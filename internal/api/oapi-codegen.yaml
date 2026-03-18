@@ -1,0 +1,23 @@
+# oapi-codegen configuration for generating API client
+# See: https://github.com/oapi-codegen/oapi-codegen
+
+package: api
+output: client.gen.go
+
+generate:
+  # Generate type definitions for request/response bodies and schemas
+  models: true
+  # Generate client with methods for each operation
+  client: true
+  # Embedded spec is no longer needed - schema is fetched from API and cached locally
+  embedded-spec: false
+
+# Output options
+output-options:
+  # Skip formatting (we'll run gofmt after)
+  skip-fmt: false
+  # Skip pruning unused types
+  skip-prune: false
+  # Use TitleCase naming for enum values to avoid conflicts with type names
+  # e.g., "issue_type" -> "IssueTypeValue" instead of "IssueType"
+  name-normalizer: ToCamelCaseWithInitialisms

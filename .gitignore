@@ -1,0 +1,94 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Binary output (at root only, not cmd/qctl/)
+/qctl
+qctl-*
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.out
+coverage.html
+
+# Profiling and benchmark files
+*.prof
+*.pprof
+*.cpu
+*.mem
+*.bench
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Build artifacts
+build/dist/
+dist/
+
+# Downloaded/generated OpenAPI specs (regenerate with: make generate-client)
+build/openapi.raw.json
+build/openapi.codegen.json
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment and config files
+.env
+.env.local
+.envrc
+
+# Config files (except examples)
+.qctl.yaml
+*.local.yaml
+
+# Runtime config and credentials (stored in ~/.qctl/ by default)
+# These are added for safety in case they're accidentally created in project dir
+.qctl/
+credentials.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+temp[0-9]*
+temp_*
+
+# Scratch YAML files in repo root
+/table.yaml
+/dry_run_rule_spec.yaml
+debug_kinde_openid2.md
+
+# Log files
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Editor backup files
+*~
+*.bak
+\#*\#
+.\#*
+
+# Claude Code
+.claude/
+openapi.json
+.gocache
+build/
+.cache/

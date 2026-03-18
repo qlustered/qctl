@@ -1,0 +1,102 @@
+version: "2"
+run:
+  tests: true
+linters:
+  enable:
+    - goconst
+    - gocritic
+    - gocyclo
+    - misspell
+    - revive
+    - unconvert
+    - unparam
+  settings:
+    errcheck:
+      check-type-assertions: false  # Type is verified before assertion in our code patterns
+      check-blank: false  # We use _ intentionally for delete operations that may fail
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    gocyclo:
+      min-complexity: 15
+    govet:
+      enable-all: true
+      disable:
+        - shadow  # Variable shadowing with err is common Go pattern, not a bug
+  exclusions:
+    generated: strict
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - errcheck
+          - goconst
+          - gocyclo
+        path: _test\.go
+      # Ignore stuttering warnings for type aliases from generated API client
+      - linters:
+          - revive
+        text: "stutters"
+        path: internal/(alerts|datasets|ingestion|warnings|rules|datasources|orgs|users)/client\.go
+      # Ignore errcheck for cobra flag getters - these only fail if flag name doesn't exist
+      # which is a programming error caught at startup, not a runtime error
+      - linters:
+          - errcheck
+        text: "GetString|GetBool|GetInt|GetFloat|Set"
+        path: internal/(commands|output)/
+      # Ignore errcheck in test utilities - test failures surface issues
+      - linters:
+          - errcheck
+        path: internal/testutil/
+      # Ignore unused parameters in test files - mock handlers legitimately ignore params
+      - linters:
+          - revive
+        text: "unused-parameter"
+        path: _test\.go
+      # Ignore unused parameters in command files - cobra handlers often don't use cmd/args
+      - linters:
+          - revive
+        text: "unused-parameter"
+        path: internal/commands/
+      # Ignore field alignment in test files - not critical for test code
+      - linters:
+          - govet
+        text: "fieldalignment"
+        path: _test\.go
+      # Ignore remaining field alignment warnings - micro-optimization with diminishing returns
+      # These structs are short-lived request parameters, not worth further optimization
+      - linters:
+          - govet
+        text: "fieldalignment"
+        path: internal/(apierror|cloud_sources|datasets|ingestion|output|stored_items)/
+      # Ignore package naming with underscores - matches backend entity names
+      - linters:
+          - revive
+        text: "don't use an underscore in package name"
+        path: internal/(cloud_sources|stored_items|rule_versions)/
+      # Ignore errors package name warning - internal packages can use common names
+      - linters:
+          - revive
+        text: "avoid package names that conflict with Go standard library"
+        path: internal/errors/
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+      - internal/api/client\.gen\.go$
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
