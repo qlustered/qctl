@@ -1,6 +1,7 @@
 package submit
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +18,7 @@ Examples:
 
   # Force submission even if versions exist
   qctl submit rules -f rules.py --force`,
+		RunE: cmdutil.SubcommandRequired,
 	}
 
 	cmd.AddCommand(NewRulesCommand())

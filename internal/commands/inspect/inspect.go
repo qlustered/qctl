@@ -1,6 +1,7 @@
 package inspect
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "inspect",
 		Short: "Inspect resource artifacts",
 		Long:  `Inspect resource artifacts such as dry-run job previews.`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	cmd.AddCommand(NewDryRunJobCommand())

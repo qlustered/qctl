@@ -1,6 +1,7 @@
 package download
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "download",
 		Short: "Download resources",
 		Long:  `Commands for downloading resources such as files.`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

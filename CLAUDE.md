@@ -10,23 +10,32 @@ CLI tool for managing Qluster platform resources.
 - **CI**: GitHub Actions (lint, test, build)
 
 ## Implementation Conventions (Go CLI)
-- A comprehensive patterns reference is maintained in `docs/patterns.md`. It documents:
-  - Directory layout and command tree
-  - Canonical code patterns for `get`, `describe`, `apply`, `run/kill`, and domain client implementations
-  - Test setup boilerplate (mock server, test env, fixtures)
-  - All key utility functions with file paths
-  - API URL patterns and output format behavior
-- Consult `patterns.md` before exploring the codebase — it should have what you need to implement new commands or modify existing ones.
-- When implementing CLI commands, follow established patterns in the codebase for:
-  - cobra command structure (flags, args, subcommands),
-  - resolver/client patterns,
-  - display/output formatting,
-  - error handling and exit behavior,
-  - test structure and fixtures.
-- Prefer consistent UX:
-  - stable output formats,
-  - clear error messages,
-  - avoid breaking changes to output unless explicitly required.
+
+### Documentation Lookup Order
+
+Before exploring the codebase, consult these docs in order:
+
+1. **`docs/commands.md`** — **Command-to-file map.** Use this FIRST to find the exact file path for any CLI command, its domain client package, printer, and test file. This eliminates the need to search or explore the directory structure.
+
+2. **`docs/patterns.md`** — **Canonical implementation patterns.** Use this when you need to understand HOW to implement or modify a command. It documents:
+   - Canonical code patterns for `get`, `describe`, `apply`, `run/kill`, `enable/disable/set-default`, and domain client implementations
+   - Test setup boilerplate (mock server, test env, fixtures)
+   - All key utility functions with file paths
+   - API URL patterns and output format behavior
+   - Rule-specific command details (smart apply, resolvers, manifest types)
+   - Printer packages and when to use each
+
+### Workflow for modifying or adding commands
+
+1. Look up the command in `docs/commands.md` to find the implementation file and domain client.
+2. Read the implementation file directly — do not explore the directory.
+3. If you need to understand the pattern (e.g., how describe commands work), consult the relevant section of `docs/patterns.md`.
+4. For new commands, find an existing command of the same verb (get/describe/apply/etc.) in `docs/commands.md`, read it as a template, and follow the pattern from `docs/patterns.md`.
+5. Register the new subcommand in the parent file listed in `docs/commands.md` → "Parent Command Files" section.
+
+### Code conventions
+- Follow established patterns in the codebase for cobra command structure, resolver/client patterns, display/output formatting, error handling, and test structure.
+- Prefer consistent UX: stable output formats, clear error messages, avoid breaking changes to output unless explicitly required.
 
 ## Configuration
 

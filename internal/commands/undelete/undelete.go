@@ -1,6 +1,7 @@
 package undelete
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "undelete",
 		Short: "Undelete resources",
 		Long:  `Commands for undeleting (restoring) resources such as files.`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

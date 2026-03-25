@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -12,6 +13,7 @@ func NewCommand() *cobra.Command {
 		Long: `Manage qctl configuration including contexts and settings.
 
 Contexts allow you to switch between different Qluster deployments and user accounts.`,
+		RunE: cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

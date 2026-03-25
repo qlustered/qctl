@@ -1,6 +1,7 @@
 package create
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "create",
 		Short: "Create a resource",
 		Long:  `Create a resource. Valid resource types include: dry-run-job`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	cmd.AddCommand(NewDryRunJobCommand())

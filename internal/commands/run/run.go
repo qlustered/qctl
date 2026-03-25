@@ -1,6 +1,7 @@
 package run
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "run",
 		Short: "Run resources",
 		Long:  `Commands for running resources such as ingestion jobs and profiling jobs.`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

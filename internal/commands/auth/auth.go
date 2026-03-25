@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "auth",
 		Short: "Authentication commands",
 		Long:  "Commands for managing authentication and sessions",
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

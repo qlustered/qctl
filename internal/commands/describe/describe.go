@@ -1,6 +1,7 @@
 package describe
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,7 @@ func NewCommand() *cobra.Command {
 Valid resource types include: table, cloud-source, ingestion-job, profiling-job, alert, warning, file, destination, error-incident, rule, table-rule, dry-run-job
 
 The default output format is YAML for readability. You can override with -o json, -o table, etc.`,
+		RunE: cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

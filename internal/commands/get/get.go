@@ -1,6 +1,7 @@
 package get
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "get",
 		Short: "Display one or many resources",
 		Long:  `Display one or many resources. Valid resource types include: table, tables, cloud-sources, ingestion-jobs, profiling-jobs, alerts, warnings, files, destinations, error-incidents, rule, rules, rule-revisions, table-rule, table-rules, dry-run-job, dry-run-jobs`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands

@@ -1,6 +1,7 @@
 package delete
 
 import (
+	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +11,7 @@ func NewCommand() *cobra.Command {
 		Use:   "delete",
 		Short: "Delete resources",
 		Long:  `Commands for deleting resources such as files, error incidents, and rules.`,
+		RunE:  cmdutil.SubcommandRequired,
 	}
 
 	// Add subcommands
