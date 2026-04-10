@@ -281,6 +281,7 @@ func TestDescribeRuleCommand_PlainTextSections(t *testing.T) {
 	// Should contain all diagnostic sections
 	checks := []string{
 		"Name:",
+		"Slug:",
 		"Release:",
 		"ID:",
 		"Family ID:",

@@ -18,6 +18,7 @@ func FormatDescribe(detail *RuleRevisionFull, showCode bool) string {
 
 	// Identity
 	fmt.Fprintf(&b, "Name:              %s\n", detail.Name)
+	fmt.Fprintf(&b, "Slug:              %s\n", detail.Slug)
 	fmt.Fprintf(&b, "Release:           %s\n", detail.Release)
 	fmt.Fprintf(&b, "ID:                %s\n", detail.ID.String())
 	fmt.Fprintf(&b, "Family ID:         %s\n", detail.FamilyID.String())

@@ -21,6 +21,18 @@ func makeRule(id, name, release string, state RuleState) RuleRevisionTiny {
 	}
 }
 
+func makeRuleWithSlug(id, name, slug, release string, state RuleState) RuleRevisionTiny {
+	return RuleRevisionTiny{
+		ID:        openapi_types.UUID(uuid.MustParse(id)),
+		Name:      name,
+		Slug:      slug,
+		Release:   release,
+		State:     state,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+}
+
 func TestShortID(t *testing.T) {
 	tests := []struct {
 		uuid string
@@ -476,6 +488,52 @@ func TestResolveRule_PascalCaseFallsThrough(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "No rule found") {
 		t.Errorf("expected 'No rule found' error, got: %v", err)
+	}
+}
+
+func TestResolveRule_ExactSlugMatch(t *testing.T) {
+	// Name is PascalCase, slug is kebab-case — user types the slug
+	rules := []RuleRevisionTiny{
+		makeRuleWithSlug("550e8400-e29b-41d4-a716-446655440000", "ZeroValueRowRule", "zero-value-row-rule", "1.0.0", "enabled"),
+		makeRuleWithSlug("660e8400-e29b-41d4-a716-446655440001", "UsCity", "us_city", "1.0.0", "enabled"),
+	}
+
+	resolved, err := ResolveRule(rules, "zero-value-row-rule", "")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resolved.ID != "550e8400-e29b-41d4-a716-446655440000" {
+		t.Errorf("got ID %q, want %q", resolved.ID, "550e8400-e29b-41d4-a716-446655440000")
+	}
+}
+
+func TestResolveRuleAny_ExactSlugMatch(t *testing.T) {
+	rules := []RuleRevisionTiny{
+		makeRuleWithSlug("550e8400-e29b-41d4-a716-446655440000", "ZeroValueRowRule", "zero-value-row-rule", "1.0.0", "enabled"),
+		makeRuleWithSlug("660e8400-e29b-41d4-a716-446655440001", "UsCity", "us_city", "1.0.0", "enabled"),
+	}
+
+	resolved, err := ResolveRuleAny(rules, "zero-value-row-rule")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resolved.ID != "550e8400-e29b-41d4-a716-446655440000" {
+		t.Errorf("got ID %q, want %q", resolved.ID, "550e8400-e29b-41d4-a716-446655440000")
+	}
+}
+
+func TestResolveRule_FuzzySlugMatch(t *testing.T) {
+	rules := []RuleRevisionTiny{
+		makeRuleWithSlug("550e8400-e29b-41d4-a716-446655440000", "ZeroValueRowRule", "zero-value-row-rule", "1.0.0", "enabled"),
+	}
+
+	// Partial slug should match via fuzzy
+	resolved, err := ResolveRule(rules, "zero-value", "")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resolved.ID != "550e8400-e29b-41d4-a716-446655440000" {
+		t.Errorf("got ID %q, want %q", resolved.ID, "550e8400-e29b-41d4-a716-446655440000")
 	}
 }
 

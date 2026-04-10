@@ -158,7 +158,7 @@ func selectFromMatches(matches []RuleRevisionTiny, input string, releaseFilter s
 func findExactNameMatches(rules []RuleRevisionTiny, name string) []RuleRevisionTiny {
 	var matches []RuleRevisionTiny
 	for _, r := range rules {
-		if r.Name == name {
+		if r.Name == name || r.Slug == name {
 			matches = append(matches, r)
 		}
 	}
@@ -183,7 +183,7 @@ func findFuzzyNameMatches(rules []RuleRevisionTiny, input string) []RuleRevision
 	var matches []RuleRevisionTiny
 	lowerInput := strings.ToLower(input)
 	for _, r := range rules {
-		if strings.Contains(strings.ToLower(r.Name), lowerInput) {
+		if strings.Contains(strings.ToLower(r.Name), lowerInput) || strings.Contains(strings.ToLower(r.Slug), lowerInput) {
 			matches = append(matches, r)
 		}
 	}

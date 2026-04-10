@@ -349,6 +349,7 @@ func (c *Client) ResolveRuleIDAny(accessToken, input string) (string, error) {
 
 	// Need to list rules to resolve by name/prefix
 	resp, err := c.GetRuleRevisions(accessToken, GetRuleRevisionsParams{
+		SearchQuery: &input,
 		Limit:       1000,
 		OnlyDefault: BoolPtr(false),
 	})
@@ -375,6 +376,7 @@ func (c *Client) ResolveRuleFull(accessToken, input, release string) (*ResolvedR
 
 	// Need to list rules to resolve by name/prefix
 	resp, err := c.GetRuleRevisions(accessToken, GetRuleRevisionsParams{
+		SearchQuery: &input,
 		Limit:       1000,
 		OnlyDefault: BoolPtr(false),
 	})
