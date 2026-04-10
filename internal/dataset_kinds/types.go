@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/qlustered/qctl/internal/api"
+	"github.com/qlustered/qctl/internal/pkg/tags"
 	"github.com/qlustered/qctl/internal/pkg/timeutil"
 )
 
@@ -25,7 +26,7 @@ type (
 type DatasetKindDisplay struct {
 	Slug      string `json:"slug"`
 	Name      string `json:"name"`
-	IsBuiltin bool   `json:"is_builtin"`
+	Tags      string `json:"tags"`
 	UpdatedAt string `json:"updated_at"`
 	ShortID   string `json:"short_id"`
 }
@@ -44,9 +45,11 @@ func ToDisplayList(kinds []DatasetKindTiny) []DatasetKindDisplay {
 	result := make([]DatasetKindDisplay, len(kinds))
 	for i, k := range kinds {
 		result[i] = DatasetKindDisplay{
-			Slug:      k.Slug,
-			Name:      k.Name,
-			IsBuiltin: k.IsBuiltin,
+			Slug: k.Slug,
+			Name: k.Name,
+			Tags: tags.Build(
+				tags.TagPair{Label: "Built-in", Active: k.IsBuiltin},
+			),
 			UpdatedAt: timeutil.FormatRelative(k.UpdatedAt),
 			ShortID:   ShortID(k.ID.String()),
 		}

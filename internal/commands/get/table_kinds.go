@@ -5,7 +5,7 @@ import (
 
 	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/qlustered/qctl/internal/dataset_kinds"
-	"github.com/qlustered/qctl/internal/output"
+	"github.com/qlustered/qctl/internal/pkg/tableui"
 	"github.com/spf13/cobra"
 )
 
@@ -16,9 +16,8 @@ var validTableKindSortFields = []string{
 // NewTableKindsCommand creates the get table-kinds command
 func NewTableKindsCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "table-kinds",
-		Aliases: []string{"table-kind"},
-		Short:   "List table kinds",
+		Use:   "table-kinds",
+		Short: "List table kinds",
 		Long:    `List all table kinds in the current organization.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx, err := cmdutil.Bootstrap(cmd)
@@ -39,14 +38,7 @@ func NewTableKindsCommand() *cobra.Command {
 
 			displayResults := dataset_kinds.ToDisplayList(resp.Results)
 
-			setDefaultColumns(cmd, "slug,name,is_builtin,updated_at")
-
-			printer, err := output.NewPrinterFromCmd(cmd)
-			if err != nil {
-				return fmt.Errorf("failed to create output printer: %w", err)
-			}
-
-			if err := printer.Print(displayResults); err != nil {
+			if err := tableui.PrintFromCmd(cmd, displayResults, "slug,name,tags,updated_at,short_id"); err != nil {
 				return fmt.Errorf("failed to print output: %w", err)
 			}
 
@@ -105,5 +97,5 @@ func addTableKindsFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("reverse", false, "Reverse the sort order")
 	cmd.Flags().String("search", "", "Search table kinds by name or slug")
 	cmd.Flags().Bool("include-builtin", false, "Include built-in (global) table kinds")
-	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: slug, name, is_builtin, updated_at, short_id")
+	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: slug, name, tags, updated_at, short_id")
 }

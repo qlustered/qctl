@@ -68,7 +68,7 @@ func sampleDatasetKindWithFieldKinds() dataset_kinds.DatasetKindWithFieldKinds {
 }
 
 func registerKindListHandler(mock *testutil.MockAPIServer) {
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 		totalRows := 1
 		page := 1
 		response := dataset_kinds.DatasetKindsPage{
@@ -89,7 +89,7 @@ func registerKindListHandler(mock *testutil.MockAPIServer) {
 }
 
 func registerKindDetailHandler(mock *testutil.MockAPIServer, kindID string) {
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles/"+kindID, func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds/"+kindID, func(w http.ResponseWriter, r *http.Request) {
 		testutil.RespondJSON(w, http.StatusOK, sampleDatasetKindWithFieldKinds())
 	})
 }
@@ -237,7 +237,7 @@ func TestGetTableKindCommand_NotFound(t *testing.T) {
 	env.SetupCredential(endpointKey, testOrgID, "test-token")
 
 	// Register list handler that returns empty results
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 		totalRows := 0
 		page := 1
 		response := dataset_kinds.DatasetKindsPage{

@@ -70,7 +70,7 @@ func sampleTableKindWithFieldKinds() dataset_kinds.DatasetKindWithFieldKinds {
 }
 
 func registerDescribeKindListHandler(mock *testutil.MockAPIServer) {
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 		totalRows := 1
 		page := 1
 		response := dataset_kinds.DatasetKindsPage{
@@ -91,7 +91,7 @@ func registerDescribeKindListHandler(mock *testutil.MockAPIServer) {
 }
 
 func registerDescribeKindDetailHandler(mock *testutil.MockAPIServer) {
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles/"+testTableKindID, func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds/"+testTableKindID, func(w http.ResponseWriter, r *http.Request) {
 		testutil.RespondJSON(w, http.StatusOK, sampleTableKindWithFieldKinds())
 	})
 }

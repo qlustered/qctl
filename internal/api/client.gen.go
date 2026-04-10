@@ -21621,7 +21621,7 @@ func NewGetDatasetKindsRequest(server string, organizationID openapi_types.UUID,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles", pathParam0)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21785,7 +21785,7 @@ func NewCreateDatasetKindRequestWithBody(server string, organizationID openapi_t
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles", pathParam0)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21849,7 +21849,7 @@ func NewSubmitDatasetKindFromFileRequestWithBody(server string, organizationID o
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/import-config", pathParam0)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds/import-config", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21909,7 +21909,7 @@ func NewDeleteDatasetKindRequest(server string, organizationID openapi_types.UUI
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21967,7 +21967,7 @@ func NewGetOneDatasetKindRequest(server string, organizationID openapi_types.UUI
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -22036,7 +22036,7 @@ func NewPatchDatasetKindRequestWithBody(server string, organizationID openapi_ty
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-kinds/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}

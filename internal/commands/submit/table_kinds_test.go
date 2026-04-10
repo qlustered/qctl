@@ -65,7 +65,7 @@ func TestSubmitTableKindsCommand_TOMLSubmit(t *testing.T) {
 		},
 	}
 
-	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-profiles/import-config", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-kinds/import-config", func(w http.ResponseWriter, r *http.Request) {
 		submitCalled = true
 		testutil.RespondJSON(w, http.StatusCreated, dataset_kinds.DatasetKindWithFieldKinds{
 			ID:         openapi_types.UUID(uuid.MustParse("aaaa0000-bbbb-cccc-dddd-eeeeeeee0001")),
@@ -112,7 +112,7 @@ func TestSubmitTableKindsCommand_YAMLSubmit(t *testing.T) {
 	env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
 	env.SetupCredential(endpointKey, testOrgID, "test-token")
 
-	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-profiles/import-config", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-kinds/import-config", func(w http.ResponseWriter, r *http.Request) {
 		testutil.RespondJSON(w, http.StatusCreated, dataset_kinds.DatasetKindWithFieldKinds{
 			ID:        openapi_types.UUID(uuid.MustParse("aaaa0000-bbbb-cccc-dddd-eeeeeeee0001")),
 			Slug:      "car-policy-bordereau",
@@ -223,7 +223,7 @@ func TestSubmitTableKindsCommand_ServerError(t *testing.T) {
 	env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
 	env.SetupCredential(endpointKey, testOrgID, "test-token")
 
-	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-profiles/import-config", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/dataset-kinds/import-config", func(w http.ResponseWriter, r *http.Request) {
 		testutil.RespondError(w, http.StatusInternalServerError, "Internal Server Error")
 	})
 

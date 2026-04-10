@@ -3,10 +3,11 @@ package get
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/qlustered/qctl/internal/dataset_kinds"
-	"github.com/qlustered/qctl/internal/output"
+	"github.com/qlustered/qctl/internal/pkg/tableui"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -67,40 +68,51 @@ Examples:
 				return encoder.Encode(kind)
 
 			default:
+				w := cmd.OutOrStdout()
+
 				// Print kind info as key-value header
-				fmt.Fprintf(cmd.OutOrStdout(), "Name:       %s\n", kind.Name)
-				fmt.Fprintf(cmd.OutOrStdout(), "Slug:       %s\n", kind.Slug)
-				fmt.Fprintf(cmd.OutOrStdout(), "ID:         %s\n", kind.ID.String())
-				fmt.Fprintf(cmd.OutOrStdout(), "Built-in:   %s\n", boolYesNo(kind.IsBuiltin))
-				fmt.Fprintf(cmd.OutOrStdout(), "\n")
+				fmt.Fprintf(w, "Name:       %s\n", kind.Name)
+				fmt.Fprintf(w, "Slug:       %s\n", kind.Slug)
+				fmt.Fprintf(w, "ID:         %s\n", kind.ID.String())
+				fmt.Fprintf(w, "Built-in:   %s\n", boolYesNo(kind.IsBuiltin))
+				if ctx.Verbosity >= 2 {
+					fmt.Fprintf(w, "Description: %s\n", derefStr(kind.Description))
+				}
+				fmt.Fprintln(w)
 
 				if len(fieldKinds) == 0 {
-					fmt.Fprintln(cmd.OutOrStdout(), "No field kinds found.")
+					fmt.Fprintln(w, "No field kinds found.")
 					return nil
 				}
 
-				// Print field kinds as a table
+				// Print field kinds as a table with verbosity-dependent columns
 				type fieldKindDisplay struct {
-					Slug      string `json:"slug"`
-					Name      string `json:"name"`
-					UpdatedAt string `json:"updated_at"`
+					Slug        string `json:"slug"`
+					Name        string `json:"name"`
+					Description string `json:"description"`
+					Aliases     string `json:"aliases"`
+					UpdatedAt   string `json:"updated_at"`
 				}
 
 				displayResults := make([]fieldKindDisplay, len(fieldKinds))
 				for i, fk := range fieldKinds {
 					displayResults[i] = fieldKindDisplay{
-						Slug:      fk.Slug,
-						Name:      fk.Name,
-						UpdatedAt: fk.UpdatedAt.Format("2006-01-02"),
+						Slug:        fk.Slug,
+						Name:        fk.Name,
+						Description: derefStr(fk.Description),
+						Aliases:     formatAliases(fk.Aliases),
+						UpdatedAt:   fk.UpdatedAt.Format("2006-01-02"),
 					}
 				}
 
-				setDefaultColumns(cmd, "slug,name,updated_at")
-				printer, err := output.NewPrinterFromCmd(cmd)
-				if err != nil {
-					return fmt.Errorf("failed to create output printer: %w", err)
+				defaultCols := "slug,name,updated_at"
+				if ctx.Verbosity >= 3 {
+					defaultCols = "slug,name,description,aliases,updated_at"
+				} else if ctx.Verbosity >= 2 {
+					defaultCols = "slug,name,description,updated_at"
 				}
-				return printer.Print(displayResults)
+
+				return tableui.PrintFromCmd(cmd, displayResults, defaultCols)
 			}
 		},
 	}
@@ -113,4 +125,18 @@ func boolYesNo(v bool) string {
 		return "yes"
 	}
 	return "no"
+}
+
+func derefStr(s *string) string {
+	if s == nil || *s == "" {
+		return "-"
+	}
+	return *s
+}
+
+func formatAliases(aliases *[]string) string {
+	if aliases == nil || len(*aliases) == 0 {
+		return "-"
+	}
+	return strings.Join(*aliases, ", ")
 }

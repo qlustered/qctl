@@ -114,7 +114,7 @@ func TestGetTableKindsCommand(t *testing.T) {
 			env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
 			env.SetupCredential(endpointKey, testOrgID, "test-token")
 
-			mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+			mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 				totalRows := len(tt.mockKinds)
 				page := 1
 				response := dataset_kinds.DatasetKindsPage{
@@ -163,7 +163,7 @@ func TestGetTableKindsCommand_Pagination(t *testing.T) {
 	env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
 	env.SetupCredential(endpointKey, testOrgID, "test-token")
 
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 		totalRows := 2
 		pageNum := 1
 		nextStart := 2
@@ -205,7 +205,7 @@ func TestGetTableKindsCommand_ServerError(t *testing.T) {
 	env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
 	env.SetupCredential(endpointKey, testOrgID, "test-token")
 
-	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-profiles", func(w http.ResponseWriter, r *http.Request) {
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/dataset-kinds", func(w http.ResponseWriter, r *http.Request) {
 		testutil.RespondError(w, http.StatusInternalServerError, "Internal Server Error")
 	})
 

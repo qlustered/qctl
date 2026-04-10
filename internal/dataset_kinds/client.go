@@ -221,6 +221,7 @@ func (c *Client) ResolveDatasetKindID(accessToken, input string) (openapi_types.
 	includeBuiltin := true
 	limit := 500
 	resp, err := c.GetDatasetKinds(accessToken, GetDatasetKindsParams{
+		SearchQuery:    &input,
 		IncludeBuiltin: &includeBuiltin,
 		Limit:          limit,
 	})
