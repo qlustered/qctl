@@ -445,6 +445,12 @@ const (
 	DatasetFieldKindOrderByUpdatedAt DatasetFieldKindOrderBy = "updated_at"
 )
 
+// Defines values for DatasetKindImportFormat.
+const (
+	Toml DatasetKindImportFormat = "toml"
+	Yaml DatasetKindImportFormat = "yaml"
+)
+
 // Defines values for DatasetKindOrderBy.
 const (
 	DatasetKindOrderByCreatedAt DatasetKindOrderBy = "created_at"
@@ -3248,6 +3254,18 @@ type DatasetFieldKindsListSchema struct {
 	TotalRows *int                         `json:"total_rows"`
 }
 
+// DatasetKindImportFormat Supported formats for dataset kind import.
+type DatasetKindImportFormat string
+
+// DatasetKindImportRequestSchema Request body for importing a dataset kind from TOML or YAML content.
+type DatasetKindImportRequestSchema struct {
+	// Content TOML or YAML string defining a dataset_kind and optional field_kinds.
+	Content string `json:"content"`
+
+	// Format Supported formats for dataset kind import.
+	Format DatasetKindImportFormat `json:"format"`
+}
+
 // DatasetKindOrderBy Sort options for dataset kind list.
 type DatasetKindOrderBy string
 
@@ -3286,6 +3304,19 @@ type DatasetKindTinySchema struct {
 	OrganizationID *openapi_types.UUID `json:"organization_id"`
 	Slug           string              `json:"slug"`
 	UpdatedAt      time.Time           `json:"updated_at"`
+}
+
+// DatasetKindWithFieldKindsSchema Dataset kind with its field kinds.
+type DatasetKindWithFieldKindsSchema struct {
+	CreatedAt      time.Time                     `json:"created_at"`
+	Description    *string                       `json:"description"`
+	FieldKinds     *[]DatasetFieldKindSchemaFull `json:"field_kinds,omitempty"`
+	ID             openapi_types.UUID            `json:"id"`
+	IsBuiltin      bool                          `json:"is_builtin"`
+	Name           string                        `json:"name"`
+	OrganizationID *openapi_types.UUID           `json:"organization_id"`
+	Slug           string                        `json:"slug"`
+	UpdatedAt      time.Time                     `json:"updated_at"`
 }
 
 // DatasetKindsListSchema Paginated response for dataset kind list.
@@ -7935,6 +7966,11 @@ type CreateDatasetKindParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
+// SubmitDatasetKindFromFileParams defines parameters for SubmitDatasetKindFromFile.
+type SubmitDatasetKindFromFileParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
 // DeleteDatasetKindParams defines parameters for DeleteDatasetKind.
 type DeleteDatasetKindParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -9762,6 +9798,9 @@ type PatchDatasetFieldKindJSONRequestBody = DatasetFieldKindPatchRequestSchema
 
 // CreateDatasetKindJSONRequestBody defines body for CreateDatasetKind for application/json ContentType.
 type CreateDatasetKindJSONRequestBody = DatasetKindPostRequestSchema
+
+// SubmitDatasetKindFromFileJSONRequestBody defines body for SubmitDatasetKindFromFile for application/json ContentType.
+type SubmitDatasetKindFromFileJSONRequestBody = DatasetKindImportRequestSchema
 
 // PatchDatasetKindJSONRequestBody defines body for PatchDatasetKind for application/json ContentType.
 type PatchDatasetKindJSONRequestBody = DatasetKindPatchRequestSchema
@@ -12067,6 +12106,11 @@ type ClientInterface interface {
 
 	CreateDatasetKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// SubmitDatasetKindFromFileWithBody request with any body
+	SubmitDatasetKindFromFileWithBody(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SubmitDatasetKindFromFile(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, body SubmitDatasetKindFromFileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteDatasetKind request
 	DeleteDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -13804,6 +13848,30 @@ func (c *Client) CreateDatasetKindWithBody(ctx context.Context, organizationID o
 
 func (c *Client) CreateDatasetKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateDatasetKindRequest(c.Server, organizationID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SubmitDatasetKindFromFileWithBody(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSubmitDatasetKindFromFileRequestWithBody(c.Server, organizationID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SubmitDatasetKindFromFile(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, body SubmitDatasetKindFromFileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSubmitDatasetKindFromFileRequest(c.Server, organizationID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -21718,6 +21786,70 @@ func NewCreateDatasetKindRequestWithBody(server string, organizationID openapi_t
 	}
 
 	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewSubmitDatasetKindFromFileRequest calls the generic SubmitDatasetKindFromFile builder with application/json body
+func NewSubmitDatasetKindFromFileRequest(server string, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, body SubmitDatasetKindFromFileJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSubmitDatasetKindFromFileRequestWithBody(server, organizationID, params, "application/json", bodyReader)
+}
+
+// NewSubmitDatasetKindFromFileRequestWithBody generates requests for SubmitDatasetKindFromFile with any type of body
+func NewSubmitDatasetKindFromFileRequestWithBody(server string, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/import-config", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -40115,6 +40247,11 @@ type ClientWithResponsesInterface interface {
 
 	CreateDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDatasetKindResponse, error)
 
+	// SubmitDatasetKindFromFileWithBodyWithResponse request with any body
+	SubmitDatasetKindFromFileWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SubmitDatasetKindFromFileResponse, error)
+
+	SubmitDatasetKindFromFileWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, body SubmitDatasetKindFromFileJSONRequestBody, reqEditors ...RequestEditorFn) (*SubmitDatasetKindFromFileResponse, error)
+
 	// DeleteDatasetKindWithResponse request
 	DeleteDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetKindResponse, error)
 
@@ -42198,6 +42335,29 @@ func (r CreateDatasetKindResponse) StatusCode() int {
 	return 0
 }
 
+type SubmitDatasetKindFromFileResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DatasetKindWithFieldKindsSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r SubmitDatasetKindFromFileResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SubmitDatasetKindFromFileResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteDatasetKindResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -42223,7 +42383,7 @@ func (r DeleteDatasetKindResponse) StatusCode() int {
 type GetOneDatasetKindResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *DatasetKindSchemaFull
+	JSON200      *DatasetKindWithFieldKindsSchema
 	JSON422      *HTTPValidationError
 }
 
@@ -47378,6 +47538,23 @@ func (c *ClientWithResponses) CreateDatasetKindWithResponse(ctx context.Context,
 	return ParseCreateDatasetKindResponse(rsp)
 }
 
+// SubmitDatasetKindFromFileWithBodyWithResponse request with arbitrary body returning *SubmitDatasetKindFromFileResponse
+func (c *ClientWithResponses) SubmitDatasetKindFromFileWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SubmitDatasetKindFromFileResponse, error) {
+	rsp, err := c.SubmitDatasetKindFromFileWithBody(ctx, organizationID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSubmitDatasetKindFromFileResponse(rsp)
+}
+
+func (c *ClientWithResponses) SubmitDatasetKindFromFileWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *SubmitDatasetKindFromFileParams, body SubmitDatasetKindFromFileJSONRequestBody, reqEditors ...RequestEditorFn) (*SubmitDatasetKindFromFileResponse, error) {
+	rsp, err := c.SubmitDatasetKindFromFile(ctx, organizationID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSubmitDatasetKindFromFileResponse(rsp)
+}
+
 // DeleteDatasetKindWithResponse request returning *DeleteDatasetKindResponse
 func (c *ClientWithResponses) DeleteDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetKindResponse, error) {
 	rsp, err := c.DeleteDatasetKind(ctx, organizationID, profileID, params, reqEditors...)
@@ -51696,6 +51873,39 @@ func ParseCreateDatasetKindResponse(rsp *http.Response) (*CreateDatasetKindRespo
 	return response, nil
 }
 
+// ParseSubmitDatasetKindFromFileResponse parses an HTTP response from a SubmitDatasetKindFromFileWithResponse call
+func ParseSubmitDatasetKindFromFileResponse(rsp *http.Response) (*SubmitDatasetKindFromFileResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SubmitDatasetKindFromFileResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DatasetKindWithFieldKindsSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDeleteDatasetKindResponse parses an HTTP response from a DeleteDatasetKindWithResponse call
 func ParseDeleteDatasetKindResponse(rsp *http.Response) (*DeleteDatasetKindResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -51737,7 +51947,7 @@ func ParseGetOneDatasetKindResponse(rsp *http.Response) (*GetOneDatasetKindRespo
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest DatasetKindSchemaFull
+		var dest DatasetKindWithFieldKindsSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

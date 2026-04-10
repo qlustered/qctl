@@ -10,7 +10,7 @@ func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get",
 		Short: "Display one or many resources",
-		Long:  `Display one or many resources. Valid resource types include: table, tables, cloud-sources, ingestion-jobs, profiling-jobs, alerts, warnings, files, destinations, error-incidents, rule, rules, rule-revisions, table-rule, table-rules, dry-run-job, dry-run-jobs`,
+		Long:  `Display one or many resources. Valid resource types include: table, tables, cloud-sources, ingestion-jobs, profiling-jobs, alerts, warnings, files, destinations, error-incidents, rule, rules, rule-revisions, table-rule, table-rules, dry-run-job, dry-run-jobs, table-kind, table-kinds`,
 		RunE:  cmdutil.SubcommandRequired,
 	}
 
@@ -32,6 +32,8 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(NewTableRulesCommand())
 	cmd.AddCommand(NewDryRunJobCommand())
 	cmd.AddCommand(NewDryRunJobsCommand())
+	cmd.AddCommand(NewTableKindsCommand())
+	cmd.AddCommand(NewTableKindGetCommand())
 
 	return cmd
 }

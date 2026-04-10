@@ -54,6 +54,7 @@ internal/
   rule_families/                    # Client + types + display (list rule families for `get rules`)
   rule_versions/                    # Client + resolver + describe + display + types (full domain package)
   dataset_rules/                    # Client + resolver + display + types (full domain package)
+  dataset_kinds/                    # Client + resolver + describe + types (table kind domain package)
   ws/                               # WebSocket client
   schema/                           # OpenAPI schema cache + metadata for `explain`
   output/                           # Older printer (output.NewPrinterFromCmd)
@@ -87,11 +88,13 @@ pkg/
 qctl
 ├── get           tables, table, files, ingestion-jobs, profiling-jobs, alerts, warnings,
 │                 cloud-sources, destinations, error-incidents, rules, rule-revisions,
-│                 rule, table-rules, table-rule, dry-run-job, dry-run-jobs, job-activity
+│                 rule, table-rules, table-rule, dry-run-job, dry-run-jobs, job-activity,
+│                 table-kinds, table-kind
 ├── describe      table, file, ingestion-job, profiling-job, alert, warning,
-│                 cloud-source, destination, error-incident, rule, table-rule, dry-run-job
+│                 cloud-source, destination, error-incident, rule, table-rule, dry-run-job,
+│                 table-kind
 ├── apply         -f <file> (generic dispatch by kind), table, destination, cloud-source
-├── submit        rules
+├── submit        rules, table-kinds
 ├── delete        file, error-incident, rule, rules
 ├── enable        rule
 ├── disable       rule
@@ -743,3 +746,4 @@ Examples:
 | rule_family | rule (in list context) | `rule_families` |
 | rule_revision | rule (in detail context) | `rule_versions` |
 | dataset_rule | table-rule | `dataset_rules` |
+| dataset_kind | table-kind | `dataset_kinds` |

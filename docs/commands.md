@@ -15,6 +15,7 @@ Use this to jump straight to code without exploring the codebase.
 | rule_family | rule (list) | `internal/rule_families` |
 | rule_revision | rule (detail) | `internal/rule_versions` |
 | dataset_rule | table-rule | `internal/dataset_rules` |
+| dataset_kind | table-kind | `internal/dataset_kinds` |
 
 ## get commands
 
@@ -38,6 +39,8 @@ Use this to jump straight to code without exploring the codebase.
 | `get dry-run-jobs` | `internal/commands/get/dry_run_jobs.go` | `dry_runs.NewClient` | `output.NewPrinterFromCmd` | `dry_run_jobs_test.go` |
 | `get dry-run-job <id>` | `internal/commands/get/dry_run_job.go` | `dry_runs.NewClient` | `output.NewPrinterFromCmd` | `dry_run_job_test.go` |
 | `get job-activity` | `internal/commands/get/job_activity.go` | `ingestion.NewClient` | `output.NewPrinterFromCmd` | `job_activity_test.go` |
+| `get table-kinds` | `internal/commands/get/table_kinds.go` | `dataset_kinds.NewClient` | `output.NewPrinterFromCmd` | `table_kinds_test.go` |
+| `get table-kind <slug>` | `internal/commands/get/table_kind.go` | `dataset_kinds.NewClient` | `output.NewPrinterFromCmd` | `table_kind_test.go` |
 
 Notes:
 - `get rules` lists rule **families** (grouped by name), not individual revisions.
@@ -63,6 +66,7 @@ Notes:
 | `describe rule <name>` | `internal/commands/describe/rule.go` | `rule_versions.NewClient` | **plain text** | `rule_test.go` |
 | `describe table-rule <name>` | `internal/commands/describe/table_rule.go` | `dataset_rules.NewClient` | yaml | `table_rule_test.go` |
 | `describe dry-run-job <id>` | `internal/commands/describe/dry_run_job.go` | `dry_runs.NewClient` | yaml | `dry_run_job_test.go` |
+| `describe table-kind <slug>` | `internal/commands/describe/table_kind.go` | `dataset_kinds.NewClient` | **plain text** | `table_kind_test.go` |
 
 Notes:
 - All describe commands default to yaml except `describe rule` which outputs **plain text** (human-readable, not round-trippable).
@@ -95,11 +99,12 @@ Notes:
 | Command | File | Domain Client | Test File |
 |---|---|---|---|
 | `submit rules -f <files>` | `internal/commands/submit/rules.go` | `rule_versions.NewClient` | `rules_test.go` |
+| `submit table-kinds -f <files>` | `internal/commands/submit/table_kinds.go` | `dataset_kinds.NewClient` | `table_kinds_test.go` |
 
 Notes:
 - `-f` is `StringArrayVar` (multiple files).
-- Only `.py` files accepted. Max 500 KB per file.
-- Flags: `--force`, `--yes`.
+- `submit rules`: Only `.py` files accepted. Max 500 KB per file. Flags: `--force`, `--yes`.
+- `submit table-kinds`: Only `.toml`, `.yaml`, `.yml` files accepted. Max 500 KB per file. Flags: `--yes`.
 
 ## delete commands
 
@@ -189,6 +194,7 @@ Notes:
 | `rule_families` | `internal/rule_families/client.go` | `NewClient(base, orgID, verb)` | Standard |
 | `rule_versions` | `internal/rule_versions/client.go` | `NewClient(base, orgID, verb)` | **Returns `(*Client, error)`** |
 | `dataset_rules` | `internal/dataset_rules/client.go` | `NewClient(base, orgID, verb)` | **Returns `(*Client, error)`** |
+| `dataset_kinds` | `internal/dataset_kinds/client.go` | `NewClient(base, orgID, verb)` | Standard |
 
 ## Parent Command Files (register subcommands)
 
