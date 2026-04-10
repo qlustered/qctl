@@ -44,7 +44,7 @@ func sampleProfilingJobTinyForKill() api.TrainingJobTinySchema {
 		DatasetName:     "test-dataset",
 		SettingsModelID: 10,
 		State:           state,
-		Step:            api.TrainingJobStepAnalysis,
+		Step:            api.Analysis,
 		UpdatedAt:       updatedAt,
 	}
 }
@@ -58,7 +58,7 @@ func sampleProfilingJobFullForKill() api.TrainingJobFullSchema {
 		DatasetName:      "test-dataset",
 		SettingsModelID:  10,
 		State:            state,
-		Step:             api.TrainingJobStepAnalysis,
+		Step:             api.Analysis,
 		AttemptID:        1,
 		UnresolvedAlerts: 0,
 		CreatedAt:        createdAt,

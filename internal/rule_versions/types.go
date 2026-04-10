@@ -55,7 +55,7 @@ type RuleSpec struct {
 	Description          string `yaml:"description,omitempty" json:"description,omitempty"`
 	IsBuiltin            bool   `yaml:"is_builtin" json:"is_builtin"`
 	IsCaf                bool   `yaml:"is_caf,omitempty" json:"is_caf,omitempty"`
-	InteractsWithColumns []string `yaml:"interacts_with_columns,omitempty" json:"interacts_with_columns,omitempty"`
+	AffectedColumns []string `yaml:"affected_columns,omitempty" json:"affected_columns,omitempty"`
 }
 
 // RuleStatus holds runtime status information
@@ -99,7 +99,7 @@ type RuleReleaseInfo struct {
 	State                string   `yaml:"state" json:"state"`
 	IsDefault            bool     `yaml:"is_default" json:"is_default"`
 	Description          string   `yaml:"description,omitempty" json:"description,omitempty"`
-	InteractsWithColumns []string `yaml:"interacts_with_columns,omitempty" json:"interacts_with_columns,omitempty"`
+	AffectedColumns []string `yaml:"affected_columns,omitempty" json:"affected_columns,omitempty"`
 }
 
 // RuleFamilyManifest is the manifest format for describe output (all releases)
@@ -127,7 +127,7 @@ func APIResponseToManifest(resp *RuleRevisionTiny, verbosity int) *RuleManifest 
 	spec := RuleSpec{
 		Release:              resp.Release,
 		IsBuiltin:            resp.IsBuiltin,
-		InteractsWithColumns: resp.InteractsWithColumns,
+		AffectedColumns: resp.AffectedColumns,
 	}
 
 	if resp.Description != nil {
@@ -202,8 +202,8 @@ func FamilyToManifest(resp *RuleRevisionsFamily, verbosity int) *RuleFamilyManif
 		if r.Description != nil {
 			release.Description = *r.Description
 		}
-		if len(r.InteractsWithColumns) > 0 {
-			release.InteractsWithColumns = r.InteractsWithColumns
+		if len(r.AffectedColumns) > 0 {
+			release.AffectedColumns = r.AffectedColumns
 		}
 		releases = append(releases, release)
 	}
@@ -256,7 +256,7 @@ type RuleGetSpec struct {
 	ValidatesColumns            []string                                `yaml:"validates_columns,omitempty" json:"validates_columns,omitempty"`
 	CorrectsColumns             []string                                `yaml:"corrects_columns,omitempty" json:"corrects_columns,omitempty"`
 	EnrichesColumns             []string                                `yaml:"enriches_columns,omitempty" json:"enriches_columns,omitempty"`
-	InteractsWithColumns        []string                                `yaml:"interacts_with_columns,omitempty" json:"interacts_with_columns,omitempty"`
+	AffectedColumns             []string                                `yaml:"affected_columns,omitempty" json:"affected_columns,omitempty"`
 	ParamSchema                 map[string]interface{}                   `yaml:"param_schema,omitempty" json:"param_schema,omitempty"`
 	ParamsRenderability         *map[string]api.FieldRenderabilitySchema `yaml:"params_renderability,omitempty" json:"params_renderability,omitempty"`
 	ParamsRenderableInBasicUI   *bool                                    `yaml:"params_renderable_in_basic_ui,omitempty" json:"params_renderable_in_basic_ui,omitempty"`
@@ -293,7 +293,7 @@ func FullResponseToGetManifest(resp *RuleRevisionFull) *RuleGetManifest {
 		ValidatesColumns:            resp.ValidatesColumns,
 		CorrectsColumns:             resp.CorrectsColumns,
 		EnrichesColumns:             resp.EnrichesColumns,
-		InteractsWithColumns:        resp.InteractsWithColumns,
+		AffectedColumns:             resp.AffectedColumns,
 		ParamSchema:                 resp.ParamSchema,
 		ParamsRenderability:         resp.ParamsRenderability,
 		ParamsRenderableInBasicUI:   resp.ParamsRenderableInBasicUI,

@@ -15,8 +15,8 @@ type RuleRevisionDisplay struct {
 	CreatedByUser        *api.UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
 	Description          *string                     `json:"description"`
 	ID                   string                      `json:"id"`
-	InteractsWithColumns []string                    `json:"interacts_with_columns"`
-	Name                 string                      `json:"name"`
+	AffectedColumns      []string                    `json:"affected_columns"`
+	Slug                 string                      `json:"slug"`
 	Release              string                      `json:"release"`
 	State                RuleState                   `json:"state"`
 	Tags                 string                      `json:"tags"`
@@ -30,21 +30,21 @@ func ToDisplayList(rules []RuleRevisionTiny) []RuleRevisionDisplay {
 	namesWithUpgrade := make(map[string]bool)
 	for _, r := range rules {
 		if r.UpgradeAvailable != nil && *r.UpgradeAvailable {
-			namesWithUpgrade[r.Name] = true
+			namesWithUpgrade[r.Slug] = true
 		}
 	}
 
 	result := make([]RuleRevisionDisplay, len(rules))
 	for i, r := range rules {
 		newerThanDefault := r.UpgradeAvailable != nil && *r.UpgradeAvailable
-		updateAvailable := r.IsDefault && namesWithUpgrade[r.Name]
+		updateAvailable := r.IsDefault && namesWithUpgrade[r.Slug]
 		result[i] = RuleRevisionDisplay{
 			CreatedAt:            r.CreatedAt,
 			CreatedByUser:        r.CreatedByUser,
 			Description:          r.Description,
 			ID:                   r.ID.String(),
-			InteractsWithColumns: r.InteractsWithColumns,
-			Name:                 r.Name,
+			AffectedColumns:      r.AffectedColumns,
+			Slug:                 r.Slug,
 			Release:              r.Release,
 			State:                r.State,
 			Tags: tags.Build(

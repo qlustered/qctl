@@ -13,6 +13,7 @@ func makeRule(id, name, release string, state RuleState) RuleRevisionTiny {
 	return RuleRevisionTiny{
 		ID:        openapi_types.UUID(uuid.MustParse(id)),
 		Name:      name,
+		Slug:      name,
 		Release:   release,
 		State:     state,
 		CreatedAt: time.Now(),
@@ -494,7 +495,7 @@ func TestToDisplayList(t *testing.T) {
 	if display[1].ShortID != "660e8400" {
 		t.Errorf("second short_id = %q, want %q", display[1].ShortID, "660e8400")
 	}
-	if display[0].Name != "email_validator" {
-		t.Errorf("first name = %q, want %q", display[0].Name, "email_validator")
+	if display[0].Slug != "email_validator" {
+		t.Errorf("first slug = %q, want %q", display[0].Slug, "email_validator")
 	}
 }

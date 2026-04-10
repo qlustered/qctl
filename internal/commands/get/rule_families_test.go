@@ -53,6 +53,7 @@ func sampleRuleFamilyItem() rule_families.RuleFamilyItem {
 	return rule_families.RuleFamilyItem{
 		FamilyID:  familyID,
 		Name:      "email_validator",
+		Slug:      "email_validator",
 		IsBuiltin: false,
 		PrimaryRevision: &rule_families.RuleFamilyRevisionTiny{
 			ID:        revID,
@@ -83,6 +84,7 @@ func sampleRuleFamilyItemWithSecondary() rule_families.RuleFamilyItem {
 	return rule_families.RuleFamilyItem{
 		FamilyID:            familyID,
 		Name:                "phone_normalizer",
+		Slug:                "phone_normalizer",
 		IsBuiltin:           true,
 		HasNewerThanDefault: &hasNewer,
 		PrimaryRevision: &rule_families.RuleFamilyRevisionTiny{
@@ -151,7 +153,7 @@ func TestGetRuleFamiliesCommand(t *testing.T) {
 			mockFamilies: []rule_families.RuleFamilyItem{
 				sampleRuleFamilyItem(),
 			},
-			wantOutputContains: []string{`"name": "email_validator"`, `"release": "1.0.0"`},
+			wantOutputContains: []string{`"slug": "email_validator"`, `"release": "1.0.0"`},
 		},
 		{
 			name: "with yaml output",
@@ -159,7 +161,7 @@ func TestGetRuleFamiliesCommand(t *testing.T) {
 			mockFamilies: []rule_families.RuleFamilyItem{
 				sampleRuleFamilyItem(),
 			},
-			wantOutputContains: []string{"name: email_validator", "release: 1.0.0"},
+			wantOutputContains: []string{"slug: email_validator", "release: 1.0.0"},
 		},
 		{
 			name: "multiple families",

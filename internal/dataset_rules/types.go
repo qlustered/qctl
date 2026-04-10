@@ -90,8 +90,8 @@ func APIResponseToManifest(resp *DatasetRuleDetail, verbosity int) *TableRuleMan
 		CreatedAt: timeutil.FormatRelative(resp.CreatedAt),
 		UpdatedAt: timeutil.FormatRelative(resp.UpdatedAt),
 	}
-	if resp.InitiatedByUser != nil {
-		status.InitiatedBy = resp.InitiatedByUser.Email
+	if resp.CreatedByUser != nil {
+		status.InitiatedBy = resp.CreatedByUser.Email
 	}
 	// DatasetFieldNames was removed from the API; omit from status.
 

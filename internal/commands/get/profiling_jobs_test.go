@@ -53,7 +53,7 @@ func sampleProfilingJobTiny() profiling.ProfilingJobTiny {
 		DatasetName:     "user_data",
 		SettingsModelID: 10,
 		State:           api.TrainingJobStateFinished,
-		Step:            api.TrainingJobStepFinished,
+		Step:            api.Finished,
 		UpdatedAt:       updatedAt,
 	}
 }
@@ -67,7 +67,7 @@ func sampleProfilingJobTiny2() profiling.ProfilingJobTiny {
 		DatasetName:     "product_catalog",
 		SettingsModelID: 20,
 		State:           api.TrainingJobStateRunning,
-		Step:            api.TrainingJobStepAnalysis,
+		Step:            api.Analysis,
 		UpdatedAt:       updatedAt,
 	}
 }

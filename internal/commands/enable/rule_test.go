@@ -52,7 +52,7 @@ func sampleRuleRevisionTiny() rule_versions.RuleRevisionTiny {
 		IsBuiltin:        false,
 		IsCaf:            false,
 		Description:      &description,
-		InteractsWithColumns: []string{"email"},
+		AffectedColumns: []string{"email"},
 		CreatedAt:            createdAt,
 		UpdatedAt:            updatedAt,
 		UpgradeAvailable:     &upgradeAvailable,

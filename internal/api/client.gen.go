@@ -120,6 +120,7 @@ const (
 	AlertActionRerunTraining                                           AlertAction = "rerun_training"
 	AlertActionResolveSniffHeader                                      AlertAction = "resolve_sniff_header"
 	AlertActionReviewMigrationAgain                                    AlertAction = "review_migration_again"
+	AlertActionSetFileType                                             AlertAction = "set_file_type"
 	AlertActionSetValueToFalse                                         AlertAction = "set_value_to_false"
 	AlertActionSetValueToFalseForField                                 AlertAction = "set_value_to_false_for_field"
 	AlertActionSetValueToFalseForFieldForSource                        AlertAction = "set_value_to_false_for_field_for_source"
@@ -131,6 +132,7 @@ const (
 	AlertActionTryAgain                                                AlertAction = "try_again"
 	AlertActionUpdateConfigsToRecommendedValue                         AlertAction = "update_configs_to_recommended_value"
 	AlertActionUpdateRuleParam                                         AlertAction = "update_rule_param"
+	AlertActionUploadFileAgain                                         AlertAction = "upload_file_again"
 	AlertActionValidationAddANewKeyword                                AlertAction = "validation_add_a_new_keyword"
 	AlertActionValidationAddANewKeywordMapValue                        AlertAction = "validation_add_a_new_keyword__map_value"
 	AlertActionValidationAddANewKeywordMapValueForField                AlertAction = "validation_add_a_new_keyword__map_value_for_field"
@@ -259,7 +261,7 @@ const (
 	AlertTypeUnknownMassUnit                     AlertType = "unknown_mass_unit"
 	AlertTypeUnknownMaterialPhase                AlertType = "unknown_material_phase"
 	AlertTypeUnknownProductCategory              AlertType = "unknown_product_category"
-	AlertTypeUnknownTempratureUnit               AlertType = "unknown_temprature_unit"
+	AlertTypeUnknownTemperatureUnit              AlertType = "unknown_temperature_unit"
 	AlertTypeUnknownTimeUnit                     AlertType = "unknown_time_unit"
 	AlertTypeUnknownUsDistrict                   AlertType = "unknown_us_district"
 	AlertTypeUnknownUsState                      AlertType = "unknown_us_state"
@@ -435,6 +437,22 @@ const (
 	DataSourceTypeSimpleURL DataSourceType = "simple_url"
 )
 
+// Defines values for DatasetFieldKindOrderBy.
+const (
+	DatasetFieldKindOrderByCreatedAt DatasetFieldKindOrderBy = "created_at"
+	DatasetFieldKindOrderByName      DatasetFieldKindOrderBy = "name"
+	DatasetFieldKindOrderBySlug      DatasetFieldKindOrderBy = "slug"
+	DatasetFieldKindOrderByUpdatedAt DatasetFieldKindOrderBy = "updated_at"
+)
+
+// Defines values for DatasetKindOrderBy.
+const (
+	DatasetKindOrderByCreatedAt DatasetKindOrderBy = "created_at"
+	DatasetKindOrderByName      DatasetKindOrderBy = "name"
+	DatasetKindOrderBySlug      DatasetKindOrderBy = "slug"
+	DatasetKindOrderByUpdatedAt DatasetKindOrderBy = "updated_at"
+)
+
 // Defines values for DatasetRuleOrderBy.
 const (
 	DatasetRuleOrderByCreatedAt    DatasetRuleOrderBy = "created_at"
@@ -446,6 +464,7 @@ const (
 
 // Defines values for DatasetRuleState.
 const (
+	DatasetRuleStateDeleted           DatasetRuleState = "deleted"
 	DatasetRuleStateDisabled          DatasetRuleState = "disabled"
 	DatasetRuleStateEnabled           DatasetRuleState = "enabled"
 	DatasetRuleStatePendingValidation DatasetRuleState = "pending_validation"
@@ -492,9 +511,9 @@ const (
 
 // Defines values for FieldNameResolutionOperator.
 const (
-	Delete FieldNameResolutionOperator = "delete"
-	Map    FieldNameResolutionOperator = "map"
-	New    FieldNameResolutionOperator = "new"
+	FieldNameResolutionOperatorDelete FieldNameResolutionOperator = "delete"
+	FieldNameResolutionOperatorMap    FieldNameResolutionOperator = "map"
+	FieldNameResolutionOperatorNew    FieldNameResolutionOperator = "new"
 )
 
 // Defines values for FieldType.
@@ -536,12 +555,12 @@ const (
 
 // Defines values for FilterOperator.
 const (
-	Contains    FilterOperator = "contains"
-	Empty       FilterOperator = ""
-	Equals      FilterOperator = "equals"
-	GreaterThan FilterOperator = "greater_than"
-	LessThan    FilterOperator = "less_than"
-	NotEquals   FilterOperator = "not_equals"
+	FilterOperatorContains    FilterOperator = "contains"
+	FilterOperatorEmpty       FilterOperator = ""
+	FilterOperatorEquals      FilterOperator = "equals"
+	FilterOperatorGreaterThan FilterOperator = "greater_than"
+	FilterOperatorLessThan    FilterOperator = "less_than"
+	FilterOperatorNotEquals   FilterOperator = "not_equals"
 )
 
 // Defines values for FormFieldRenderType.
@@ -658,7 +677,7 @@ const (
 	UnknownMassUnit              IssueTypeEnum = "unknown_mass_unit"
 	UnknownMaterialPhase         IssueTypeEnum = "unknown_material_phase"
 	UnknownProductCategory       IssueTypeEnum = "unknown_product_category"
-	UnknownTempratureUnit        IssueTypeEnum = "unknown_temprature_unit"
+	UnknownTemperatureUnit       IssueTypeEnum = "unknown_temperature_unit"
 	UnknownTimeUnit              IssueTypeEnum = "unknown_time_unit"
 	UnknownUsDistrict            IssueTypeEnum = "unknown_us_district"
 	UnknownUsState               IssueTypeEnum = "unknown_us_state"
@@ -729,12 +748,12 @@ const (
 
 // Defines values for NotificationType.
 const (
-	NotificationTypeReviewAssigned   NotificationType = "review_assigned"
-	NotificationTypeReviewDecision   NotificationType = "review_decision"
-	NotificationTypeReviewMentioned  NotificationType = "review_mentioned"
-	NotificationTypeReviewRequested  NotificationType = "review_requested"
-	NotificationTypeRuleUpgrade      NotificationType = "rule_upgrade"
-	NotificationTypeValidationFailed NotificationType = "validation_failed"
+	ReviewAssigned   NotificationType = "review_assigned"
+	ReviewDecision   NotificationType = "review_decision"
+	ReviewMentioned  NotificationType = "review_mentioned"
+	ReviewRequested  NotificationType = "review_requested"
+	RuleUpgrade      NotificationType = "rule_upgrade"
+	ValidationFailed NotificationType = "validation_failed"
 )
 
 // Defines values for OrganizationOrderBy.
@@ -839,6 +858,7 @@ const (
 	RuleFamilyOrderByImpactScore RuleFamilyOrderBy = "impact_score"
 	RuleFamilyOrderByIsBuiltin   RuleFamilyOrderBy = "is_builtin"
 	RuleFamilyOrderByName        RuleFamilyOrderBy = "name"
+	RuleFamilyOrderBySlug        RuleFamilyOrderBy = "slug"
 )
 
 // Defines values for RuleRevisionOrderBy.
@@ -852,10 +872,10 @@ const (
 
 // Defines values for RuleState.
 const (
-	RuleStateDisabled RuleState = "disabled"
-	RuleStateDraft    RuleState = "draft"
-	RuleStateEnabled  RuleState = "enabled"
-	RuleStateInReview RuleState = "in_review"
+	Disabled RuleState = "disabled"
+	Draft    RuleState = "draft"
+	Enabled  RuleState = "enabled"
+	InReview RuleState = "in_review"
 )
 
 // Defines values for Scope.
@@ -863,6 +883,13 @@ const (
 	ScopeDataSourceModel Scope = "data_source_model"
 	ScopeDataset         Scope = "dataset"
 	ScopeStoredItem      Scope = "stored_item"
+)
+
+// Defines values for SearchMatchMode.
+const (
+	SearchMatchModeContains                SearchMatchMode = "contains"
+	SearchMatchModeContainsCaseInsensitive SearchMatchMode = "contains_case_insensitive"
+	SearchMatchModeRegex                   SearchMatchMode = "regex"
 )
 
 // Defines values for SettingsModules.
@@ -899,6 +926,27 @@ const (
 	StoredItemOrderByIgnoredRowsCount    StoredItemOrderBy = "ignored_rows_count"
 )
 
+// Defines values for SuggestionAction.
+const (
+	SuggestionActionCreate SuggestionAction = "create"
+	SuggestionActionDelete SuggestionAction = "delete"
+	SuggestionActionUpdate SuggestionAction = "update"
+)
+
+// Defines values for SuggestionSource.
+const (
+	Periodic  SuggestionSource = "periodic"
+	Profiling SuggestionSource = "profiling"
+	User      SuggestionSource = "user"
+)
+
+// Defines values for SuggestionState.
+const (
+	SuggestionStateApplied   SuggestionState = "applied"
+	SuggestionStateDismissed SuggestionState = "dismissed"
+	SuggestionStatePending   SuggestionState = "pending"
+)
+
 // Defines values for TrainingJobOrderBy.
 const (
 	TrainingJobOrderByDatasetID       TrainingJobOrderBy = "dataset_id"
@@ -930,10 +978,10 @@ const (
 
 // Defines values for TrainingJobStep.
 const (
-	TrainingJobStepAnalysis TrainingJobStep = "analysis"
-	TrainingJobStepCombine  TrainingJobStep = "combine"
-	TrainingJobStepFinished TrainingJobStep = "finished"
-	TrainingJobStepMigrate  TrainingJobStep = "migrate"
+	Analysis TrainingJobStep = "analysis"
+	Combine  TrainingJobStep = "combine"
+	Finished TrainingJobStep = "finished"
+	Migrate  TrainingJobStep = "migrate"
 )
 
 // Defines values for UserOrderBy.
@@ -1183,7 +1231,8 @@ type AlertResolveResponseSchema struct {
 	RedirectPostSubmitTo *string `json:"redirect_post_submit_to"`
 
 	// ShouldRefreshPostSubmit Refresh the current alert page if true.
-	ShouldRefreshPostSubmit *bool `json:"should_refresh_post_submit,omitempty"`
+	ShouldRefreshPostSubmit *bool                `json:"should_refresh_post_submit,omitempty"`
+	StoredItemURL           *StoredItemURLSchema `json:"stored_item_url,omitempty"`
 }
 
 // AlertResolveSchema defines model for AlertResolveSchema.
@@ -1199,6 +1248,7 @@ type AlertResolveSchema struct {
 
 	// FieldNamesResolution What to do when we run to field names we have not seen before?
 	FieldNamesResolution *[]FieldNameResolutionParams `json:"field_names_resolution"`
+	FileType             *FileTypes                   `json:"file_type,omitempty"`
 
 	// Ids Instead of initial_signatures, you can pass ids
 	Ids *[]int `json:"ids"`
@@ -1257,9 +1307,13 @@ type AlertSchema struct {
 	DataSourceModelID *int       `json:"data_source_model_id"`
 
 	// DataSourceModelName The name of the data source associated with this alert
-	DataSourceModelName *string `json:"data_source_model_name"`
-	DatasetID           int     `json:"dataset_id"`
-	DatasetName         string  `json:"dataset_name"`
+	DataSourceModelName *string             `json:"data_source_model_name"`
+	DatasetID           int                 `json:"dataset_id"`
+	DatasetName         string              `json:"dataset_name"`
+	DatasetRuleID       *openapi_types.UUID `json:"dataset_rule_id"`
+
+	// DatasetRuleName Name of the dataset rule
+	DatasetRuleName *string `json:"dataset_rule_name"`
 
 	// DependentAlert Information about an alert that must be resolved before the current alert can be resolved.
 	DependentAlert *DependentAlertSchema `json:"dependent_alert,omitempty"`
@@ -1687,6 +1741,34 @@ type BulkDatasetPatchResponseSchema struct {
 	Results []UserTrackedDatasetResponseSchema `json:"results"`
 }
 
+// BulkDismissSuggestionRequest defines model for BulkDismissSuggestionRequest.
+type BulkDismissSuggestionRequest struct {
+	// Action What rule change the suggestion proposes.
+	Action        *SuggestionAction `json:"action,omitempty"`
+	DismissFamily *bool             `json:"dismiss_family,omitempty"`
+
+	// Source How the suggestion was generated.
+	Source        *SuggestionSource     `json:"source,omitempty"`
+	SuggestionIds *[]openapi_types.UUID `json:"suggestion_ids"`
+}
+
+// BulkSuggestionRequest defines model for BulkSuggestionRequest.
+type BulkSuggestionRequest struct {
+	// Action What rule change the suggestion proposes.
+	Action *SuggestionAction `json:"action,omitempty"`
+
+	// Source How the suggestion was generated.
+	Source        *SuggestionSource     `json:"source,omitempty"`
+	SuggestionIds *[]openapi_types.UUID `json:"suggestion_ids"`
+}
+
+// BulkSuggestionResultSchema defines model for BulkSuggestionResultSchema.
+type BulkSuggestionResultSchema struct {
+	Errors    []string `json:"errors"`
+	Processed int      `json:"processed"`
+	Skipped   int      `json:"skipped"`
+}
+
 // CLIExchangeRequest Request body for CLI token exchange endpoint.
 type CLIExchangeRequest struct {
 	// AccessToken Kinde access_token from device flow
@@ -1875,6 +1957,9 @@ type DataSchema struct {
 	// Fields The header fields.
 	Fields []string `json:"fields"`
 
+	// Labels The header fields in human friendly form. When None means there was no label for that field.
+	Labels []string `json:"labels"`
+
 	// Results The array of rows of results.
 	Results [][]interface{} `json:"results"`
 
@@ -1937,6 +2022,7 @@ type DataSetPatchRequestSchema struct {
 	MaxRetryCount                                   *int                    `json:"max_retry_count"`
 	MaxTriesToFixJSON                               *int                    `json:"max_tries_to_fix_json"`
 	MigrationPolicy                                 *MigrationPolicy        `json:"migration_policy,omitempty"`
+	ModelLabels                                     *map[string]string      `json:"model_labels"`
 	Name                                            *string                 `json:"name"`
 	NotAnomaliesPerColumn                           *map[string]interface{} `json:"not_anomalies_per_column"`
 	OrganizationID                                  *openapi_types.UUID     `json:"organization_id"`
@@ -1973,6 +2059,7 @@ type DataSetPostRequestSchema struct {
 	MaxRetryCount                                   *int                    `json:"max_retry_count"`
 	MaxTriesToFixJSON                               *int                    `json:"max_tries_to_fix_json"`
 	MigrationPolicy                                 *MigrationPolicy        `json:"migration_policy,omitempty"`
+	ModelLabels                                     *map[string]string      `json:"model_labels"`
 	Name                                            string                  `json:"name"`
 	NotAnomaliesPerColumn                           *map[string]interface{} `json:"not_anomalies_per_column"`
 	OrganizationID                                  *openapi_types.UUID     `json:"organization_id"`
@@ -2052,6 +2139,9 @@ type DataSetSchemaFull struct {
 	// MaxTriesToFixJSON Max number of times to try fixing a JSON value that can't be opened.
 	MaxTriesToFixJSON int             `json:"max_tries_to_fix_json"`
 	MigrationPolicy   MigrationPolicy `json:"migration_policy"`
+
+	// ModelLabels field names to human friendly field names
+	ModelLabels *map[string]string `json:"model_labels,omitempty"`
 
 	// Name Table name for display purposes.
 	Name string `json:"name"`
@@ -2149,6 +2239,9 @@ type DataSetSchemaFullDraft struct {
 	// MaxTriesToFixJSON Max number of times to try fixing a JSON value that can't be opened.
 	MaxTriesToFixJSON int             `json:"max_tries_to_fix_json"`
 	MigrationPolicy   MigrationPolicy `json:"migration_policy"`
+
+	// ModelLabels field names to human friendly field names
+	ModelLabels *map[string]string `json:"model_labels,omitempty"`
 
 	// Name Table name for display purposes.
 	Name string `json:"name"`
@@ -2443,7 +2536,6 @@ type DataSourceModelAllOptionalSchema struct {
 	NullValuesOverride                                   *[]string                     `json:"null_values_override"`
 	NullValuesPerColumnOverride                          *map[string][]string          `json:"null_values_per_column_override"`
 	Pattern                                              *string                       `json:"pattern"`
-	QuarantineRowIfRowLevelIssueOverride                 *bool                         `json:"quarantine_row_if_row_level_issue_override"`
 	RawHeaders                                           *[]string                     `json:"raw_headers"`
 	RedirectPostSubmitTo                                 *string                       `json:"redirect_post_submit_to"`
 	S3AccessKey                                          *string                       `json:"s3_access_key"`
@@ -2475,18 +2567,33 @@ type DataSourceModelAllOptionalSchema struct {
 
 // DataSourceModelFullSchema defines model for DataSourceModelFullSchema.
 type DataSourceModelFullSchema struct {
-	ArchivePattern                string               `json:"archive_pattern"`
-	ArrayDelimitersOverride       *[]string            `json:"array_delimiters_override"`
-	BadRowsCount                  *int                 `json:"bad_rows_count"`
-	BooleanFalseOverride          *[]string            `json:"boolean_false_override"`
+	// ArchivePattern The regex pattern of the file to look for inside an archive file. For example, if we see a myfile.zip and it contains multiple files inside it, you can use this to select ONE file within the zip file. Only one file will be ingested. If no pattern is specified, the first file found in the file is ingested.
+	ArchivePattern string `json:"archive_pattern"`
+
+	// ArrayDelimitersOverride The list of any possible delimiters for separating array elements in a column. It is very common for a list of URLS to be in a single cell in the csv file. The elements then are separated using one of these delimiters.
+	ArrayDelimitersOverride *[]string `json:"array_delimiters_override"`
+
+	// BadRowsCount Bad rows count.
+	BadRowsCount *int `json:"bad_rows_count"`
+
+	// BooleanFalseOverride Any string that should be considered boolean False
+	BooleanFalseOverride *[]string `json:"boolean_false_override"`
+
+	// BooleanFalsePerColumnOverride Boolean false per column override
 	BooleanFalsePerColumnOverride *map[string][]string `json:"boolean_false_per_column_override"`
-	BooleanTrueOverride           *[]string            `json:"boolean_true_override"`
-	BooleanTruePerColumnOverride  *map[string][]string `json:"boolean_true_per_column_override"`
+
+	// BooleanTrueOverride Any string that should be considered boolean True
+	BooleanTrueOverride *[]string `json:"boolean_true_override"`
+
+	// BooleanTruePerColumnOverride Boolean true per column override of {obj} cloud source
+	BooleanTruePerColumnOverride *map[string][]string `json:"boolean_true_per_column_override"`
 
 	// ChunkSizeToReadForHeader Chunk size of the file to read in bytes to sniff the header.
-	ChunkSizeToReadForHeader int       `json:"chunk_size_to_read_for_header"`
-	ConnectionTimeout        int       `json:"connection_timeout"`
-	CreatedAt                time.Time `json:"created_at"`
+	ChunkSizeToReadForHeader int `json:"chunk_size_to_read_for_header"`
+
+	// ConnectionTimeout Connection Timeout in seconds.
+	ConnectionTimeout int       `json:"connection_timeout"`
+	CreatedAt         time.Time `json:"created_at"`
 
 	// CsvDelimiter The explicit delimiter character for CSVs. Leave it empty so it is auto-detected. You will usually want to populate this if the auto detection fails.
 	CsvDelimiter *string `json:"csv_delimiter"`
@@ -2495,99 +2602,205 @@ type DataSourceModelFullSchema struct {
 	CsvEscapechar *string `json:"csv_escapechar"`
 
 	// CsvQuotechar The explicit quote character for CSVs. Leave it empty so it is auto-detected. You will usually want to populate this if the auto detection fails.
-	CsvQuotechar                      *string              `json:"csv_quotechar"`
-	DataSourceType                    DataSourceType       `json:"data_source_type"`
-	DatasetID                         int                  `json:"dataset_id"`
-	DatasetName                       string               `json:"dataset_name"`
-	DatetimeAllowedCharactersOverride *string              `json:"datetime_allowed_characters_override"`
-	DatetimeFormatsOverride           *[]string            `json:"datetime_formats_override"`
-	DatetimeFormatsPerColumnOverride  *map[string][]string `json:"datetime_formats_per_column_override"`
-	DeleteSourceFileAfterBackup       bool                 `json:"delete_source_file_after_backup"`
+	CsvQuotechar   *string        `json:"csv_quotechar"`
+	DataSourceType DataSourceType `json:"data_source_type"`
+	DatasetID      int            `json:"dataset_id"`
+	DatasetName    string         `json:"dataset_name"`
+
+	// DatetimeAllowedCharactersOverride Special characters that are allowed in a DateTime field. These characters are used to evaluate then that string value can be a DateTime value.
+	DatetimeAllowedCharactersOverride *string `json:"datetime_allowed_characters_override"`
+
+	// DatetimeFormatsOverride The list of any possible DateTime formats in all your training CSVs.
+	DatetimeFormatsOverride *[]string `json:"datetime_formats_override"`
+
+	// DatetimeFormatsPerColumnOverride Date formats per field name.
+	DatetimeFormatsPerColumnOverride *map[string][]string `json:"datetime_formats_per_column_override"`
+
+	// DeleteSourceFileAfterBackup If true will try to delete the source file once it is pulled. It doesn't affect the cloud source type of Qluster UI. But for example, if we pull a file from a SFTP folder, we will try to delete it.
+	DeleteSourceFileAfterBackup *bool `json:"delete_source_file_after_backup,omitempty"`
 
 	// DeletedLineSignaturesOverride Delete these rows of data when they appear on this cloud source.
-	DeletedLineSignaturesOverride   *[]string          `json:"deleted_line_signatures_override"`
-	DropboxAccessToken              *string            `json:"dropbox_access_token,omitempty"`
-	DropboxFolder                   string             `json:"dropbox_folder"`
-	EncodingProbably                string             `json:"encoding_probably"`
-	ExcelSheetName                  string             `json:"excel_sheet_name"`
+	DeletedLineSignaturesOverride *[]string `json:"deleted_line_signatures_override"`
+
+	// DropboxAccessToken Dropbox access token for this cloud source.
+	DropboxAccessToken *string `json:"dropbox_access_token,omitempty"`
+
+	// DropboxFolder The folder on Dropbox to look for files.
+	DropboxFolder string `json:"dropbox_folder"`
+
+	// EncodingProbably The most likely encoding of the file once it is decompressed/decrypted.
+	EncodingProbably string `json:"encoding_probably"`
+
+	// ExcelSheetName The explicit sheet name to ingest. If not specified, when it comes to Excel files, Qluster will automatically load the open sheet when the file is saved. Regarding Google Sheets, if this parameter is not specified, the first sheet will be imported.
+	ExcelSheetName string `json:"excel_sheet_name"`
+
+	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
+
+	// FieldNamePartConversionOverride words in the field name that need to be replaced by another word.
 	FieldNamePartConversionOverride *map[string]string `json:"field_name_part_conversion_override"`
 
 	// FieldsToExpandOverride Expand nested data at these column names to flatten the data structure. For example, if a row looks like {"key1": {"a": 1, "b": 2}}, using ["key"] for expanding will transform the row into {"a": 1, "b": 2}
-	FieldsToExpandOverride                               *[]string            `json:"fields_to_expand_override"`
-	FilePassword                                         *string              `json:"file_password,omitempty"`
-	GpgPassphrase                                        *string              `json:"gpg_passphrase,omitempty"`
-	GpgPrivateKey                                        *string              `json:"gpg_private_key,omitempty"`
-	GsBucket                                             string               `json:"gs_bucket"`
-	GsPrefix                                             string               `json:"gs_prefix"`
-	GsServiceAccountKey                                  *string              `json:"gs_service_account_key,omitempty"`
-	ID                                                   int                  `json:"id"`
-	IdentifyHeaderByColumnNames                          []string             `json:"identify_header_by_column_names"`
-	IgnoreColumnIds                                      []string             `json:"ignore_column_ids"`
-	IgnoreColumnNamesOverride                            *[]string            `json:"ignore_column_names_override"`
-	IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride *[]string            `json:"ignore_lines_that_include_only_subset_of_characters_override"`
-	IgnoreLinesThatIncludeOnlySubsetOfWordsOverride      *[]string            `json:"ignore_lines_that_include_only_subset_of_words_override"`
-	IgnoreMatchersOverride                               *map[string][]string `json:"ignore_matchers_override"`
+	FieldsToExpandOverride *[]string `json:"fields_to_expand_override"`
+
+	// FilePassword The password to open the files from this cloud source. For example, a zip file password.
+	FilePassword *string `json:"file_password,omitempty"`
+
+	// GpgPassphrase GPG passphrase to open the GPG private key if any.
+	GpgPassphrase *string `json:"gpg_passphrase,omitempty"`
+
+	// GpgPrivateKey GPG private key needed to decrypt the source data if any.
+	GpgPrivateKey *string `json:"gpg_private_key,omitempty"`
+
+	// GsBucket The bucket name on Google Cloud Storage
+	GsBucket string `json:"gs_bucket"`
+
+	// GsPrefix Filter by this prefix on Google Cloud Storage. This is faster than running a regex pattern.
+	GsPrefix string `json:"gs_prefix"`
+
+	// GsServiceAccountKey Service Account Key for Google Cloud Storage.
+	GsServiceAccountKey *string `json:"gs_service_account_key,omitempty"`
+	ID                  int     `json:"id"`
+
+	// IdentifyHeaderByColumnNames If the first row of the sheet is not the headers row, and Qluster is failing to find the header row, you can use this list to define a subset of raw column names that can be used to find the row that has the headers. For example, if there are a few rows with descriptions and then on row X which includes column names like FirstName and LastName, you set this attribute to ['FirstName', 'LastName']
+	IdentifyHeaderByColumnNames []string `json:"identify_header_by_column_names"`
+
+	// IgnoreColumnIds Ignore Column Numbers. For example, ['1', '2'] means ignore the first 2 columns. Also you could use ['A', 'B'] like how the columns are named in MS Excel.
+	IgnoreColumnIds []string `json:"ignore_column_ids"`
+
+	// IgnoreColumnNamesOverride List of field names that need to be ignored.
+	IgnoreColumnNamesOverride *[]string `json:"ignore_column_names_override"`
+
+	// IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride Ignore lines that only include these characters
+	IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride *[]string `json:"ignore_lines_that_include_only_subset_of_characters_override"`
+
+	// IgnoreLinesThatIncludeOnlySubsetOfWordsOverride Ignore lines that only include these strings. Note that the line may include numbers and it will still be ignored.
+	IgnoreLinesThatIncludeOnlySubsetOfWordsOverride *[]string `json:"ignore_lines_that_include_only_subset_of_words_override"`
+
+	// IgnoreMatchersOverride The matchers to be ignored per field name during the stats collection. For example {'field1': [DateTimeMatcher]}
+	IgnoreMatchersOverride *map[string][]string `json:"ignore_matchers_override"`
 
 	// InferDatetimeForColumnsOverride List of field names that we only infer the DateTime from them instead of using explicit DateTime formats. This list is added to the list for the dataset.
 	InferDatetimeForColumnsOverride *[]string `json:"infer_datetime_for_columns_override"`
 
 	// InferDatetimeOverride Infer the DateTime in any DateTime column in the source.
-	InferDatetimeOverride                 *bool                    `json:"infer_datetime_override"`
-	IngestionJobsList                     *IngestionJobsListSchema `json:"ingestion_jobs_list,omitempty"`
-	InternalID                            string                   `json:"internal_id"`
-	Name                                  string                   `json:"name"`
-	NullValuesOverride                    *[]string                `json:"null_values_override"`
-	NullValuesPerColumnOverride           *map[string][]string     `json:"null_values_per_column_override"`
-	Pattern                               string                   `json:"pattern"`
-	QuarantineRowIfRowLevelIssueOverride  *bool                    `json:"quarantine_row_if_row_level_issue_override"`
-	RawHeaders                            []string                 `json:"raw_headers"`
-	RedirectPostSubmitTo                  *string                  `json:"redirect_post_submit_to"`
-	S3AccessKey                           string                   `json:"s3_access_key"`
-	S3Bucket                              string                   `json:"s3_bucket"`
-	S3DefaultBufferSize                   int                      `json:"s3_default_buffer_size"`
-	S3EndpointURL                         string                   `json:"s3_endpoint_url"`
-	S3Prefix                              string                   `json:"s3_prefix"`
-	S3RegionName                          string                   `json:"s3_region_name"`
-	S3SecretKey                           *string                  `json:"s3_secret_key,omitempty"`
-	Schedule                              *string                  `json:"schedule"`
-	SettingsModelID                       int                      `json:"settings_model_id"`
-	SftpFolder                            string                   `json:"sftp_folder"`
-	SftpHost                              string                   `json:"sftp_host"`
-	SftpPassword                          *string                  `json:"sftp_password,omitempty"`
-	SftpPort                              int                      `json:"sftp_port"`
-	SftpSSHKey                            *string                  `json:"sftp_ssh_key,omitempty"`
-	SftpSSHKeyPassphrase                  *string                  `json:"sftp_ssh_key_passphrase,omitempty"`
-	SftpUser                              string                   `json:"sftp_user"`
-	ShouldReprocessOverride               *bool                    `json:"should_reprocess_override"`
-	SimpleURL                             string                   `json:"simple_url"`
-	State                                 DataSourceState          `json:"state"`
-	TrimStringInsteadOfRaisingErrOverride *bool                    `json:"trim_string_instead_of_raising_err_override"`
-	UseTextInsteadOfStringOverride        *bool                    `json:"use_text_instead_of_string_override"`
+	InferDatetimeOverride *bool                    `json:"infer_datetime_override"`
+	IngestionJobsList     *IngestionJobsListSchema `json:"ingestion_jobs_list,omitempty"`
+	InternalID            string                   `json:"internal_id"`
+	Name                  string                   `json:"name"`
+
+	// NullValuesOverride Any string that should be considered null
+	NullValuesOverride *[]string `json:"null_values_override"`
+
+	// NullValuesPerColumnOverride Null values for specific columns. Usually bad values for a specific column go here.
+	NullValuesPerColumnOverride *map[string][]string `json:"null_values_per_column_override"`
+
+	// Pattern The regex pattern of the file to look for.
+	Pattern string `json:"pattern"`
+
+	// RawHeaders Provide raw headers ONLY if the sheet does not have any column names. Example: ['FirstName', 'LastName']
+	RawHeaders           []string `json:"raw_headers"`
+	RedirectPostSubmitTo *string  `json:"redirect_post_submit_to"`
+
+	// S3AccessKey S3 access key
+	S3AccessKey string `json:"s3_access_key"`
+
+	// S3Bucket The bucket name on S3.
+	S3Bucket string `json:"s3_bucket"`
+
+	// S3DefaultBufferSize The buffer bytes count to use when performing I/O.
+	S3DefaultBufferSize int `json:"s3_default_buffer_size"`
+
+	// S3EndpointURL S3 endpoint is only used for Minio type of S3.
+	S3EndpointURL string `json:"s3_endpoint_url"`
+
+	// S3Prefix filter by this prefix on S3. This is faster than running a regex to find the files.
+	S3Prefix string `json:"s3_prefix"`
+
+	// S3RegionName S3 region name.
+	S3RegionName string `json:"s3_region_name"`
+
+	// S3SecretKey S3 secret key
+	S3SecretKey *string `json:"s3_secret_key,omitempty"`
+
+	// Schedule Cron schedule to run this source. If the schedule is not set, we pull data from the source when the user asks for it.
+	Schedule        *string `json:"schedule"`
+	SettingsModelID int     `json:"settings_model_id"`
+
+	// SftpFolder The folder on the SFTP server to look for files.
+	SftpFolder string `json:"sftp_folder"`
+
+	// SftpHost host of the SFTP cloud source.
+	SftpHost string `json:"sftp_host"`
+
+	// SftpPassword password of source.
+	SftpPassword *string `json:"sftp_password,omitempty"`
+
+	// SftpPort sftp port.
+	SftpPort int `json:"sftp_port"`
+
+	// SftpSSHKey SSH key to login to this SFTP cloud source if any needed.
+	SftpSSHKey *string `json:"sftp_ssh_key,omitempty"`
+
+	// SftpSSHKeyPassphrase SSH key passphrase for this cloud source.
+	SftpSSHKeyPassphrase *string `json:"sftp_ssh_key_passphrase,omitempty"`
+
+	// SftpUser username of SFTP cloud source.
+	SftpUser string `json:"sftp_user"`
+
+	// ShouldReprocessOverride Once we see a file that had been processed before, should we reprocess it or not. The recommended value is false.
+	ShouldReprocessOverride *bool `json:"should_reprocess_override"`
+
+	// SimpleURL A direct url to download the file from. It should be a URL that immediately leads to downloading the file if you put it in your browser.
+	SimpleURL string          `json:"simple_url"`
+	State     DataSourceState `json:"state"`
+
+	// TrimStringInsteadOfRaisingErrOverride If true, for string fields that have specific character limits, we trim the string before inserting to the database. Otherwise it may raise an error which will put the file up for learning.
+	TrimStringInsteadOfRaisingErrOverride *bool `json:"trim_string_instead_of_raising_err_override"`
+
+	// UseTextInsteadOfStringOverride When true it always uses text type of field instead of varchar even if the strings lengths are shorter than 255 in the sample data.
+	UseTextInsteadOfStringOverride *bool `json:"use_text_instead_of_string_override"`
 
 	// ValueMappingOverride When a value needs to be mapped to another value. Example: {'20B0': '2020', 'carot': 'carrot'}
 	ValueMappingOverride *map[string]string `json:"value_mapping_override"`
 
 	// ValueMappingPerColumnOverride When a value of a field needs to be mapped to another value just for that field. Example: {"field1": {"20B0": "2020", "carot": "carrot"}}
 	ValueMappingPerColumnOverride *map[string]map[string]string `json:"value_mapping_per_column_override"`
-	VersionID                     int                           `json:"version_id"`
-	XlsDateModeOverride           *XLSDateMode                  `json:"xls_date_mode_override,omitempty"`
+
+	// VersionID Version ID is used for [optimistic concurrency model](https://en.wikipedia.org/wiki/Optimistic_concurrency_control).
+	VersionID           int          `json:"version_id"`
+	XlsDateModeOverride *XLSDateMode `json:"xls_date_mode_override,omitempty"`
 }
 
 // DataSourceModelFullSchemaDraft defines model for DataSourceModelFullSchemaDraft.
 type DataSourceModelFullSchemaDraft struct {
-	ArchivePattern                string               `json:"archive_pattern"`
-	ArrayDelimitersOverride       *[]string            `json:"array_delimiters_override"`
-	BadRowsCount                  *int                 `json:"bad_rows_count"`
-	BooleanFalseOverride          *[]string            `json:"boolean_false_override"`
+	// ArchivePattern The regex pattern of the file to look for inside an archive file. For example, if we see a myfile.zip and it contains multiple files inside it, you can use this to select ONE file within the zip file. Only one file will be ingested. If no pattern is specified, the first file found in the file is ingested.
+	ArchivePattern string `json:"archive_pattern"`
+
+	// ArrayDelimitersOverride The list of any possible delimiters for separating array elements in a column. It is very common for a list of URLS to be in a single cell in the csv file. The elements then are separated using one of these delimiters.
+	ArrayDelimitersOverride *[]string `json:"array_delimiters_override"`
+
+	// BadRowsCount Bad rows count.
+	BadRowsCount *int `json:"bad_rows_count"`
+
+	// BooleanFalseOverride Any string that should be considered boolean False
+	BooleanFalseOverride *[]string `json:"boolean_false_override"`
+
+	// BooleanFalsePerColumnOverride Boolean false per column override
 	BooleanFalsePerColumnOverride *map[string][]string `json:"boolean_false_per_column_override"`
-	BooleanTrueOverride           *[]string            `json:"boolean_true_override"`
-	BooleanTruePerColumnOverride  *map[string][]string `json:"boolean_true_per_column_override"`
+
+	// BooleanTrueOverride Any string that should be considered boolean True
+	BooleanTrueOverride *[]string `json:"boolean_true_override"`
+
+	// BooleanTruePerColumnOverride Boolean true per column override of {obj} cloud source
+	BooleanTruePerColumnOverride *map[string][]string `json:"boolean_true_per_column_override"`
 
 	// ChunkSizeToReadForHeader Chunk size of the file to read in bytes to sniff the header.
-	ChunkSizeToReadForHeader int        `json:"chunk_size_to_read_for_header"`
-	ConnectionTimeout        int        `json:"connection_timeout"`
-	CreatedAt                *time.Time `json:"created_at"`
+	ChunkSizeToReadForHeader int `json:"chunk_size_to_read_for_header"`
+
+	// ConnectionTimeout Connection Timeout in seconds.
+	ConnectionTimeout int        `json:"connection_timeout"`
+	CreatedAt         *time.Time `json:"created_at"`
 
 	// CsvDelimiter The explicit delimiter character for CSVs. Leave it empty so it is auto-detected. You will usually want to populate this if the auto detection fails.
 	CsvDelimiter *string `json:"csv_delimiter"`
@@ -2596,83 +2809,174 @@ type DataSourceModelFullSchemaDraft struct {
 	CsvEscapechar *string `json:"csv_escapechar"`
 
 	// CsvQuotechar The explicit quote character for CSVs. Leave it empty so it is auto-detected. You will usually want to populate this if the auto detection fails.
-	CsvQuotechar                      *string              `json:"csv_quotechar"`
-	DataSourceType                    DataSourceType       `json:"data_source_type"`
-	DatasetID                         int                  `json:"dataset_id"`
-	DatasetName                       string               `json:"dataset_name"`
-	DatetimeAllowedCharactersOverride *string              `json:"datetime_allowed_characters_override"`
-	DatetimeFormatsOverride           *[]string            `json:"datetime_formats_override"`
-	DatetimeFormatsPerColumnOverride  *map[string][]string `json:"datetime_formats_per_column_override"`
-	DeleteSourceFileAfterBackup       bool                 `json:"delete_source_file_after_backup"`
+	CsvQuotechar   *string        `json:"csv_quotechar"`
+	DataSourceType DataSourceType `json:"data_source_type"`
+	DatasetID      int            `json:"dataset_id"`
+	DatasetName    string         `json:"dataset_name"`
+
+	// DatetimeAllowedCharactersOverride Special characters that are allowed in a DateTime field. These characters are used to evaluate then that string value can be a DateTime value.
+	DatetimeAllowedCharactersOverride *string `json:"datetime_allowed_characters_override"`
+
+	// DatetimeFormatsOverride The list of any possible DateTime formats in all your training CSVs.
+	DatetimeFormatsOverride *[]string `json:"datetime_formats_override"`
+
+	// DatetimeFormatsPerColumnOverride Date formats per field name.
+	DatetimeFormatsPerColumnOverride *map[string][]string `json:"datetime_formats_per_column_override"`
+
+	// DeleteSourceFileAfterBackup If true will try to delete the source file once it is pulled. It doesn't affect the cloud source type of Qluster UI. But for example, if we pull a file from a SFTP folder, we will try to delete it.
+	DeleteSourceFileAfterBackup *bool `json:"delete_source_file_after_backup,omitempty"`
 
 	// DeletedLineSignaturesOverride Delete these rows of data when they appear on this cloud source.
-	DeletedLineSignaturesOverride   *[]string          `json:"deleted_line_signatures_override"`
-	DropboxAccessToken              *string            `json:"dropbox_access_token,omitempty"`
-	DropboxFolder                   string             `json:"dropbox_folder"`
-	EncodingProbably                string             `json:"encoding_probably"`
-	ExcelSheetName                  string             `json:"excel_sheet_name"`
+	DeletedLineSignaturesOverride *[]string `json:"deleted_line_signatures_override"`
+
+	// DropboxAccessToken Dropbox access token for this cloud source.
+	DropboxAccessToken *string `json:"dropbox_access_token,omitempty"`
+
+	// DropboxFolder The folder on Dropbox to look for files.
+	DropboxFolder string `json:"dropbox_folder"`
+
+	// EncodingProbably The most likely encoding of the file once it is decompressed/decrypted.
+	EncodingProbably string `json:"encoding_probably"`
+
+	// ExcelSheetName The explicit sheet name to ingest. If not specified, when it comes to Excel files, Qluster will automatically load the open sheet when the file is saved. Regarding Google Sheets, if this parameter is not specified, the first sheet will be imported.
+	ExcelSheetName string `json:"excel_sheet_name"`
+
+	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
+
+	// FieldNamePartConversionOverride words in the field name that need to be replaced by another word.
 	FieldNamePartConversionOverride *map[string]string `json:"field_name_part_conversion_override"`
 
 	// FieldsToExpandOverride Expand nested data at these column names to flatten the data structure. For example, if a row looks like {"key1": {"a": 1, "b": 2}}, using ["key"] for expanding will transform the row into {"a": 1, "b": 2}
-	FieldsToExpandOverride                               *[]string            `json:"fields_to_expand_override"`
-	FilePassword                                         *string              `json:"file_password,omitempty"`
-	GpgPassphrase                                        *string              `json:"gpg_passphrase,omitempty"`
-	GpgPrivateKey                                        *string              `json:"gpg_private_key,omitempty"`
-	GsBucket                                             string               `json:"gs_bucket"`
-	GsPrefix                                             string               `json:"gs_prefix"`
-	GsServiceAccountKey                                  *string              `json:"gs_service_account_key,omitempty"`
-	ID                                                   *int                 `json:"id"`
-	IdentifyHeaderByColumnNames                          []string             `json:"identify_header_by_column_names"`
-	IgnoreColumnIds                                      []string             `json:"ignore_column_ids"`
-	IgnoreColumnNamesOverride                            *[]string            `json:"ignore_column_names_override"`
-	IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride *[]string            `json:"ignore_lines_that_include_only_subset_of_characters_override"`
-	IgnoreLinesThatIncludeOnlySubsetOfWordsOverride      *[]string            `json:"ignore_lines_that_include_only_subset_of_words_override"`
-	IgnoreMatchersOverride                               *map[string][]string `json:"ignore_matchers_override"`
+	FieldsToExpandOverride *[]string `json:"fields_to_expand_override"`
+
+	// FilePassword The password to open the files from this cloud source. For example, a zip file password.
+	FilePassword *string `json:"file_password,omitempty"`
+
+	// GpgPassphrase GPG passphrase to open the GPG private key if any.
+	GpgPassphrase *string `json:"gpg_passphrase,omitempty"`
+
+	// GpgPrivateKey GPG private key needed to decrypt the source data if any.
+	GpgPrivateKey *string `json:"gpg_private_key,omitempty"`
+
+	// GsBucket The bucket name on Google Cloud Storage
+	GsBucket string `json:"gs_bucket"`
+
+	// GsPrefix Filter by this prefix on Google Cloud Storage. This is faster than running a regex pattern.
+	GsPrefix string `json:"gs_prefix"`
+
+	// GsServiceAccountKey Service Account Key for Google Cloud Storage.
+	GsServiceAccountKey *string `json:"gs_service_account_key,omitempty"`
+	ID                  *int    `json:"id"`
+
+	// IdentifyHeaderByColumnNames If the first row of the sheet is not the headers row, and Qluster is failing to find the header row, you can use this list to define a subset of raw column names that can be used to find the row that has the headers. For example, if there are a few rows with descriptions and then on row X which includes column names like FirstName and LastName, you set this attribute to ['FirstName', 'LastName']
+	IdentifyHeaderByColumnNames []string `json:"identify_header_by_column_names"`
+
+	// IgnoreColumnIds Ignore Column Numbers. For example, ['1', '2'] means ignore the first 2 columns. Also you could use ['A', 'B'] like how the columns are named in MS Excel.
+	IgnoreColumnIds []string `json:"ignore_column_ids"`
+
+	// IgnoreColumnNamesOverride List of field names that need to be ignored.
+	IgnoreColumnNamesOverride *[]string `json:"ignore_column_names_override"`
+
+	// IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride Ignore lines that only include these characters
+	IgnoreLinesThatIncludeOnlySubsetOfCharactersOverride *[]string `json:"ignore_lines_that_include_only_subset_of_characters_override"`
+
+	// IgnoreLinesThatIncludeOnlySubsetOfWordsOverride Ignore lines that only include these strings. Note that the line may include numbers and it will still be ignored.
+	IgnoreLinesThatIncludeOnlySubsetOfWordsOverride *[]string `json:"ignore_lines_that_include_only_subset_of_words_override"`
+
+	// IgnoreMatchersOverride The matchers to be ignored per field name during the stats collection. For example {'field1': [DateTimeMatcher]}
+	IgnoreMatchersOverride *map[string][]string `json:"ignore_matchers_override"`
 
 	// InferDatetimeForColumnsOverride List of field names that we only infer the DateTime from them instead of using explicit DateTime formats. This list is added to the list for the dataset.
 	InferDatetimeForColumnsOverride *[]string `json:"infer_datetime_for_columns_override"`
 
 	// InferDatetimeOverride Infer the DateTime in any DateTime column in the source.
-	InferDatetimeOverride                 *bool                    `json:"infer_datetime_override"`
-	IngestionJobsList                     *IngestionJobsListSchema `json:"ingestion_jobs_list,omitempty"`
-	InternalID                            string                   `json:"internal_id"`
-	Name                                  string                   `json:"name"`
-	NullValuesOverride                    *[]string                `json:"null_values_override"`
-	NullValuesPerColumnOverride           *map[string][]string     `json:"null_values_per_column_override"`
-	Pattern                               string                   `json:"pattern"`
-	QuarantineRowIfRowLevelIssueOverride  *bool                    `json:"quarantine_row_if_row_level_issue_override"`
-	RawHeaders                            []string                 `json:"raw_headers"`
-	RedirectPostSubmitTo                  *string                  `json:"redirect_post_submit_to"`
-	S3AccessKey                           string                   `json:"s3_access_key"`
-	S3Bucket                              string                   `json:"s3_bucket"`
-	S3DefaultBufferSize                   int                      `json:"s3_default_buffer_size"`
-	S3EndpointURL                         string                   `json:"s3_endpoint_url"`
-	S3Prefix                              string                   `json:"s3_prefix"`
-	S3RegionName                          string                   `json:"s3_region_name"`
-	S3SecretKey                           *string                  `json:"s3_secret_key,omitempty"`
-	Schedule                              *string                  `json:"schedule"`
-	SettingsModelID                       int                      `json:"settings_model_id"`
-	SftpFolder                            string                   `json:"sftp_folder"`
-	SftpHost                              string                   `json:"sftp_host"`
-	SftpPassword                          *string                  `json:"sftp_password,omitempty"`
-	SftpPort                              int                      `json:"sftp_port"`
-	SftpSSHKey                            *string                  `json:"sftp_ssh_key,omitempty"`
-	SftpSSHKeyPassphrase                  *string                  `json:"sftp_ssh_key_passphrase,omitempty"`
-	SftpUser                              string                   `json:"sftp_user"`
-	ShouldReprocessOverride               *bool                    `json:"should_reprocess_override"`
-	SimpleURL                             string                   `json:"simple_url"`
-	State                                 DataSourceState          `json:"state"`
-	TrimStringInsteadOfRaisingErrOverride *bool                    `json:"trim_string_instead_of_raising_err_override"`
-	UseTextInsteadOfStringOverride        *bool                    `json:"use_text_instead_of_string_override"`
+	InferDatetimeOverride *bool                    `json:"infer_datetime_override"`
+	IngestionJobsList     *IngestionJobsListSchema `json:"ingestion_jobs_list,omitempty"`
+	InternalID            string                   `json:"internal_id"`
+	Name                  string                   `json:"name"`
+
+	// NullValuesOverride Any string that should be considered null
+	NullValuesOverride *[]string `json:"null_values_override"`
+
+	// NullValuesPerColumnOverride Null values for specific columns. Usually bad values for a specific column go here.
+	NullValuesPerColumnOverride *map[string][]string `json:"null_values_per_column_override"`
+
+	// Pattern The regex pattern of the file to look for.
+	Pattern string `json:"pattern"`
+
+	// RawHeaders Provide raw headers ONLY if the sheet does not have any column names. Example: ['FirstName', 'LastName']
+	RawHeaders           []string `json:"raw_headers"`
+	RedirectPostSubmitTo *string  `json:"redirect_post_submit_to"`
+
+	// S3AccessKey S3 access key
+	S3AccessKey string `json:"s3_access_key"`
+
+	// S3Bucket The bucket name on S3.
+	S3Bucket string `json:"s3_bucket"`
+
+	// S3DefaultBufferSize The buffer bytes count to use when performing I/O.
+	S3DefaultBufferSize int `json:"s3_default_buffer_size"`
+
+	// S3EndpointURL S3 endpoint is only used for Minio type of S3.
+	S3EndpointURL string `json:"s3_endpoint_url"`
+
+	// S3Prefix filter by this prefix on S3. This is faster than running a regex to find the files.
+	S3Prefix string `json:"s3_prefix"`
+
+	// S3RegionName S3 region name.
+	S3RegionName string `json:"s3_region_name"`
+
+	// S3SecretKey S3 secret key
+	S3SecretKey *string `json:"s3_secret_key,omitempty"`
+
+	// Schedule Cron schedule to run this source. If the schedule is not set, we pull data from the source when the user asks for it.
+	Schedule        *string `json:"schedule"`
+	SettingsModelID int     `json:"settings_model_id"`
+
+	// SftpFolder The folder on the SFTP server to look for files.
+	SftpFolder string `json:"sftp_folder"`
+
+	// SftpHost host of the SFTP cloud source.
+	SftpHost string `json:"sftp_host"`
+
+	// SftpPassword password of source.
+	SftpPassword *string `json:"sftp_password,omitempty"`
+
+	// SftpPort sftp port.
+	SftpPort int `json:"sftp_port"`
+
+	// SftpSSHKey SSH key to login to this SFTP cloud source if any needed.
+	SftpSSHKey *string `json:"sftp_ssh_key,omitempty"`
+
+	// SftpSSHKeyPassphrase SSH key passphrase for this cloud source.
+	SftpSSHKeyPassphrase *string `json:"sftp_ssh_key_passphrase,omitempty"`
+
+	// SftpUser username of SFTP cloud source.
+	SftpUser string `json:"sftp_user"`
+
+	// ShouldReprocessOverride Once we see a file that had been processed before, should we reprocess it or not. The recommended value is false.
+	ShouldReprocessOverride *bool `json:"should_reprocess_override"`
+
+	// SimpleURL A direct url to download the file from. It should be a URL that immediately leads to downloading the file if you put it in your browser.
+	SimpleURL string          `json:"simple_url"`
+	State     DataSourceState `json:"state"`
+
+	// TrimStringInsteadOfRaisingErrOverride If true, for string fields that have specific character limits, we trim the string before inserting to the database. Otherwise it may raise an error which will put the file up for learning.
+	TrimStringInsteadOfRaisingErrOverride *bool `json:"trim_string_instead_of_raising_err_override"`
+
+	// UseTextInsteadOfStringOverride When true it always uses text type of field instead of varchar even if the strings lengths are shorter than 255 in the sample data.
+	UseTextInsteadOfStringOverride *bool `json:"use_text_instead_of_string_override"`
 
 	// ValueMappingOverride When a value needs to be mapped to another value. Example: {'20B0': '2020', 'carot': 'carrot'}
 	ValueMappingOverride *map[string]string `json:"value_mapping_override"`
 
 	// ValueMappingPerColumnOverride When a value of a field needs to be mapped to another value just for that field. Example: {"field1": {"20B0": "2020", "carot": "carrot"}}
 	ValueMappingPerColumnOverride *map[string]map[string]string `json:"value_mapping_per_column_override"`
-	VersionID                     int                           `json:"version_id"`
-	XlsDateModeOverride           *XLSDateMode                  `json:"xls_date_mode_override,omitempty"`
+
+	// VersionID Version ID is used for [optimistic concurrency model](https://en.wikipedia.org/wiki/Optimistic_concurrency_control).
+	VersionID           int          `json:"version_id"`
+	XlsDateModeOverride *XLSDateMode `json:"xls_date_mode_override,omitempty"`
 }
 
 // DataSourceModelListSchema defines model for DataSourceModelListSchema.
@@ -2739,7 +3043,6 @@ type DataSourceModelPatchRequestSchema struct {
 	NullValuesOverride                                   *[]string                     `json:"null_values_override"`
 	NullValuesPerColumnOverride                          *map[string][]string          `json:"null_values_per_column_override"`
 	Pattern                                              *string                       `json:"pattern"`
-	QuarantineRowIfRowLevelIssueOverride                 *bool                         `json:"quarantine_row_if_row_level_issue_override"`
 	RawHeaders                                           *[]string                     `json:"raw_headers"`
 	RedirectPostSubmitTo                                 *string                       `json:"redirect_post_submit_to"`
 	S3AccessKey                                          *string                       `json:"s3_access_key"`
@@ -2817,7 +3120,6 @@ type DataSourceModelPostRequestSchema struct {
 	NullValuesOverride                                   *[]string                     `json:"null_values_override"`
 	NullValuesPerColumnOverride                          *map[string][]string          `json:"null_values_per_column_override"`
 	Pattern                                              *string                       `json:"pattern"`
-	QuarantineRowIfRowLevelIssueOverride                 *bool                         `json:"quarantine_row_if_row_level_issue_override"`
 	RawHeaders                                           *[]string                     `json:"raw_headers"`
 	RedirectPostSubmitTo                                 *string                       `json:"redirect_post_submit_to"`
 	S3AccessKey                                          *string                       `json:"s3_access_key"`
@@ -2848,17 +3150,22 @@ type DataSourceModelPostRequestSchema struct {
 
 // DataSourceModelTinySchema defines model for DataSourceModelTinySchema.
 type DataSourceModelTinySchema struct {
-	BadRowsCount     *int            `json:"bad_rows_count"`
-	CleanRowsCount   *int            `json:"clean_rows_count"`
-	DataSourceType   DataSourceType  `json:"data_source_type"`
-	DatasetID        int             `json:"dataset_id"`
-	DatasetName      string          `json:"dataset_name"`
-	DestinationID    int             `json:"destination_id"`
-	DestinationName  string          `json:"destination_name"`
-	ID               int             `json:"id"`
-	InternalID       string          `json:"internal_id"`
-	LastSync         *time.Time      `json:"last_sync"`
-	Name             string          `json:"name"`
+	// BadRowsCount Bad rows count.
+	BadRowsCount *int `json:"bad_rows_count"`
+
+	// CleanRowsCount Successful rows count.
+	CleanRowsCount  *int           `json:"clean_rows_count"`
+	DataSourceType  DataSourceType `json:"data_source_type"`
+	DatasetID       int            `json:"dataset_id"`
+	DatasetName     string         `json:"dataset_name"`
+	DestinationID   int            `json:"destination_id"`
+	DestinationName string         `json:"destination_name"`
+	ID              int            `json:"id"`
+	InternalID      string         `json:"internal_id"`
+	LastSync        *time.Time     `json:"last_sync"`
+	Name            string         `json:"name"`
+
+	// Schedule Cron schedule to run this source. If the schedule is not set, we pull data from the source when the user asks for it.
 	Schedule         *string         `json:"schedule"`
 	State            DataSourceState `json:"state"`
 	UnresolvedAlerts int             `json:"unresolved_alerts"`
@@ -2869,6 +3176,130 @@ type DataSourceState string
 
 // DataSourceType defines model for DataSourceType.
 type DataSourceType string
+
+// DatasetFieldKindOrderBy Sort options for dataset field kind list.
+type DatasetFieldKindOrderBy string
+
+// DatasetFieldKindPatchRequestSchema Schema for updating a dataset field kind via PATCH.
+//
+// Setting “dataset_kind_id“ re-parents the field kind onto a different
+// dataset kind. Both the current and the new parent must be owned by the
+// caller's organization. Removing a field kind from a dataset kind entirely
+// is done via DELETE.
+type DatasetFieldKindPatchRequestSchema struct {
+	Aliases *[]string `json:"aliases"`
+
+	// DatasetKindID Move this field kind to a different (org-owned) dataset kind.
+	DatasetKindID *openapi_types.UUID `json:"dataset_kind_id"`
+	Description   *string             `json:"description"`
+	Name          *string             `json:"name"`
+}
+
+// DatasetFieldKindPostRequestSchema Schema for creating a new dataset field kind via POST.
+//
+// The “dataset_kind_id“ points at the parent dataset kind. Adding a field
+// kind to a dataset kind is just creating a row whose foreign key targets
+// that dataset kind; the parent must be owned by the caller's organization.
+type DatasetFieldKindPostRequestSchema struct {
+	// Aliases Optional list of header aliases / matching hints.
+	Aliases *[]string `json:"aliases,omitempty"`
+
+	// DatasetKindID The dataset kind to which this field kind belongs.
+	DatasetKindID openapi_types.UUID `json:"dataset_kind_id"`
+
+	// Description Optional business-facing description.
+	Description *string `json:"description"`
+
+	// Name Human-facing field-kind name, e.g. 'Car Make'.
+	Name string `json:"name"`
+}
+
+// DatasetFieldKindSchemaFull Full dataset field kind detail.
+type DatasetFieldKindSchemaFull struct {
+	Aliases       *[]string          `json:"aliases,omitempty"`
+	CreatedAt     time.Time          `json:"created_at"`
+	DatasetKindID openapi_types.UUID `json:"dataset_kind_id"`
+	Description   *string            `json:"description"`
+	ID            openapi_types.UUID `json:"id"`
+	Name          string             `json:"name"`
+	Slug          string             `json:"slug"`
+	UpdatedAt     time.Time          `json:"updated_at"`
+}
+
+// DatasetFieldKindTinySchema Minimal fields returned in the field-kind list view.
+type DatasetFieldKindTinySchema struct {
+	DatasetKindID openapi_types.UUID `json:"dataset_kind_id"`
+	ID            openapi_types.UUID `json:"id"`
+	Name          string             `json:"name"`
+	Slug          string             `json:"slug"`
+	UpdatedAt     time.Time          `json:"updated_at"`
+}
+
+// DatasetFieldKindsListSchema Paginated response for dataset field kind list.
+type DatasetFieldKindsListSchema struct {
+	// Msg Message to display to the user using notistack.
+	Msg  *string           `json:"msg"`
+	Next *PaginationSchema `json:"next,omitempty"`
+
+	// Page Current page
+	Page      *int                         `json:"page"`
+	Previous  *PaginationSchema            `json:"previous,omitempty"`
+	Results   []DatasetFieldKindTinySchema `json:"results"`
+	TotalRows *int                         `json:"total_rows"`
+}
+
+// DatasetKindOrderBy Sort options for dataset kind list.
+type DatasetKindOrderBy string
+
+// DatasetKindPatchRequestSchema Schema for updating a dataset kind via PATCH.
+type DatasetKindPatchRequestSchema struct {
+	Description *string `json:"description"`
+	Name        *string `json:"name"`
+}
+
+// DatasetKindPostRequestSchema Schema for creating a new (custom) dataset kind via POST.
+type DatasetKindPostRequestSchema struct {
+	// Description Optional business-facing description.
+	Description *string `json:"description"`
+
+	// Name Human-facing title, e.g. 'Car Bordereau'.
+	Name string `json:"name"`
+}
+
+// DatasetKindSchemaFull Full dataset kind detail.
+type DatasetKindSchemaFull struct {
+	CreatedAt      time.Time           `json:"created_at"`
+	Description    *string             `json:"description"`
+	ID             openapi_types.UUID  `json:"id"`
+	IsBuiltin      bool                `json:"is_builtin"`
+	Name           string              `json:"name"`
+	OrganizationID *openapi_types.UUID `json:"organization_id"`
+	Slug           string              `json:"slug"`
+	UpdatedAt      time.Time           `json:"updated_at"`
+}
+
+// DatasetKindTinySchema Minimal fields returned in the list view.
+type DatasetKindTinySchema struct {
+	ID             openapi_types.UUID  `json:"id"`
+	IsBuiltin      bool                `json:"is_builtin"`
+	Name           string              `json:"name"`
+	OrganizationID *openapi_types.UUID `json:"organization_id"`
+	Slug           string              `json:"slug"`
+	UpdatedAt      time.Time           `json:"updated_at"`
+}
+
+// DatasetKindsListSchema Paginated response for dataset kind list.
+type DatasetKindsListSchema struct {
+	// Msg Message to display to the user using notistack.
+	Msg  *string           `json:"msg"`
+	Next *PaginationSchema `json:"next,omitempty"`
+
+	// Page Current page
+	Page      *int                    `json:"page"`
+	Previous  *PaginationSchema       `json:"previous,omitempty"`
+	Results   []DatasetKindTinySchema `json:"results"`
+	TotalRows *int                    `json:"total_rows"`
+}
 
 // DatasetRecoverRequestSchema Request schema for recovering a deleted dataset.
 type DatasetRecoverRequestSchema struct {
@@ -2891,14 +3322,14 @@ type DatasetRuleDetailSchema struct {
 	CreatedAt         time.Time               `json:"created_at"`
 	CreatedByUser     *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
 	DatasetID         int                     `json:"dataset_id"`
+	FamilyName        string                  `json:"family_name"`
 	ID                openapi_types.UUID      `json:"id"`
-	InitiatedByUser   *UserInfoTinyDictSchema `json:"initiated_by_user,omitempty"`
 	InstanceName      string                  `json:"instance_name"`
+	IsBuiltin         bool                    `json:"is_builtin"`
+	IsCaf             bool                    `json:"is_caf"`
 	OrganizationID    openapi_types.UUID      `json:"organization_id"`
 	Params            map[string]interface{}  `json:"params"`
-
-	// RuleRevision One Rule revision for detail view
-	RuleRevision RuleRevisionTinySchema `json:"rule_revision"`
+	RuleRevision      RuleRevisionSmallSchema `json:"rule_revision"`
 
 	// State Lifecycle state for a DatasetRule instance.
 	//
@@ -2941,6 +3372,80 @@ type DatasetRuleOrderBy string
 //	validation_failed → re-instantiate to retry
 //	Builtin/CAF creation → enabled directly
 type DatasetRuleState string
+
+// DatasetRuleSuggestionListSchema defines model for DatasetRuleSuggestionListSchema.
+type DatasetRuleSuggestionListSchema struct {
+	// Msg Message to display to the user using notistack.
+	Msg  *string           `json:"msg"`
+	Next *PaginationSchema `json:"next,omitempty"`
+
+	// Page Current page
+	Page      *int                              `json:"page"`
+	Previous  *PaginationSchema                 `json:"previous,omitempty"`
+	Results   []DatasetRuleSuggestionTinySchema `json:"results"`
+	TotalRows *int                              `json:"total_rows"`
+}
+
+// DatasetRuleSuggestionSchema defines model for DatasetRuleSuggestionSchema.
+type DatasetRuleSuggestionSchema struct {
+	// Action What rule change the suggestion proposes.
+	Action                SuggestionAction        `json:"action"`
+	ColumnMappingDict     *map[string]string      `json:"column_mapping_dict"`
+	CreatedAt             time.Time               `json:"created_at"`
+	CreatedByUser         *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
+	CreatedDatasetRuleID  *openapi_types.UUID     `json:"created_dataset_rule_id"`
+	DatasetID             int                     `json:"dataset_id"`
+	ExistingDatasetRuleID *openapi_types.UUID     `json:"existing_dataset_rule_id"`
+	FamilyName            *string                 `json:"family_name"`
+	ID                    openapi_types.UUID      `json:"id"`
+	InstanceName          string                  `json:"instance_name"`
+	IsBuiltin             *bool                   `json:"is_builtin"`
+	IsCaf                 *bool                   `json:"is_caf"`
+	MatchRate             *float32                `json:"match_rate"`
+	MigrationModelID      *int                    `json:"migration_model_id"`
+	OrganizationID        openapi_types.UUID      `json:"organization_id"`
+
+	// Params Rule parameters (UI-assembled)
+	Params     *map[string]interface{} `json:"params,omitempty"`
+	ResolvedAt *time.Time              `json:"resolved_at"`
+
+	// RuleColumnMapping Map of generic input name -> dataset column
+	RuleColumnMapping map[string]string        `json:"rule_column_mapping"`
+	RuleFamilyID      openapi_types.UUID       `json:"rule_family_id"`
+	RuleRevision      *RuleRevisionSmallSchema `json:"rule_revision,omitempty"`
+	RuleRevisionID    *openapi_types.UUID      `json:"rule_revision_id"`
+
+	// Source How the suggestion was generated.
+	Source SuggestionSource `json:"source"`
+
+	// State Lifecycle state of a DatasetRuleSuggestion.
+	State                 SuggestionState `json:"state"`
+	TreatAsAlert          bool            `json:"treat_as_alert"`
+	ValidationDryRunJobID *int            `json:"validation_dry_run_job_id"`
+}
+
+// DatasetRuleSuggestionTinySchema Compact schema for list view.
+type DatasetRuleSuggestionTinySchema struct {
+	// Action What rule change the suggestion proposes.
+	Action               SuggestionAction    `json:"action"`
+	CreatedAt            time.Time           `json:"created_at"`
+	CreatedDatasetRuleID *openapi_types.UUID `json:"created_dataset_rule_id"`
+
+	// DatasetColumns Dataset columns used by this rule suggestion
+	DatasetColumns        *[]string           `json:"dataset_columns,omitempty"`
+	ExistingDatasetRuleID *openapi_types.UUID `json:"existing_dataset_rule_id"`
+	ID                    openapi_types.UUID  `json:"id"`
+	InstanceName          string              `json:"instance_name"`
+	MatchRate             *float32            `json:"match_rate"`
+	ResolvedAt            *time.Time          `json:"resolved_at"`
+
+	// Source How the suggestion was generated.
+	Source SuggestionSource `json:"source"`
+
+	// State Lifecycle state of a DatasetRuleSuggestion.
+	State        SuggestionState `json:"state"`
+	TreatAsAlert bool            `json:"treat_as_alert"`
+}
 
 // DatasetRuleTinySchema Fields returned for the list view of rule items
 type DatasetRuleTinySchema struct {
@@ -3138,6 +3643,12 @@ type DismissNotificationResponseSchema struct {
 	Success bool   `json:"success"`
 }
 
+// DismissSuggestionRequest defines model for DismissSuggestionRequest.
+type DismissSuggestionRequest struct {
+	// DismissFamily If True, dismisses the entire rule family for this dataset (prevents re-suggestion of any revision).
+	DismissFamily *bool `json:"dismiss_family,omitempty"`
+}
+
 // DisplayValuesForResponse defines model for DisplayValuesForResponse.
 type DisplayValuesForResponse map[string][]DisplayValuesForResponse_Item
 
@@ -3202,6 +3713,7 @@ type DryRunJobFullSchema struct {
 	NondeterminismReport     *NondeterminismReport `json:"nondeterminism_report,omitempty"`
 	NondeterminismSampleSize *int                  `json:"nondeterminism_sample_size,omitempty"`
 	PinnedSignatures         *[]string             `json:"pinned_signatures"`
+	RuleLoadErrors           *[]RuleLoadError      `json:"rule_load_errors"`
 	RuleRunSpecs             []RuleRunSpec         `json:"rule_run_specs"`
 
 	// Sampling Sampling metadata stored in DryRunJob.sampling field.
@@ -3531,12 +4043,16 @@ type ExpandableFieldInfo struct {
 
 // FieldDatabaseDetailDict defines model for FieldDatabaseDetailDict.
 type FieldDatabaseDetailDict struct {
-	Args        *[]int                       `json:"args"`
-	Indexed     *bool                        `json:"indexed"`
-	IsDeleted   *bool                        `json:"is_deleted"`
-	IsNullable  *bool                        `json:"is_nullable"`
-	TrgmIndexed *bool                        `json:"trgm_indexed"`
-	Type        FieldDatabaseDetailDict_Type `json:"type"`
+	Args            *[]int                       `json:"args"`
+	DatetimeFormats *[]string                    `json:"datetime_formats"`
+	Indexed         *bool                        `json:"indexed"`
+	IsDeleted       *bool                        `json:"is_deleted"`
+	IsDollar        *bool                        `json:"is_dollar"`
+	IsNullable      *bool                        `json:"is_nullable"`
+	IsPercent       *bool                        `json:"is_percent"`
+	OriginalName    *string                      `json:"original_name"`
+	TrgmIndexed     *bool                        `json:"trgm_indexed"`
+	Type            FieldDatabaseDetailDict_Type `json:"type"`
 }
 
 // FieldDatabaseDetailDictType1 defines model for .
@@ -3563,11 +4079,11 @@ type FieldDiffType struct {
 
 // FieldFormatCandidateDict defines model for FieldFormatCandidateDict.
 type FieldFormatCandidateDict struct {
-	Format        FieldFormatCandidateDict_Format   `json:"format"`
-	LimitToValues *[]string                         `json:"limit_to_values"`
-	MatchRate     float32                           `json:"match_rate"`
-	Maximum       *FieldFormatCandidateDict_Maximum `json:"maximum,omitempty"`
-	Minimum       *FieldFormatCandidateDict_Minimum `json:"minimum,omitempty"`
+	Allowed   *[]string                         `json:"allowed"`
+	Format    FieldFormatCandidateDict_Format   `json:"format"`
+	MatchRate float32                           `json:"match_rate"`
+	Maximum   *FieldFormatCandidateDict_Maximum `json:"maximum,omitempty"`
+	Minimum   *FieldFormatCandidateDict_Minimum `json:"minimum,omitempty"`
 }
 
 // FieldFormatCandidateDict_Format defines model for FieldFormatCandidateDict.Format.
@@ -3597,62 +4113,16 @@ type FieldFormatCandidateDict_Minimum struct {
 	union json.RawMessage
 }
 
-// FieldFormatInfoDict defines model for FieldFormatInfoDict.
-type FieldFormatInfoDict struct {
-	CaseSensitive     *bool                        `json:"case_sensitive"`
-	DatetimeFormats   *[]string                    `json:"datetime_formats"`
-	Format            *FieldFormatInfoDict_Format  `json:"format,omitempty"`
-	IsDollar          *bool                        `json:"is_dollar"`
-	IsPercent         *bool                        `json:"is_percent"`
-	LimitToValues     *[]string                    `json:"limit_to_values"`
-	Maximum           *FieldFormatInfoDict_Maximum `json:"maximum,omitempty"`
-	Minimum           *FieldFormatInfoDict_Minimum `json:"minimum,omitempty"`
-	ShouldAutoCorrect *bool                        `json:"should_auto_correct"`
-	TreatAsAlert      *bool                        `json:"treat_as_alert"`
-}
-
-// FieldFormatInfoDict_Format defines model for FieldFormatInfoDict.Format.
-type FieldFormatInfoDict_Format struct {
-	union json.RawMessage
-}
-
-// FieldFormatInfoDictMaximum0 defines model for .
-type FieldFormatInfoDictMaximum0 = int
-
-// FieldFormatInfoDictMaximum1 defines model for .
-type FieldFormatInfoDictMaximum1 = float32
-
-// FieldFormatInfoDict_Maximum defines model for FieldFormatInfoDict.Maximum.
-type FieldFormatInfoDict_Maximum struct {
-	union json.RawMessage
-}
-
-// FieldFormatInfoDictMinimum0 defines model for .
-type FieldFormatInfoDictMinimum0 = int
-
-// FieldFormatInfoDictMinimum1 defines model for .
-type FieldFormatInfoDictMinimum1 = float32
-
-// FieldFormatInfoDict_Minimum defines model for FieldFormatInfoDict.Minimum.
-type FieldFormatInfoDict_Minimum struct {
-	union json.RawMessage
-}
-
 // FieldMigrationAction defines model for FieldMigrationAction.
 type FieldMigrationAction string
 
 // FieldMigrationInfo Complete information about a field in a migration
 type FieldMigrationInfo struct {
-	Action               *FieldMigrationAction          `json:"action,omitempty"`
-	Current              *FieldDatabaseDetailDict       `json:"current,omitempty"`
-	CurrentFormatInfo    *FieldFormatInfoDict           `json:"current_format_info,omitempty"`
-	Diffs                *[]FieldDiff                   `json:"diffs"`
-	FormatCandidates     *[]FieldFormatCandidateDict    `json:"format_candidates"`
-	FormatInfoDiffs      *[]FieldDiff                   `json:"format_info_diffs"`
-	New                  *FieldDatabaseDetailDict       `json:"new,omitempty"`
-	NewFormatInfo        *FieldFormatInfoDict           `json:"new_format_info,omitempty"`
-	NewFormatIsIdentical *bool                          `json:"new_format_is_identical,omitempty"`
-	NotableValues        *FieldNotableValuesForResponse `json:"notable_values,omitempty"`
+	Action        *FieldMigrationAction          `json:"action,omitempty"`
+	Current       *FieldDatabaseDetailDict       `json:"current,omitempty"`
+	Diffs         *[]FieldDiff                   `json:"diffs"`
+	New           *FieldDatabaseDetailDict       `json:"new,omitempty"`
+	NotableValues *FieldNotableValuesForResponse `json:"notable_values,omitempty"`
 }
 
 // FieldNameResolutionOperator defines model for FieldNameResolutionOperator.
@@ -3670,11 +4140,14 @@ type FieldNameResolutionParams struct {
 
 // FieldNameSuggestion defines model for FieldNameSuggestion.
 type FieldNameSuggestion struct {
+	// Expand Whether the user chose to expand this field in a previous resolution.
+	Expand                      *bool                        `json:"expand"`
 	HighConfidence              bool                         `json:"high_confidence"`
 	IncomingFieldName           string                       `json:"incoming_field_name"`
 	NormalizedIncomingFieldName string                       `json:"normalized_incoming_field_name"`
 	RecommendedFieldNameToMapTo string                       `json:"recommended_field_name_to_map_to"`
 	RecommendedOperation        *FieldNameResolutionOperator `json:"recommended_operation,omitempty"`
+	Scope                       *Scope                       `json:"scope,omitempty"`
 }
 
 // FieldNamesSuggestionsInfo defines model for FieldNamesSuggestionsInfo.
@@ -3684,15 +4157,6 @@ type FieldNamesSuggestionsInfo struct {
 	// Suggestions What we recommend to do with the incoming fields.
 	Suggestions []FieldNameSuggestion `json:"suggestions"`
 }
-
-// FieldNamesToFormatInfoDictInput defines model for FieldNamesToFormatInfoDict-Input.
-type FieldNamesToFormatInfoDictInput map[string]FieldFormatInfoDict
-
-// FieldNamesToFormatInfoDictOutput defines model for FieldNamesToFormatInfoDict-Output.
-type FieldNamesToFormatInfoDictOutput map[string]FieldFormatInfoDict
-
-// FieldNamesToFormatInfoDictOverride defines model for FieldNamesToFormatInfoDictOverride.
-type FieldNamesToFormatInfoDictOverride map[string]FieldFormatInfoDict
 
 // FieldNotableValuesForResponse defines model for FieldNotableValuesForResponse.
 type FieldNotableValuesForResponse = []FieldNotableValuesForResponse_Item
@@ -3711,6 +4175,12 @@ type FieldNotableValuesForResponse_Item struct {
 	union json.RawMessage
 }
 
+// FieldNotableValuesResponse defines model for FieldNotableValuesResponse.
+type FieldNotableValuesResponse struct {
+	FieldName     string                         `json:"field_name"`
+	NotableValues *FieldNotableValuesForResponse `json:"notable_values,omitempty"`
+}
+
 // FieldRenderabilitySchema Per-field renderability info returned in rule revision responses.
 type FieldRenderabilitySchema struct {
 	// Reason Machine-readable reason code explaining why the field is not renderable (e.g. NESTED_OBJECT, UNSUPPORTED_TYPE_*). Present only when renderable_in_basic_ui is False.
@@ -3725,6 +4195,7 @@ type FieldRenderabilitySchema struct {
 
 // FieldResultDict defines model for FieldResultDict.
 type FieldResultDict struct {
+	Allowed           *[]string                   `json:"allowed"`
 	Args              *[]int                      `json:"args"`
 	CaseSensitive     *bool                       `json:"case_sensitive"`
 	DatetimeFormats   *[]string                   `json:"datetime_formats"`
@@ -3735,9 +4206,9 @@ type FieldResultDict struct {
 	IsDollar          *bool                       `json:"is_dollar"`
 	IsNullable        *bool                       `json:"is_nullable"`
 	IsPercent         *bool                       `json:"is_percent"`
-	LimitToValues     *[]string                   `json:"limit_to_values"`
 	Maximum           *FieldResultDict_Maximum    `json:"maximum,omitempty"`
 	Minimum           *FieldResultDict_Minimum    `json:"minimum,omitempty"`
+	OriginalName      *string                     `json:"original_name"`
 	ShouldAutoCorrect *bool                       `json:"should_auto_correct"`
 	TreatAsAlert      *bool                       `json:"treat_as_alert"`
 	TrgmIndexed       *bool                       `json:"trgm_indexed"`
@@ -4099,21 +4570,6 @@ type JobRunningCountResponseSchema struct {
 // JobType defines model for JobType.
 type JobType string
 
-// KeepRowsInQuarantineRequestSchema The request to Keep rows inside the quarantine table
-type KeepRowsInQuarantineRequestSchema struct {
-	// Ids Limit to these row ids. If no ids are passed, it will set all rows to be in the quarantine.
-	Ids *[]int `json:"ids"`
-
-	// QuarantineStatus Status filter for quarantine rows.
-	// Used for bulk operations by status on quarantine data.
-	QuarantineStatus *QuarantineStatus `json:"quarantine_status,omitempty"`
-}
-
-// KeepRowsInQuarantineResponseSchema The response to a request to reprocess keep rows in quarantine.
-type KeepRowsInQuarantineResponseSchema struct {
-	Result string `json:"result"`
-}
-
 // LatestAlertStatsSchema defines model for LatestAlertStatsSchema.
 type LatestAlertStatsSchema struct {
 	// ID The latest alert item id relevant to the current dataset.
@@ -4243,22 +4699,26 @@ type MigrationDiffSummary struct {
 	TotalFields   *int `json:"total_fields,omitempty"`
 }
 
+// MigrationFieldsResponse defines model for MigrationFieldsResponse.
+type MigrationFieldsResponse struct {
+	Fields []string `json:"fields"`
+}
+
 // MigrationModelFullSchema defines model for MigrationModelFullSchema.
 type MigrationModelFullSchema struct {
-	Confirmed                                bool                              `json:"confirmed"`
-	CreatedAt                                time.Time                         `json:"created_at"`
-	DatasetID                                int                               `json:"dataset_id"`
-	DatasetName                              string                            `json:"dataset_name"`
-	DisplayModel                             *interface{}                      `json:"display_model,omitempty"`
-	DownID                                   *int                              `json:"down_id"`
-	FormatInfo                               *FieldNamesToFormatInfoDictOutput `json:"format_info,omitempty"`
-	ID                                       int                               `json:"id"`
-	IncompatibleOverrides                    *[]IncompatibleFieldTypesDict     `json:"incompatible_overrides"`
-	Model                                    ModelDatabaseDetailDictOutput     `json:"model"`
-	SettingsModelID                          int                               `json:"settings_model_id"`
-	State                                    MigrationState                    `json:"state"`
-	SuggestedFieldValidationWithAllowedTypes *map[string]interface{}           `json:"suggested_field_validation_with_allowed_types"`
-	UpdatedAt                                *time.Time                        `json:"updated_at"`
+	Confirmed                                bool                          `json:"confirmed"`
+	CreatedAt                                time.Time                     `json:"created_at"`
+	DatasetID                                int                           `json:"dataset_id"`
+	DatasetName                              string                        `json:"dataset_name"`
+	DisplayModel                             *interface{}                  `json:"display_model,omitempty"`
+	DownID                                   *int                          `json:"down_id"`
+	ID                                       int                           `json:"id"`
+	IncompatibleOverrides                    *[]IncompatibleFieldTypesDict `json:"incompatible_overrides"`
+	Model                                    ModelDatabaseDetailDictOutput `json:"model"`
+	SettingsModelID                          int                           `json:"settings_model_id"`
+	State                                    MigrationState                `json:"state"`
+	SuggestedFieldValidationWithAllowedTypes *map[string]interface{}       `json:"suggested_field_validation_with_allowed_types"`
+	UpdatedAt                                *time.Time                    `json:"updated_at"`
 }
 
 // MigrationModelListSchema defines model for MigrationModelListSchema.
@@ -4282,9 +4742,8 @@ type MigrationOrderBy string
 // race with another editor who might be reshaping the draft.
 type MigrationPatchRequest struct {
 	// DraftVersionID MigrationModel.version_id if a draft exists; omit/null when PATCH implicitly creates the draft.
-	DraftVersionID      *int                                `json:"draft_version_id"`
-	FormatInfoOverrides *FieldNamesToFormatInfoDictOverride `json:"format_info_overrides,omitempty"`
-	SchemaOverrides     *ModelDatabaseDetailDictOverride    `json:"schema_overrides,omitempty"`
+	DraftVersionID  *int                             `json:"draft_version_id"`
+	SchemaOverrides *ModelDatabaseDetailDictOverride `json:"schema_overrides,omitempty"`
 
 	// SettingsVersionID SettingsModel.version_id
 	SettingsVersionID int `json:"settings_version_id"`
@@ -4383,59 +4842,58 @@ type MyUserSchema struct {
 	MembershipOrgID         *openapi_types.UUID  `json:"membership_org_id"`
 
 	// Role Fixed ALL roles including internal roles
-	Role           *Role     `json:"role,omitempty"`
-	SeesDebugInfo  bool      `json:"sees_debug_info"`
-	ShowAdvancedUI bool      `json:"show_advanced_ui"`
-	UpdatedAt      time.Time `json:"updated_at"`
+	Role               *Role     `json:"role,omitempty"`
+	SeesDebugInfo      bool      `json:"sees_debug_info"`
+	ShowAdvancedUI     bool      `json:"show_advanced_ui"`
+	ShowRuleReviewsNav bool      `json:"show_rule_reviews_nav"`
+	UpdatedAt          time.Time `json:"updated_at"`
 }
 
 // NewSettingsSchema defines model for NewSettingsSchema.
 type NewSettingsSchema struct {
-	ArrayDelimiters                              *[]string                        `json:"array_delimiters"`
-	BooleanFalse                                 *[]string                        `json:"boolean_false"`
-	BooleanFalsePerColumn                        *map[string][]string             `json:"boolean_false_per_column"`
-	BooleanTrue                                  *[]string                        `json:"boolean_true"`
-	BooleanTruePerColumn                         *map[string][]string             `json:"boolean_true_per_column"`
-	DataMarkedAsValidForDBField                  *map[string][]string             `json:"data_marked_as_valid_for_db_field"`
-	DatetimeAllowedCharacters                    *string                          `json:"datetime_allowed_characters"`
-	DatetimeFormats                              *[]string                        `json:"datetime_formats"`
-	DatetimeFormatsPerColumn                     *map[string][]string             `json:"datetime_formats_per_column"`
-	DecimalFieldPadding                          *int                             `json:"decimal_field_padding"`
-	DefaultValueForFieldWhenCastingError         *map[string]interface{}          `json:"default_value_for_field_when_casting_error"`
-	DollarToCent                                 *bool                            `json:"dollar_to_cent"`
-	DollarValueIfWordInFieldName                 *[]string                        `json:"dollar_value_if_word_in_field_name"`
-	EnableInteger                                *bool                            `json:"enable_integer"`
-	EnableSmallInteger                           *bool                            `json:"enable_small_integer"`
-	EncryptColumns                               *[]string                        `json:"encrypt_columns"`
-	FieldNameFullConversion                      *map[string]string               `json:"field_name_full_conversion"`
-	FieldNamePartConversion                      *map[string]string               `json:"field_name_part_conversion"`
-	FieldsToExpand                               *[]string                        `json:"fields_to_expand"`
-	FormatInfoOverrides                          *FieldNamesToFormatInfoDictInput `json:"format_info_overrides,omitempty"`
-	IgnoreColumnNames                            *[]string                        `json:"ignore_column_names"`
-	IgnoreColumnNamesThatHaveAnyOfWords          *[]string                        `json:"ignore_column_names_that_have_any_of_words"`
-	IgnoreFieldsInSignatureCalculation           *[]string                        `json:"ignore_fields_in_signature_calculation"`
-	IgnoreLinesThatIncludeOnlySubsetOfCharacters *[]string                        `json:"ignore_lines_that_include_only_subset_of_characters"`
-	IgnoreLinesThatIncludeOnlySubsetOfWords      *[]string                        `json:"ignore_lines_that_include_only_subset_of_words"`
-	IgnoreMatchers                               *map[string][]string             `json:"ignore_matchers"`
-	IgnoreNotSeenBeforeFieldsWhenImporting       *bool                            `json:"ignore_not_seen_before_fields_when_importing"`
-	InferDatetime                                *bool                            `json:"infer_datetime"`
-	InferDatetimeForColumns                      *[]string                        `json:"infer_datetime_for_columns"`
-	MaxBoundaryElementLength                     *int                             `json:"max_boundary_element_length"`
-	MonetaryColumnsOverride                      *map[string]bool                 `json:"monetary_columns_override"`
-	NonStringFieldsAreAllNullable                *bool                            `json:"non_string_fields_are_all_nullable"`
-	NullValues                                   *[]string                        `json:"null_values"`
-	NullValuesPerColumn                          *map[string][]string             `json:"null_values_per_column"`
-	PercentToDecimal                             *bool                            `json:"percent_to_decimal"`
-	QuarantineRowIfRowLevelIssue                 *bool                            `json:"quarantine_row_if_row_level_issue"`
-	SchemaOverrides                              *ModelDatabaseDetailDictInput    `json:"schema_overrides,omitempty"`
-	StringFieldPadding                           *int                             `json:"string_field_padding"`
-	StringFieldsCanBeNullable                    *bool                            `json:"string_fields_can_be_nullable"`
-	TrimStringInsteadOfRaisingErr                *bool                            `json:"trim_string_instead_of_raising_err"`
-	UseTextInsteadOfString                       *bool                            `json:"use_text_instead_of_string"`
-	ValueMapping                                 *map[string]string               `json:"value_mapping"`
-	ValueMappingPerColumn                        *map[string]map[string]string    `json:"value_mapping_per_column"`
-	WhodunitID                                   *openapi_types.UUID              `json:"whodunit_id"`
-	XlsDateMode                                  *XLSDateMode                     `json:"xls_date_mode,omitempty"`
+	ArrayDelimiters                              *[]string                     `json:"array_delimiters"`
+	BooleanFalse                                 *[]string                     `json:"boolean_false"`
+	BooleanFalsePerColumn                        *map[string][]string          `json:"boolean_false_per_column"`
+	BooleanTrue                                  *[]string                     `json:"boolean_true"`
+	BooleanTruePerColumn                         *map[string][]string          `json:"boolean_true_per_column"`
+	DataMarkedAsValidForDBField                  *map[string][]string          `json:"data_marked_as_valid_for_db_field"`
+	DatetimeAllowedCharacters                    *string                       `json:"datetime_allowed_characters"`
+	DatetimeFormats                              *[]string                     `json:"datetime_formats"`
+	DatetimeFormatsPerColumn                     *map[string][]string          `json:"datetime_formats_per_column"`
+	DecimalFieldPadding                          *int                          `json:"decimal_field_padding"`
+	DefaultValueForFieldWhenCastingError         *map[string]interface{}       `json:"default_value_for_field_when_casting_error"`
+	DollarToCent                                 *bool                         `json:"dollar_to_cent"`
+	DollarValueIfWordInFieldName                 *[]string                     `json:"dollar_value_if_word_in_field_name"`
+	EnableInteger                                *bool                         `json:"enable_integer"`
+	EnableSmallInteger                           *bool                         `json:"enable_small_integer"`
+	EncryptColumns                               *[]string                     `json:"encrypt_columns"`
+	FieldNameFullConversion                      *map[string]string            `json:"field_name_full_conversion"`
+	FieldNamePartConversion                      *map[string]string            `json:"field_name_part_conversion"`
+	FieldsToExpand                               *[]string                     `json:"fields_to_expand"`
+	IgnoreColumnNames                            *[]string                     `json:"ignore_column_names"`
+	IgnoreColumnNamesThatHaveAnyOfWords          *[]string                     `json:"ignore_column_names_that_have_any_of_words"`
+	IgnoreFieldsInSignatureCalculation           *[]string                     `json:"ignore_fields_in_signature_calculation"`
+	IgnoreLinesThatIncludeOnlySubsetOfCharacters *[]string                     `json:"ignore_lines_that_include_only_subset_of_characters"`
+	IgnoreLinesThatIncludeOnlySubsetOfWords      *[]string                     `json:"ignore_lines_that_include_only_subset_of_words"`
+	IgnoreMatchers                               *map[string][]string          `json:"ignore_matchers"`
+	IgnoreNotSeenBeforeFieldsWhenImporting       *bool                         `json:"ignore_not_seen_before_fields_when_importing"`
+	InferDatetime                                *bool                         `json:"infer_datetime"`
+	InferDatetimeForColumns                      *[]string                     `json:"infer_datetime_for_columns"`
+	MaxBoundaryElementLength                     *int                          `json:"max_boundary_element_length"`
+	MonetaryColumnsOverride                      *map[string]bool              `json:"monetary_columns_override"`
+	NonStringFieldsAreAllNullable                *bool                         `json:"non_string_fields_are_all_nullable"`
+	NullValues                                   *[]string                     `json:"null_values"`
+	NullValuesPerColumn                          *map[string][]string          `json:"null_values_per_column"`
+	PercentToDecimal                             *bool                         `json:"percent_to_decimal"`
+	SchemaOverrides                              *ModelDatabaseDetailDictInput `json:"schema_overrides,omitempty"`
+	StringFieldPadding                           *int                          `json:"string_field_padding"`
+	StringFieldsCanBeNullable                    *bool                         `json:"string_fields_can_be_nullable"`
+	TrimStringInsteadOfRaisingErr                *bool                         `json:"trim_string_instead_of_raising_err"`
+	UseTextInsteadOfString                       *bool                         `json:"use_text_instead_of_string"`
+	ValueMapping                                 *map[string]string            `json:"value_mapping"`
+	ValueMappingPerColumn                        *map[string]map[string]string `json:"value_mapping_per_column"`
+	WhodunitID                                   *openapi_types.UUID           `json:"whodunit_id"`
+	XlsDateMode                                  *XLSDateMode                  `json:"xls_date_mode,omitempty"`
 }
 
 // NondeterminismMismatch A single mismatch detected during nondeterminism verification.
@@ -4645,13 +5103,16 @@ type PatchDatasetRuleRequestSchema struct {
 
 // PatchRuleRevisionRequestSchema Request schema for patching a RuleRevision.
 // All fields are optional - only provided fields will be updated.
-// Only description, state, and is_default can be modified.
+// Only business_summary, state, limitations, and is_default can be modified.
 type PatchRuleRevisionRequestSchema struct {
-	// Description Rule revision description
-	Description *string `json:"description"`
+	// BusinessSummary Rule revision business summary
+	BusinessSummary *string `json:"business_summary"`
 
 	// IsDefault Is this the default rule revision for the family
 	IsDefault *bool `json:"is_default"`
+
+	// Limitations Rule revision limitations
+	Limitations *string `json:"limitations"`
 
 	// State Lifecycle state for RuleRevision (rule template/definition).
 	//
@@ -4670,6 +5131,13 @@ type PatchRuleRevisionRequestSchema struct {
 // PatchRuleRevisionResponseSchema defines model for PatchRuleRevisionResponseSchema.
 type PatchRuleRevisionResponseSchema struct {
 	Result string `json:"result"`
+}
+
+// PatchSuggestionRequest defines model for PatchSuggestionRequest.
+type PatchSuggestionRequest struct {
+	Params            *map[string]interface{} `json:"params"`
+	RuleColumnMapping *map[string]string      `json:"rule_column_mapping"`
+	TreatAsAlert      *bool                   `json:"treat_as_alert"`
 }
 
 // PrivilegeAction Action to perform on a user's privilege.
@@ -4925,15 +5393,6 @@ type RejectionResponseSchema struct {
 	Request PrivilegeRequestResponseSchema `json:"request"`
 }
 
-// ReleaseRowsFromQuarantineRequestSchema The request to release rows from quarantine to clean
-// If the row has not issues, it will move to quarantine.
-//
-// This is simply unlocking the row from being stuck in the quarantine data.
-type ReleaseRowsFromQuarantineRequestSchema struct {
-	// Ids Limit to these row ids. If no ids are passed, it will release all rows in the quarantine that the user has access to.
-	Ids *[]int `json:"ids"`
-}
-
 // ReprocessBadRowsRequestSchema The request to reprocess one or more bad rows in the quarantine table based on the bad rows IDs.
 // Note that the request is limited to the dataset passed in the URL.
 //
@@ -5158,6 +5617,7 @@ type RuleFamilyItemSchema struct {
 
 	// SecondaryRevision Revision summary for primary/secondary slots.
 	SecondaryRevision *RuleFamilyRevisionTinySchema `json:"secondary_revision,omitempty"`
+	Slug              string                        `json:"slug"`
 }
 
 // RuleFamilyListSchema Paginated list of rule families.
@@ -5217,6 +5677,15 @@ type RuleFamilyUpgradeDetailsSchema struct {
 	OutdatedItems        []OutdatedDatasetRuleSchema `json:"outdated_items"`
 }
 
+// RuleLoadError Error encountered while loading a rule during a dry run.
+type RuleLoadError struct {
+	ErrorType      string  `json:"error_type"`
+	Message        string  `json:"message"`
+	Position       int     `json:"position"`
+	RuleRevisionID string  `json:"rule_revision_id"`
+	StackTrace     *string `json:"stack_trace"`
+}
+
 // RuleReorderRequestSchema defines model for RuleReorderRequestSchema.
 type RuleReorderRequestSchema struct {
 	NewPosition int `json:"new_position"`
@@ -5227,23 +5696,46 @@ type RuleReorderResonseSchema struct {
 	Result string `json:"result"`
 }
 
+// RuleRevisionDatasetFieldKindSchema A dataset field kind bound to a rule field.
+type RuleRevisionDatasetFieldKindSchema struct {
+	DatasetFieldKindID openapi_types.UUID `json:"dataset_field_kind_id"`
+	Description        *string            `json:"description"`
+	Name               string             `json:"name"`
+	Slug               string             `json:"slug"`
+}
+
+// RuleRevisionFieldKindBindingSchema Field-kind bindings grouped by dataset kind.
+type RuleRevisionFieldKindBindingSchema struct {
+	DatasetKindDescription *string                               `json:"dataset_kind_description"`
+	DatasetKindID          openapi_types.UUID                    `json:"dataset_kind_id"`
+	DatasetKindName        string                                `json:"dataset_kind_name"`
+	DatasetKindSlug        string                                `json:"dataset_kind_slug"`
+	FieldKindBindings      *[]RuleRevisionRuleFieldBindingSchema `json:"field_kind_bindings,omitempty"`
+}
+
 // RuleRevisionFullSchema Full rule revision detail including code.
 type RuleRevisionFullSchema struct {
-	Code                 *string                 `json:"code"`
-	CorrectsColumns      []string                `json:"corrects_columns"`
-	CreatedAt            time.Time               `json:"created_at"`
-	CreatedByUser        *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
-	Description          *string                 `json:"description"`
-	EnrichesColumns      []string                `json:"enriches_columns"`
-	FamilyID             openapi_types.UUID      `json:"family_id"`
-	ID                   openapi_types.UUID      `json:"id"`
-	InputColumns         []string                `json:"input_columns"`
-	InteractsWithColumns []string                `json:"interacts_with_columns"`
-	IsBuiltin            bool                    `json:"is_builtin"`
-	IsCaf                bool                    `json:"is_caf"`
-	IsDefault            bool                    `json:"is_default"`
-	Name                 string                  `json:"name"`
-	ParamSchema          map[string]interface{}  `json:"param_schema"`
+	// AffectedColumns The union of input_columns, validates_columns, corrects_columns, and enriches_columns
+	AffectedColumns   []string                              `json:"affected_columns"`
+	BusinessSummary   *string                               `json:"business_summary"`
+	Code              *string                               `json:"code"`
+	CorrectsColumns   []string                              `json:"corrects_columns"`
+	CreatedAt         time.Time                             `json:"created_at"`
+	CreatedByUser     *UserInfoTinyDictSchema               `json:"created_by_user,omitempty"`
+	Description       *string                               `json:"description"`
+	DryRunJobID       *int                                  `json:"dry_run_job_id"`
+	EnrichesColumns   []string                              `json:"enriches_columns"`
+	FamilyID          openapi_types.UUID                    `json:"family_id"`
+	FieldKindBindings *[]RuleRevisionFieldKindBindingSchema `json:"field_kind_bindings,omitempty"`
+	ID                openapi_types.UUID                    `json:"id"`
+	InputColumns      []string                              `json:"input_columns"`
+	IsBuiltin         bool                                  `json:"is_builtin"`
+	IsCaf             bool                                  `json:"is_caf"`
+	IsDefault         bool                                  `json:"is_default"`
+	Limitations       *string                               `json:"limitations"`
+	LineageID         *openapi_types.UUID                   `json:"lineage_id"`
+	Name              string                                `json:"name"`
+	ParamSchema       map[string]interface{}                `json:"param_schema"`
 
 	// ParamsRenderability Per-field renderability breakdown keyed by parameter name. Each entry tells the frontend whether the field is renderable and, if so, which widget to use.
 	ParamsRenderability *map[string]FieldRenderabilitySchema `json:"params_renderability,omitempty"`
@@ -5254,6 +5746,7 @@ type RuleRevisionFullSchema struct {
 
 	// RenderabilityRulesetVersion Version stamp of the renderability analysis logic that produced these results (e.g. 'basic-ui-2026-02-25'). Updated on each deploy that changes the analysis rules, so the frontend can detect and discard stale cached renderability data.
 	RenderabilityRulesetVersion *string `json:"renderability_ruleset_version,omitempty"`
+	Slug                        string  `json:"slug"`
 
 	// State Lifecycle state for RuleRevision (rule template/definition).
 	//
@@ -5266,10 +5759,11 @@ type RuleRevisionFullSchema struct {
 	// - enabled: Available for use. Can create new DatasetRules.
 	// - disabled: Deprecated/sunset. No new DatasetRules allowed.
 	//             Existing DatasetRules must be disabled before transitioning here.
-	State            RuleState `json:"state"`
-	UpdatedAt        time.Time `json:"updated_at"`
-	UpgradeAvailable *bool     `json:"upgrade_available,omitempty"`
-	ValidatesColumns []string  `json:"validates_columns"`
+	State                 RuleState                                 `json:"state"`
+	SupportedDatasetKinds *[]RuleRevisionSupportedDatasetKindSchema `json:"supported_dataset_kinds,omitempty"`
+	UpdatedAt             time.Time                                 `json:"updated_at"`
+	UpgradeAvailable      *bool                                     `json:"upgrade_available,omitempty"`
+	ValidatesColumns      []string                                  `json:"validates_columns"`
 }
 
 // RuleRevisionListSchema defines model for RuleRevisionListSchema.
@@ -5287,6 +5781,52 @@ type RuleRevisionListSchema struct {
 
 // RuleRevisionOrderBy defines model for RuleRevisionOrderBy.
 type RuleRevisionOrderBy string
+
+// RuleRevisionRuleFieldBindingSchema A single rule field → dataset field kind binding.
+type RuleRevisionRuleFieldBindingSchema struct {
+	// DatasetFieldKind A dataset field kind bound to a rule field.
+	DatasetFieldKind RuleRevisionDatasetFieldKindSchema `json:"dataset_field_kind"`
+	RuleFieldName    string                             `json:"rule_field_name"`
+}
+
+// RuleRevisionSmallSchema defines model for RuleRevisionSmallSchema.
+type RuleRevisionSmallSchema struct {
+	// AffectedColumns The union of input_columns, validates_columns, corrects_columns, and enriches_columns
+	AffectedColumns []string                `json:"affected_columns"`
+	CreatedAt       time.Time               `json:"created_at"`
+	CreatedByUser   *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
+	Description     *string                 `json:"description"`
+	ID              openapi_types.UUID      `json:"id"`
+	IsBuiltin       bool                    `json:"is_builtin"`
+	IsCaf           bool                    `json:"is_caf"`
+	IsDefault       bool                    `json:"is_default"`
+	LineageID       *openapi_types.UUID     `json:"lineage_id"`
+	Name            string                  `json:"name"`
+	ParamSchema     map[string]interface{}  `json:"param_schema"`
+
+	// ParamsRenderability Per-field renderability breakdown keyed by parameter name. Each entry tells the frontend whether the field is renderable and, if so, which widget to use.
+	ParamsRenderability *map[string]FieldRenderabilitySchema `json:"params_renderability,omitempty"`
+
+	// ParamsRenderableInBasicUI Top-level summary: True only when every field in params_renderability is individually renderable. When False, isolate unsupported fields in an **Advanced settings** section and require explicit user intent to open raw JSON editing.
+	ParamsRenderableInBasicUI *bool  `json:"params_renderable_in_basic_ui,omitempty"`
+	Release                   string `json:"release"`
+	Slug                      string `json:"slug"`
+
+	// State Lifecycle state for RuleRevision (rule template/definition).
+	//
+	// State transitions:
+	//     draft -> enabled -> disabled (when no review policy)
+	//     draft -> in_review -> enabled -> disabled (when there is a review policy)
+	//
+	// - draft: Pending review/approval. Cannot be instantiated as DatasetRule.
+	// - in_review: Submitted for review, visible in Reviews Inbox
+	// - enabled: Available for use. Can create new DatasetRules.
+	// - disabled: Deprecated/sunset. No new DatasetRules allowed.
+	//             Existing DatasetRules must be disabled before transitioning here.
+	State            RuleState `json:"state"`
+	UpdatedAt        time.Time `json:"updated_at"`
+	UpgradeAvailable *bool     `json:"upgrade_available,omitempty"`
+}
 
 // RuleRevisionSubmitRequestSchema Request schema for submitting rule revision file content.
 type RuleRevisionSubmitRequestSchema struct {
@@ -5312,18 +5852,29 @@ type RuleRevisionSubmitResponseSchema struct {
 	NotChanged *[][]interface{} `json:"not_changed,omitempty"`
 }
 
+// RuleRevisionSupportedDatasetKindSchema A dataset kind that a rule revision supports.
+type RuleRevisionSupportedDatasetKindSchema struct {
+	Description *string            `json:"description"`
+	ID          openapi_types.UUID `json:"id"`
+	Name        string             `json:"name"`
+	Slug        string             `json:"slug"`
+}
+
 // RuleRevisionTinySchema One Rule revision for detail view
 type RuleRevisionTinySchema struct {
-	CreatedAt            time.Time               `json:"created_at"`
-	CreatedByUser        *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
-	Description          *string                 `json:"description"`
-	ID                   openapi_types.UUID      `json:"id"`
-	InteractsWithColumns []string                `json:"interacts_with_columns"`
-	IsBuiltin            bool                    `json:"is_builtin"`
-	IsCaf                bool                    `json:"is_caf"`
-	IsDefault            bool                    `json:"is_default"`
-	Name                 string                  `json:"name"`
-	Release              string                  `json:"release"`
+	// AffectedColumns The union of input_columns, validates_columns, corrects_columns, and enriches_columns
+	AffectedColumns []string                `json:"affected_columns"`
+	CreatedAt       time.Time               `json:"created_at"`
+	CreatedByUser   *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
+	Description     *string                 `json:"description"`
+	ID              openapi_types.UUID      `json:"id"`
+	IsBuiltin       bool                    `json:"is_builtin"`
+	IsCaf           bool                    `json:"is_caf"`
+	IsDefault       bool                    `json:"is_default"`
+	LineageID       *openapi_types.UUID     `json:"lineage_id"`
+	Name            string                  `json:"name"`
+	Release         string                  `json:"release"`
+	Slug            string                  `json:"slug"`
 
 	// State Lifecycle state for RuleRevision (rule template/definition).
 	//
@@ -5379,12 +5930,13 @@ type RuleRevisionsListSchema struct {
 
 // RuleRunSpec Configuration for running a specific rule in the dry run.
 type RuleRunSpec struct {
-	ColumnMapping  *map[string]string      `json:"column_mapping,omitempty"`
-	DatasetRuleID  *openapi_types.UUID     `json:"dataset_rule_id"`
-	Params         *map[string]interface{} `json:"params,omitempty"`
-	Position       int                     `json:"position"`
-	RuleRevisionID *openapi_types.UUID     `json:"rule_revision_id,omitempty"`
-	TreatAsAlert   *bool                   `json:"treat_as_alert,omitempty"`
+	ColumnMapping           *map[string]string      `json:"column_mapping,omitempty"`
+	DatasetRuleID           *openapi_types.UUID     `json:"dataset_rule_id"`
+	DatasetRuleSuggestionID *openapi_types.UUID     `json:"dataset_rule_suggestion_id"`
+	Params                  *map[string]interface{} `json:"params,omitempty"`
+	Position                int                     `json:"position"`
+	RuleRevisionID          *openapi_types.UUID     `json:"rule_revision_id,omitempty"`
+	TreatAsAlert            *bool                   `json:"treat_as_alert,omitempty"`
 }
 
 // RuleState Lifecycle state for RuleRevision (rule template/definition).
@@ -5471,6 +6023,44 @@ type SamplingMetadata struct {
 // Scope defines model for Scope.
 type Scope string
 
+// SearchAndReplaceRequestSchema defines model for SearchAndReplaceRequestSchema.
+type SearchAndReplaceRequestSchema struct {
+	// DataSourceModelID Limit to rows from this data source. If None, searches across all sources.
+	DataSourceModelID *int `json:"data_source_model_id"`
+
+	// DryRun If true, return the count of matching rows/cells without making any changes.
+	DryRun *bool `json:"dry_run,omitempty"`
+
+	// FieldName Limit to this field. If None, searches all fields in the dataset.
+	FieldName *string          `json:"field_name"`
+	MatchMode *SearchMatchMode `json:"match_mode,omitempty"`
+
+	// ReplaceTerm The text to replace matches with. Can be empty string to delete matches.
+	ReplaceTerm string `json:"replace_term"`
+
+	// SearchTerm The text/pattern to search for.
+	SearchTerm string `json:"search_term"`
+}
+
+// SearchAndReplaceResponseSchema defines model for SearchAndReplaceResponseSchema.
+type SearchAndReplaceResponseSchema struct {
+	// FieldsAffected Which fields had replacements.
+	FieldsAffected *[]string `json:"fields_affected,omitempty"`
+
+	// MatchedRows Total rows that contained a match.
+	MatchedRows *int `json:"matched_rows,omitempty"`
+
+	// ReplacedRows Rows where replacement was applied.
+	ReplacedRows *int    `json:"replaced_rows,omitempty"`
+	Result       *string `json:"result,omitempty"`
+
+	// SkippedRows Rows skipped (already processing, unauthorized, replacement produced no change).
+	SkippedRows *int `json:"skipped_rows,omitempty"`
+}
+
+// SearchMatchMode defines model for SearchMatchMode.
+type SearchMatchMode string
+
 // SensorRunSchema defines model for SensorRunSchema.
 type SensorRunSchema struct {
 	Result string `json:"result"`
@@ -5536,9 +6126,8 @@ type SettingsSchema struct {
 	FieldNamePartConversion map[string]string `json:"field_name_part_conversion"`
 
 	// FieldsToExpand Expand nested data at these column names to flatten the data structure. For example, if a row looks like {"key1": {"a": 1, "b": 2}}, using ["key"] for expanding will transform the row into {"a": 1, "b": 2}
-	FieldsToExpand      *[]string                         `json:"fields_to_expand"`
-	FormatInfoOverrides *FieldNamesToFormatInfoDictOutput `json:"format_info_overrides,omitempty"`
-	ID                  int                               `json:"id"`
+	FieldsToExpand *[]string `json:"fields_to_expand"`
+	ID             int       `json:"id"`
 
 	// IgnoreColumnNames The List of field names that need to be ignored in the raw data. It will act like these columns never existed.
 	IgnoreColumnNames []string `json:"ignore_column_names"`
@@ -5583,11 +6172,8 @@ type SettingsSchema struct {
 	NullValuesPerColumn *map[string][]string `json:"null_values_per_column"`
 
 	// PercentToDecimal If true, then when a field is marked as percent values, the csv values will be divided by 100 to be put in the database. Example: 10 becomes 0.10
-	PercentToDecimal *bool `json:"percent_to_decimal,omitempty"`
-
-	// QuarantineRowIfRowLevelIssue Ignore the whole row of data if data type casting fails for any column in the row during ingestion of the data.
-	QuarantineRowIfRowLevelIssue *bool                          `json:"quarantine_row_if_row_level_issue,omitempty"`
-	SchemaOverrides              *ModelDatabaseDetailDictOutput `json:"schema_overrides,omitempty"`
+	PercentToDecimal *bool                          `json:"percent_to_decimal,omitempty"`
+	SchemaOverrides  *ModelDatabaseDetailDictOutput `json:"schema_overrides,omitempty"`
 
 	// StringFieldPadding Padding for string fields. If the biggest string length in your training CSVs is X, then the DataBase field size will be X + padding.
 	StringFieldPadding int `json:"string_field_padding"`
@@ -5673,9 +6259,8 @@ type SettingsSchemaDraft struct {
 	FieldNamePartConversion map[string]string `json:"field_name_part_conversion"`
 
 	// FieldsToExpand Expand nested data at these column names to flatten the data structure. For example, if a row looks like {"key1": {"a": 1, "b": 2}}, using ["key"] for expanding will transform the row into {"a": 1, "b": 2}
-	FieldsToExpand      *[]string                         `json:"fields_to_expand"`
-	FormatInfoOverrides *FieldNamesToFormatInfoDictOutput `json:"format_info_overrides,omitempty"`
-	ID                  *int                              `json:"id"`
+	FieldsToExpand *[]string `json:"fields_to_expand"`
+	ID             *int      `json:"id"`
 
 	// IgnoreColumnNames The List of field names that need to be ignored in the raw data. It will act like these columns never existed.
 	IgnoreColumnNames []string `json:"ignore_column_names"`
@@ -5720,11 +6305,8 @@ type SettingsSchemaDraft struct {
 	NullValuesPerColumn *map[string][]string `json:"null_values_per_column"`
 
 	// PercentToDecimal If true, then when a field is marked as percent values, the csv values will be divided by 100 to be put in the database. Example: 10 becomes 0.10
-	PercentToDecimal *bool `json:"percent_to_decimal,omitempty"`
-
-	// QuarantineRowIfRowLevelIssue Ignore the whole row of data if data type casting fails for any column in the row during ingestion of the data.
-	QuarantineRowIfRowLevelIssue *bool                          `json:"quarantine_row_if_row_level_issue,omitempty"`
-	SchemaOverrides              *ModelDatabaseDetailDictOutput `json:"schema_overrides,omitempty"`
+	PercentToDecimal *bool                          `json:"percent_to_decimal,omitempty"`
+	SchemaOverrides  *ModelDatabaseDetailDictOutput `json:"schema_overrides,omitempty"`
 
 	// StringFieldPadding Padding for string fields. If the biggest string length in your training CSVs is X, then the DataBase field size will be X + padding.
 	StringFieldPadding int `json:"string_field_padding"`
@@ -5754,53 +6336,51 @@ type SettingsSchemaDraft struct {
 
 // SettingsSchemaOptional defines model for SettingsSchemaOptional.
 type SettingsSchemaOptional struct {
-	ArrayDelimiters                              *[]string                        `json:"array_delimiters"`
-	BooleanFalse                                 *[]string                        `json:"boolean_false"`
-	BooleanFalsePerColumn                        *map[string][]string             `json:"boolean_false_per_column"`
-	BooleanTrue                                  *[]string                        `json:"boolean_true"`
-	BooleanTruePerColumn                         *map[string][]string             `json:"boolean_true_per_column"`
-	DataMarkedAsValidForDBField                  *map[string][]string             `json:"data_marked_as_valid_for_db_field"`
-	DatetimeAllowedCharacters                    *string                          `json:"datetime_allowed_characters"`
-	DatetimeFormats                              *[]string                        `json:"datetime_formats"`
-	DatetimeFormatsPerColumn                     *map[string][]string             `json:"datetime_formats_per_column"`
-	DecimalFieldPadding                          *int                             `json:"decimal_field_padding"`
-	DefaultValueForFieldWhenCastingError         *map[string]interface{}          `json:"default_value_for_field_when_casting_error"`
-	DollarToCent                                 *bool                            `json:"dollar_to_cent"`
-	DollarValueIfWordInFieldName                 *[]string                        `json:"dollar_value_if_word_in_field_name"`
-	EnableInteger                                *bool                            `json:"enable_integer"`
-	EnableSmallInteger                           *bool                            `json:"enable_small_integer"`
-	EncryptColumns                               *[]string                        `json:"encrypt_columns"`
-	FieldNameFullConversion                      *map[string]string               `json:"field_name_full_conversion"`
-	FieldNamePartConversion                      *map[string]string               `json:"field_name_part_conversion"`
-	FieldsToExpand                               *[]string                        `json:"fields_to_expand"`
-	FormatInfoOverrides                          *FieldNamesToFormatInfoDictInput `json:"format_info_overrides,omitempty"`
-	ID                                           int                              `json:"id"`
-	IgnoreColumnNames                            *[]string                        `json:"ignore_column_names"`
-	IgnoreColumnNamesThatHaveAnyOfWords          *[]string                        `json:"ignore_column_names_that_have_any_of_words"`
-	IgnoreFieldsInSignatureCalculation           *[]string                        `json:"ignore_fields_in_signature_calculation"`
-	IgnoreLinesThatIncludeOnlySubsetOfCharacters *[]string                        `json:"ignore_lines_that_include_only_subset_of_characters"`
-	IgnoreLinesThatIncludeOnlySubsetOfWords      *[]string                        `json:"ignore_lines_that_include_only_subset_of_words"`
-	IgnoreMatchers                               *map[string][]string             `json:"ignore_matchers"`
-	IgnoreNotSeenBeforeFieldsWhenImporting       *bool                            `json:"ignore_not_seen_before_fields_when_importing"`
-	InferDatetime                                *bool                            `json:"infer_datetime"`
-	InferDatetimeForColumns                      *[]string                        `json:"infer_datetime_for_columns"`
-	MaxBoundaryElementLength                     *int                             `json:"max_boundary_element_length"`
-	MonetaryColumnsOverride                      *map[string]bool                 `json:"monetary_columns_override"`
-	NonStringFieldsAreAllNullable                *bool                            `json:"non_string_fields_are_all_nullable"`
-	NullValues                                   *[]string                        `json:"null_values"`
-	NullValuesPerColumn                          *map[string][]string             `json:"null_values_per_column"`
-	PercentToDecimal                             *bool                            `json:"percent_to_decimal"`
-	QuarantineRowIfRowLevelIssue                 *bool                            `json:"quarantine_row_if_row_level_issue"`
-	SchemaOverrides                              *ModelDatabaseDetailDictInput    `json:"schema_overrides,omitempty"`
-	StringFieldPadding                           *int                             `json:"string_field_padding"`
-	StringFieldsCanBeNullable                    *bool                            `json:"string_fields_can_be_nullable"`
-	TrimStringInsteadOfRaisingErr                *bool                            `json:"trim_string_instead_of_raising_err"`
-	UseTextInsteadOfString                       *bool                            `json:"use_text_instead_of_string"`
-	ValueMapping                                 *map[string]string               `json:"value_mapping"`
-	ValueMappingPerColumn                        *map[string]map[string]string    `json:"value_mapping_per_column"`
-	VersionID                                    int                              `json:"version_id"`
-	WhodunitID                                   *openapi_types.UUID              `json:"whodunit_id"`
-	XlsDateMode                                  *XLSDateMode                     `json:"xls_date_mode,omitempty"`
+	ArrayDelimiters                              *[]string                     `json:"array_delimiters"`
+	BooleanFalse                                 *[]string                     `json:"boolean_false"`
+	BooleanFalsePerColumn                        *map[string][]string          `json:"boolean_false_per_column"`
+	BooleanTrue                                  *[]string                     `json:"boolean_true"`
+	BooleanTruePerColumn                         *map[string][]string          `json:"boolean_true_per_column"`
+	DataMarkedAsValidForDBField                  *map[string][]string          `json:"data_marked_as_valid_for_db_field"`
+	DatetimeAllowedCharacters                    *string                       `json:"datetime_allowed_characters"`
+	DatetimeFormats                              *[]string                     `json:"datetime_formats"`
+	DatetimeFormatsPerColumn                     *map[string][]string          `json:"datetime_formats_per_column"`
+	DecimalFieldPadding                          *int                          `json:"decimal_field_padding"`
+	DefaultValueForFieldWhenCastingError         *map[string]interface{}       `json:"default_value_for_field_when_casting_error"`
+	DollarToCent                                 *bool                         `json:"dollar_to_cent"`
+	DollarValueIfWordInFieldName                 *[]string                     `json:"dollar_value_if_word_in_field_name"`
+	EnableInteger                                *bool                         `json:"enable_integer"`
+	EnableSmallInteger                           *bool                         `json:"enable_small_integer"`
+	EncryptColumns                               *[]string                     `json:"encrypt_columns"`
+	FieldNameFullConversion                      *map[string]string            `json:"field_name_full_conversion"`
+	FieldNamePartConversion                      *map[string]string            `json:"field_name_part_conversion"`
+	FieldsToExpand                               *[]string                     `json:"fields_to_expand"`
+	ID                                           int                           `json:"id"`
+	IgnoreColumnNames                            *[]string                     `json:"ignore_column_names"`
+	IgnoreColumnNamesThatHaveAnyOfWords          *[]string                     `json:"ignore_column_names_that_have_any_of_words"`
+	IgnoreFieldsInSignatureCalculation           *[]string                     `json:"ignore_fields_in_signature_calculation"`
+	IgnoreLinesThatIncludeOnlySubsetOfCharacters *[]string                     `json:"ignore_lines_that_include_only_subset_of_characters"`
+	IgnoreLinesThatIncludeOnlySubsetOfWords      *[]string                     `json:"ignore_lines_that_include_only_subset_of_words"`
+	IgnoreMatchers                               *map[string][]string          `json:"ignore_matchers"`
+	IgnoreNotSeenBeforeFieldsWhenImporting       *bool                         `json:"ignore_not_seen_before_fields_when_importing"`
+	InferDatetime                                *bool                         `json:"infer_datetime"`
+	InferDatetimeForColumns                      *[]string                     `json:"infer_datetime_for_columns"`
+	MaxBoundaryElementLength                     *int                          `json:"max_boundary_element_length"`
+	MonetaryColumnsOverride                      *map[string]bool              `json:"monetary_columns_override"`
+	NonStringFieldsAreAllNullable                *bool                         `json:"non_string_fields_are_all_nullable"`
+	NullValues                                   *[]string                     `json:"null_values"`
+	NullValuesPerColumn                          *map[string][]string          `json:"null_values_per_column"`
+	PercentToDecimal                             *bool                         `json:"percent_to_decimal"`
+	SchemaOverrides                              *ModelDatabaseDetailDictInput `json:"schema_overrides,omitempty"`
+	StringFieldPadding                           *int                          `json:"string_field_padding"`
+	StringFieldsCanBeNullable                    *bool                         `json:"string_fields_can_be_nullable"`
+	TrimStringInsteadOfRaisingErr                *bool                         `json:"trim_string_instead_of_raising_err"`
+	UseTextInsteadOfString                       *bool                         `json:"use_text_instead_of_string"`
+	ValueMapping                                 *map[string]string            `json:"value_mapping"`
+	ValueMappingPerColumn                        *map[string]map[string]string `json:"value_mapping_per_column"`
+	VersionID                                    int                           `json:"version_id"`
+	WhodunitID                                   *openapi_types.UUID           `json:"whodunit_id"`
+	XlsDateMode                                  *XLSDateMode                  `json:"xls_date_mode,omitempty"`
 }
 
 // SimpleHistoryAction This is the simplified version of history action
@@ -6042,6 +6622,15 @@ type SubmitDecisionSchema struct {
 	Decision ReviewDecisionEnum `json:"decision"`
 }
 
+// SuggestionAction What rule change the suggestion proposes.
+type SuggestionAction string
+
+// SuggestionSource How the suggestion was generated.
+type SuggestionSource string
+
+// SuggestionState Lifecycle state of a DatasetRuleSuggestion.
+type SuggestionState string
+
 // SwitchOrganizationRequestSchema Schema for organization switch requests.
 //
 // The target_organization_id specifies where to switch to.
@@ -6259,6 +6848,23 @@ type UnsubmitSkippedGroup struct {
 	Rules  []UnsubmitRuleItem `json:"rules"`
 }
 
+// UpdateKeepInQuarantineRequestSchema Update the keep_in_quarantine_ field for quarantine rows.
+//
+// - true: mark rows to be kept in quarantine (pending manual review).
+// - false: release rows for reprocessing into clean data.
+// - null: reset to undecided state (triggers reprocessing).
+type UpdateKeepInQuarantineRequestSchema struct {
+	// Ids Row IDs to update. If omitted, uses quarantine_status filter.
+	Ids *[]int `json:"ids"`
+
+	// KeepInQuarantine Target value for keep_in_quarantine_. true=keep, false=release for reprocessing, null=reset to undecided (also triggers reprocessing).
+	KeepInQuarantine *bool `json:"keep_in_quarantine"`
+
+	// QuarantineStatus Status filter for quarantine rows.
+	// Used for bulk operations by status on quarantine data.
+	QuarantineStatus *QuarantineStatus `json:"quarantine_status,omitempty"`
+}
+
 // UserInfoForPrivilegeSchema Minimal user info for privilege request display.
 type UserInfoForPrivilegeSchema struct {
 	Email     string             `json:"email"`
@@ -6316,10 +6922,11 @@ type UserSchemaFull struct {
 	RedirectPostSubmitTo *string `json:"redirect_post_submit_to"`
 
 	// Role Fixed ALL roles including internal roles
-	Role           *Role     `json:"role,omitempty"`
-	ShowAdvancedUI bool      `json:"show_advanced_ui"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	VersionID      int       `json:"version_id"`
+	Role               *Role     `json:"role,omitempty"`
+	ShowAdvancedUI     bool      `json:"show_advanced_ui"`
+	ShowRuleReviewsNav bool      `json:"show_rule_reviews_nav"`
+	UpdatedAt          time.Time `json:"updated_at"`
+	VersionID          int       `json:"version_id"`
 }
 
 // UserTinySchema defines model for UserTinySchema.
@@ -6472,9 +7079,13 @@ type WarningSchema struct {
 	DataSourceModelID *int       `json:"data_source_model_id"`
 
 	// DataSourceModelName The name of the data source associated with this warning
-	DataSourceModelName *string `json:"data_source_model_name"`
-	DatasetID           int     `json:"dataset_id"`
-	DatasetName         string  `json:"dataset_name"`
+	DataSourceModelName *string             `json:"data_source_model_name"`
+	DatasetID           int                 `json:"dataset_id"`
+	DatasetName         string              `json:"dataset_name"`
+	DatasetRuleID       *openapi_types.UUID `json:"dataset_rule_id"`
+
+	// DatasetRuleName Name of the dataset rule
+	DatasetRuleName *string `json:"dataset_rule_name"`
 
 	// ExpiredAt When was this warning will be expired. Once expired, it should be marked as resolved. This is usually used for warning that are notifications.
 	ExpiredAt *time.Time `json:"expired_at"`
@@ -7227,16 +7838,6 @@ type DisableSensorCronjobNowParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
-// KeepAllRowsInQuarantineForDataSourceViewParams defines parameters for KeepAllRowsInQuarantineForDataSourceView.
-type KeepAllRowsInQuarantineForDataSourceViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// ReleaseAllRowsFromQuarantineForDataSourceViewParams defines parameters for ReleaseAllRowsFromQuarantineForDataSourceView.
-type ReleaseAllRowsFromQuarantineForDataSourceViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
 // ReprocessAllBadRowsForDataSourceViewParams defines parameters for ReprocessAllBadRowsForDataSourceView.
 type ReprocessAllBadRowsForDataSourceViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -7254,6 +7855,98 @@ type RunSensorJobNowParams struct {
 
 // GetDataSourceTinyParams defines parameters for GetDataSourceTiny.
 type GetDataSourceTinyParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// UpdateKeepInQuarantineForDataSourceViewParams defines parameters for UpdateKeepInQuarantineForDataSourceView.
+type UpdateKeepInQuarantineForDataSourceViewParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetDatasetFieldKindsParams defines parameters for GetDatasetFieldKinds.
+type GetDatasetFieldKindsParams struct {
+	// DatasetKindID If set, only return field kinds belonging to this dataset kind.
+	DatasetKindID *openapi_types.UUID `form:"dataset_kind_id,omitempty" json:"dataset_kind_id,omitempty"`
+
+	// Page Page number for pagination.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// OrderBy Field to sort the results by.
+	OrderBy *DatasetFieldKindOrderBy `form:"order_by,omitempty" json:"order_by,omitempty"`
+
+	// Reverse Reverse the sorting of returned results.
+	Reverse *bool `form:"reverse,omitempty" json:"reverse,omitempty"`
+
+	// Limit Max number of field kinds to return.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// SearchQuery Search field kinds by name or slug.
+	SearchQuery *string `form:"search_query,omitempty" json:"search_query,omitempty"`
+
+	// IncludeBuiltin Include field kinds that belong to builtin (global) dataset kinds.
+	IncludeBuiltin *bool   `form:"include_builtin,omitempty" json:"include_builtin,omitempty"`
+	OauthSession   *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// CreateDatasetFieldKindParams defines parameters for CreateDatasetFieldKind.
+type CreateDatasetFieldKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// DeleteDatasetFieldKindParams defines parameters for DeleteDatasetFieldKind.
+type DeleteDatasetFieldKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetOneDatasetFieldKindParams defines parameters for GetOneDatasetFieldKind.
+type GetOneDatasetFieldKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// PatchDatasetFieldKindParams defines parameters for PatchDatasetFieldKind.
+type PatchDatasetFieldKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetDatasetKindsParams defines parameters for GetDatasetKinds.
+type GetDatasetKindsParams struct {
+	// Page Page number for pagination.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// OrderBy Field to sort the results by.
+	OrderBy *DatasetKindOrderBy `form:"order_by,omitempty" json:"order_by,omitempty"`
+
+	// Reverse Reverse the sorting of returned results.
+	Reverse *bool `form:"reverse,omitempty" json:"reverse,omitempty"`
+
+	// Limit Max number of profiles to return.
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// SearchQuery Search profiles by name or slug.
+	SearchQuery *string `form:"search_query,omitempty" json:"search_query,omitempty"`
+
+	// IncludeBuiltin Include builtin (global) dataset kinds in the results.
+	IncludeBuiltin *bool   `form:"include_builtin,omitempty" json:"include_builtin,omitempty"`
+	OauthSession   *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// CreateDatasetKindParams defines parameters for CreateDatasetKind.
+type CreateDatasetKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// DeleteDatasetKindParams defines parameters for DeleteDatasetKind.
+type DeleteDatasetKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetOneDatasetKindParams defines parameters for GetOneDatasetKind.
+type GetOneDatasetKindParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// PatchDatasetKindParams defines parameters for PatchDatasetKind.
+type PatchDatasetKindParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -7544,18 +8237,18 @@ type GetDatasetJobActivityParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
-// KeepAllRowsInQuarantineViewParams defines parameters for KeepAllRowsInQuarantineView.
-type KeepAllRowsInQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// KeepRowsInQuarantineViewParams defines parameters for KeepRowsInQuarantineView.
-type KeepRowsInQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
 // GetDatasetMigrationDetailsParams defines parameters for GetDatasetMigrationDetails.
 type GetDatasetMigrationDetailsParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetDatasetMigrationFieldsParams defines parameters for GetDatasetMigrationFields.
+type GetDatasetMigrationFieldsParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetFieldNotableValuesParams defines parameters for GetFieldNotableValues.
+type GetFieldNotableValuesParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -7589,17 +8282,6 @@ type RecoverDatasetParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
-// ReleaseAllRowsFromQuarantineViewParams defines parameters for ReleaseAllRowsFromQuarantineView.
-type ReleaseAllRowsFromQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// ReleaseRowsFromQuarantineViewParams defines parameters for ReleaseRowsFromQuarantineView.
-type ReleaseRowsFromQuarantineViewParams struct {
-	QuarantineStatus *QuarantineStatus `form:"quarantine_status,omitempty" json:"quarantine_status,omitempty"`
-	OauthSession     *string           `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
 // ReprocessAllBadRowsForDatasetViewParams defines parameters for ReprocessAllBadRowsForDatasetView.
 type ReprocessAllBadRowsForDatasetViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -7626,8 +8308,55 @@ type CreateOrUpdateDatasetReviewPolicyParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
+// ListSuggestionsParams defines parameters for ListSuggestions.
+type ListSuggestionsParams struct {
+	// State Filter by state (repeatable)
+	State *[]SuggestionState `form:"state,omitempty" json:"state,omitempty"`
+
+	// Source Filter by source
+	Source       *SuggestionSource `form:"source,omitempty" json:"source,omitempty"`
+	Page         *int              `form:"page,omitempty" json:"page,omitempty"`
+	Limit        *int              `form:"limit,omitempty" json:"limit,omitempty"`
+	OauthSession *string           `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// BulkAcceptSuggestionsParams defines parameters for BulkAcceptSuggestions.
+type BulkAcceptSuggestionsParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// BulkDismissSuggestionsParams defines parameters for BulkDismissSuggestions.
+type BulkDismissSuggestionsParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetSuggestionParams defines parameters for GetSuggestion.
+type GetSuggestionParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// PatchSuggestionParams defines parameters for PatchSuggestion.
+type PatchSuggestionParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// AcceptSuggestionParams defines parameters for AcceptSuggestion.
+type AcceptSuggestionParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// DismissSuggestionParams defines parameters for DismissSuggestion.
+type DismissSuggestionParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
 // RunTrainingJobNowParams defines parameters for RunTrainingJobNow.
 type RunTrainingJobNowParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// SearchAndReplaceParams defines parameters for SearchAndReplace.
+type SearchAndReplaceParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -7650,6 +8379,11 @@ type GetTopAlertsParams struct {
 
 // TrackDatasetParams defines parameters for TrackDataset.
 type TrackDatasetParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// UpdateKeepInQuarantineViewParams defines parameters for UpdateKeepInQuarantineView.
+type UpdateKeepInQuarantineViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -8184,7 +8918,7 @@ type GetRuleRevisionListParams struct {
 	// OnlyDefault Only limit to the rule revision items that are default.
 	OnlyDefault *bool `form:"only_default,omitempty" json:"only_default,omitempty"`
 
-	// StateFilter Filter by state (default: enabled for catalog view)
+	// StateFilter Filter by RuleRevision.state. Defaults to no state filter; the catalog effectively shows only enabled revisions because only_default=True implies state=enabled via the ck_default_must_be_enabled DB constraint.
 	StateFilter *RuleState `form:"state_filter,omitempty" json:"state_filter,omitempty"`
 
 	// HasUpgradeAvailable Filter to rules with/without upgrade available
@@ -8357,18 +9091,13 @@ type DeleteThirdPartyRowsInDataSourceParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
-// KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams defines parameters for KeepAllThirdPartyRowsInQuarantineForDataSourceView.
-type KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams defines parameters for ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView.
-type ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
 // ReprocessAllThirdPartyBadRowsForDataSourceViewParams defines parameters for ReprocessAllThirdPartyBadRowsForDataSourceView.
 type ReprocessAllThirdPartyBadRowsForDataSourceViewParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// UpdateThirdPartyKeepInQuarantineForDataSourceViewParams defines parameters for UpdateThirdPartyKeepInQuarantineForDataSourceView.
+type UpdateThirdPartyKeepInQuarantineForDataSourceViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -8622,16 +9351,6 @@ type GetThirdPartyDryRunJobsParams struct {
 	OauthSession *string              `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
-// KeepAllThirdPartyRowsInQuarantineViewParams defines parameters for KeepAllThirdPartyRowsInQuarantineView.
-type KeepAllThirdPartyRowsInQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// KeepThirdPartyRowsInQuarantineViewParams defines parameters for KeepThirdPartyRowsInQuarantineView.
-type KeepThirdPartyRowsInQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
 // ModifyThirdPartyCleanCellParams defines parameters for ModifyThirdPartyCleanCell.
 type ModifyThirdPartyCleanCellParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -8650,17 +9369,6 @@ type GetThirdPartyCleanCellInfoParams struct {
 // GetThirdPartyQuarantineCountByStatusParams defines parameters for GetThirdPartyQuarantineCountByStatus.
 type GetThirdPartyQuarantineCountByStatusParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// ReleaseAllThirdPartyRowsFromQuarantineViewParams defines parameters for ReleaseAllThirdPartyRowsFromQuarantineView.
-type ReleaseAllThirdPartyRowsFromQuarantineViewParams struct {
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
-}
-
-// ReleaseThirdPartyRowsFromQuarantineViewParams defines parameters for ReleaseThirdPartyRowsFromQuarantineView.
-type ReleaseThirdPartyRowsFromQuarantineViewParams struct {
-	QuarantineStatus *QuarantineStatus `form:"quarantine_status,omitempty" json:"quarantine_status,omitempty"`
-	OauthSession     *string           `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
 // ReprocessAllThirdPartyBadRowsForDatasetViewParams defines parameters for ReprocessAllThirdPartyBadRowsForDatasetView.
@@ -8683,6 +9391,11 @@ type GetThirdPartyTopAlertsParams struct {
 
 // TrackThirdPartyDatasetParams defines parameters for TrackThirdPartyDataset.
 type TrackThirdPartyDatasetParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// UpdateThirdPartyKeepInQuarantineViewParams defines parameters for UpdateThirdPartyKeepInQuarantineView.
+type UpdateThirdPartyKeepInQuarantineViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -9038,6 +9751,21 @@ type PostCopyDataSourceModelJSONRequestBody = DataSourceModelPostRequestSchema
 // DeleteRowsInDataSourceJSONRequestBody defines body for DeleteRowsInDataSource for application/json ContentType.
 type DeleteRowsInDataSourceJSONRequestBody = RootModelListStr
 
+// UpdateKeepInQuarantineForDataSourceViewJSONRequestBody defines body for UpdateKeepInQuarantineForDataSourceView for application/json ContentType.
+type UpdateKeepInQuarantineForDataSourceViewJSONRequestBody = UpdateKeepInQuarantineRequestSchema
+
+// CreateDatasetFieldKindJSONRequestBody defines body for CreateDatasetFieldKind for application/json ContentType.
+type CreateDatasetFieldKindJSONRequestBody = DatasetFieldKindPostRequestSchema
+
+// PatchDatasetFieldKindJSONRequestBody defines body for PatchDatasetFieldKind for application/json ContentType.
+type PatchDatasetFieldKindJSONRequestBody = DatasetFieldKindPatchRequestSchema
+
+// CreateDatasetKindJSONRequestBody defines body for CreateDatasetKind for application/json ContentType.
+type CreateDatasetKindJSONRequestBody = DatasetKindPostRequestSchema
+
+// PatchDatasetKindJSONRequestBody defines body for PatchDatasetKind for application/json ContentType.
+type PatchDatasetKindJSONRequestBody = DatasetKindPatchRequestSchema
+
 // PatchDatasetJSONRequestBody defines body for PatchDataset for application/json ContentType.
 type PatchDatasetJSONRequestBody = DataSetPatchRequestSchema
 
@@ -9071,9 +9799,6 @@ type DeleteRowsInDatasetJSONRequestBody = RootModelListStr
 // GetDatasetJobActivityJSONRequestBody defines body for GetDatasetJobActivity for application/json ContentType.
 type GetDatasetJobActivityJSONRequestBody = JobRunningCountRequestSchema
 
-// KeepRowsInQuarantineViewJSONRequestBody defines body for KeepRowsInQuarantineView for application/json ContentType.
-type KeepRowsInQuarantineViewJSONRequestBody = KeepRowsInQuarantineRequestSchema
-
 // PatchMigrationJSONRequestBody defines body for PatchMigration for application/json ContentType.
 type PatchMigrationJSONRequestBody = MigrationPatchRequest
 
@@ -9089,17 +9814,32 @@ type GetCleanCellInfoJSONRequestBody = CleanCellInfoRequestSchema
 // RecoverDatasetJSONRequestBody defines body for RecoverDataset for application/json ContentType.
 type RecoverDatasetJSONRequestBody = DatasetRecoverRequestSchema
 
-// ReleaseRowsFromQuarantineViewJSONRequestBody defines body for ReleaseRowsFromQuarantineView for application/json ContentType.
-type ReleaseRowsFromQuarantineViewJSONRequestBody = ReleaseRowsFromQuarantineRequestSchema
-
 // ReprocessBadRowsForDatasetViewJSONRequestBody defines body for ReprocessBadRowsForDatasetView for application/json ContentType.
 type ReprocessBadRowsForDatasetViewJSONRequestBody = ReprocessBadRowsRequestSchema
 
 // CreateOrUpdateDatasetReviewPolicyJSONRequestBody defines body for CreateOrUpdateDatasetReviewPolicy for application/json ContentType.
 type CreateOrUpdateDatasetReviewPolicyJSONRequestBody = ReviewPolicyRequestSchema
 
+// BulkAcceptSuggestionsJSONRequestBody defines body for BulkAcceptSuggestions for application/json ContentType.
+type BulkAcceptSuggestionsJSONRequestBody = BulkSuggestionRequest
+
+// BulkDismissSuggestionsJSONRequestBody defines body for BulkDismissSuggestions for application/json ContentType.
+type BulkDismissSuggestionsJSONRequestBody = BulkDismissSuggestionRequest
+
+// PatchSuggestionJSONRequestBody defines body for PatchSuggestion for application/json ContentType.
+type PatchSuggestionJSONRequestBody = PatchSuggestionRequest
+
+// DismissSuggestionJSONRequestBody defines body for DismissSuggestion for application/json ContentType.
+type DismissSuggestionJSONRequestBody = DismissSuggestionRequest
+
+// SearchAndReplaceJSONRequestBody defines body for SearchAndReplace for application/json ContentType.
+type SearchAndReplaceJSONRequestBody = SearchAndReplaceRequestSchema
+
 // TrackDatasetJSONRequestBody defines body for TrackDataset for application/json ContentType.
 type TrackDatasetJSONRequestBody = UserTrackedDatasetRequestSchema
+
+// UpdateKeepInQuarantineViewJSONRequestBody defines body for UpdateKeepInQuarantineView for application/json ContentType.
+type UpdateKeepInQuarantineViewJSONRequestBody = UpdateKeepInQuarantineRequestSchema
 
 // GetWarningsMsgsListJSONRequestBody defines body for GetWarningsMsgsList for application/json ContentType.
 type GetWarningsMsgsListJSONRequestBody = WarningsMsgsListRequestSchema
@@ -9209,6 +9949,9 @@ type ResolveThirdPartyAlertJSONRequestBody = AlertResolveSchema
 // DeleteThirdPartyRowsInDataSourceJSONRequestBody defines body for DeleteThirdPartyRowsInDataSource for application/json ContentType.
 type DeleteThirdPartyRowsInDataSourceJSONRequestBody = RootModelListStr
 
+// UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody defines body for UpdateThirdPartyKeepInQuarantineForDataSourceView for application/json ContentType.
+type UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody = UpdateKeepInQuarantineRequestSchema
+
 // PatchThirdPartyDatasetJSONRequestBody defines body for PatchThirdPartyDataset for application/json ContentType.
 type PatchThirdPartyDatasetJSONRequestBody = DataSetPatchRequestSchema
 
@@ -9221,9 +9964,6 @@ type PutThirdPartyDataForDedupeJSONRequestBody = DedupeRequestSchema
 // DeleteThirdPartyRowsInDatasetJSONRequestBody defines body for DeleteThirdPartyRowsInDataset for application/json ContentType.
 type DeleteThirdPartyRowsInDatasetJSONRequestBody = RootModelListStr
 
-// KeepThirdPartyRowsInQuarantineViewJSONRequestBody defines body for KeepThirdPartyRowsInQuarantineView for application/json ContentType.
-type KeepThirdPartyRowsInQuarantineViewJSONRequestBody = KeepRowsInQuarantineRequestSchema
-
 // ModifyThirdPartyCleanCellJSONRequestBody defines body for ModifyThirdPartyCleanCell for application/json ContentType.
 type ModifyThirdPartyCleanCellJSONRequestBody = ModifyCleanCellRequestSchema
 
@@ -9233,14 +9973,14 @@ type MoveThirdPartyRowsToQuarantineViewJSONRequestBody = MoveRowsToQuarantineReq
 // GetThirdPartyCleanCellInfoJSONRequestBody defines body for GetThirdPartyCleanCellInfo for application/json ContentType.
 type GetThirdPartyCleanCellInfoJSONRequestBody = CleanCellInfoRequestSchema
 
-// ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody defines body for ReleaseThirdPartyRowsFromQuarantineView for application/json ContentType.
-type ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody = ReleaseRowsFromQuarantineRequestSchema
-
 // ReprocessThirdPartyBadRowsForDatasetViewJSONRequestBody defines body for ReprocessThirdPartyBadRowsForDatasetView for application/json ContentType.
 type ReprocessThirdPartyBadRowsForDatasetViewJSONRequestBody = ReprocessBadRowsRequestSchema
 
 // TrackThirdPartyDatasetJSONRequestBody defines body for TrackThirdPartyDataset for application/json ContentType.
 type TrackThirdPartyDatasetJSONRequestBody = UserTrackedDatasetRequestSchema
+
+// UpdateThirdPartyKeepInQuarantineViewJSONRequestBody defines body for UpdateThirdPartyKeepInQuarantineView for application/json ContentType.
+type UpdateThirdPartyKeepInQuarantineViewJSONRequestBody = UpdateKeepInQuarantineRequestSchema
 
 // GetThirdPartyWarningsMsgsListJSONRequestBody defines body for GetThirdPartyWarningsMsgsList for application/json ContentType.
 type GetThirdPartyWarningsMsgsListJSONRequestBody = WarningsMsgsListRequestSchema
@@ -10358,218 +11098,6 @@ func (t *FieldFormatCandidateDict_Minimum) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-// AsContextAwareFieldType returns the union data inside the FieldFormatInfoDict_Format as a ContextAwareFieldType
-func (t FieldFormatInfoDict_Format) AsContextAwareFieldType() (ContextAwareFieldType, error) {
-	var body ContextAwareFieldType
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromContextAwareFieldType overwrites any union data inside the FieldFormatInfoDict_Format as the provided ContextAwareFieldType
-func (t *FieldFormatInfoDict_Format) FromContextAwareFieldType(v ContextAwareFieldType) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeContextAwareFieldType performs a merge with any union data inside the FieldFormatInfoDict_Format, using the provided ContextAwareFieldType
-func (t *FieldFormatInfoDict_Format) MergeContextAwareFieldType(v ContextAwareFieldType) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsBuiltinRuleType returns the union data inside the FieldFormatInfoDict_Format as a BuiltinRuleType
-func (t FieldFormatInfoDict_Format) AsBuiltinRuleType() (BuiltinRuleType, error) {
-	var body BuiltinRuleType
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromBuiltinRuleType overwrites any union data inside the FieldFormatInfoDict_Format as the provided BuiltinRuleType
-func (t *FieldFormatInfoDict_Format) FromBuiltinRuleType(v BuiltinRuleType) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeBuiltinRuleType performs a merge with any union data inside the FieldFormatInfoDict_Format, using the provided BuiltinRuleType
-func (t *FieldFormatInfoDict_Format) MergeBuiltinRuleType(v BuiltinRuleType) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsBasicFormats returns the union data inside the FieldFormatInfoDict_Format as a BasicFormats
-func (t FieldFormatInfoDict_Format) AsBasicFormats() (BasicFormats, error) {
-	var body BasicFormats
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromBasicFormats overwrites any union data inside the FieldFormatInfoDict_Format as the provided BasicFormats
-func (t *FieldFormatInfoDict_Format) FromBasicFormats(v BasicFormats) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeBasicFormats performs a merge with any union data inside the FieldFormatInfoDict_Format, using the provided BasicFormats
-func (t *FieldFormatInfoDict_Format) MergeBasicFormats(v BasicFormats) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t FieldFormatInfoDict_Format) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *FieldFormatInfoDict_Format) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
-// AsFieldFormatInfoDictMaximum0 returns the union data inside the FieldFormatInfoDict_Maximum as a FieldFormatInfoDictMaximum0
-func (t FieldFormatInfoDict_Maximum) AsFieldFormatInfoDictMaximum0() (FieldFormatInfoDictMaximum0, error) {
-	var body FieldFormatInfoDictMaximum0
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromFieldFormatInfoDictMaximum0 overwrites any union data inside the FieldFormatInfoDict_Maximum as the provided FieldFormatInfoDictMaximum0
-func (t *FieldFormatInfoDict_Maximum) FromFieldFormatInfoDictMaximum0(v FieldFormatInfoDictMaximum0) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeFieldFormatInfoDictMaximum0 performs a merge with any union data inside the FieldFormatInfoDict_Maximum, using the provided FieldFormatInfoDictMaximum0
-func (t *FieldFormatInfoDict_Maximum) MergeFieldFormatInfoDictMaximum0(v FieldFormatInfoDictMaximum0) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsFieldFormatInfoDictMaximum1 returns the union data inside the FieldFormatInfoDict_Maximum as a FieldFormatInfoDictMaximum1
-func (t FieldFormatInfoDict_Maximum) AsFieldFormatInfoDictMaximum1() (FieldFormatInfoDictMaximum1, error) {
-	var body FieldFormatInfoDictMaximum1
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromFieldFormatInfoDictMaximum1 overwrites any union data inside the FieldFormatInfoDict_Maximum as the provided FieldFormatInfoDictMaximum1
-func (t *FieldFormatInfoDict_Maximum) FromFieldFormatInfoDictMaximum1(v FieldFormatInfoDictMaximum1) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeFieldFormatInfoDictMaximum1 performs a merge with any union data inside the FieldFormatInfoDict_Maximum, using the provided FieldFormatInfoDictMaximum1
-func (t *FieldFormatInfoDict_Maximum) MergeFieldFormatInfoDictMaximum1(v FieldFormatInfoDictMaximum1) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t FieldFormatInfoDict_Maximum) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *FieldFormatInfoDict_Maximum) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
-// AsFieldFormatInfoDictMinimum0 returns the union data inside the FieldFormatInfoDict_Minimum as a FieldFormatInfoDictMinimum0
-func (t FieldFormatInfoDict_Minimum) AsFieldFormatInfoDictMinimum0() (FieldFormatInfoDictMinimum0, error) {
-	var body FieldFormatInfoDictMinimum0
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromFieldFormatInfoDictMinimum0 overwrites any union data inside the FieldFormatInfoDict_Minimum as the provided FieldFormatInfoDictMinimum0
-func (t *FieldFormatInfoDict_Minimum) FromFieldFormatInfoDictMinimum0(v FieldFormatInfoDictMinimum0) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeFieldFormatInfoDictMinimum0 performs a merge with any union data inside the FieldFormatInfoDict_Minimum, using the provided FieldFormatInfoDictMinimum0
-func (t *FieldFormatInfoDict_Minimum) MergeFieldFormatInfoDictMinimum0(v FieldFormatInfoDictMinimum0) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsFieldFormatInfoDictMinimum1 returns the union data inside the FieldFormatInfoDict_Minimum as a FieldFormatInfoDictMinimum1
-func (t FieldFormatInfoDict_Minimum) AsFieldFormatInfoDictMinimum1() (FieldFormatInfoDictMinimum1, error) {
-	var body FieldFormatInfoDictMinimum1
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromFieldFormatInfoDictMinimum1 overwrites any union data inside the FieldFormatInfoDict_Minimum as the provided FieldFormatInfoDictMinimum1
-func (t *FieldFormatInfoDict_Minimum) FromFieldFormatInfoDictMinimum1(v FieldFormatInfoDictMinimum1) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeFieldFormatInfoDictMinimum1 performs a merge with any union data inside the FieldFormatInfoDict_Minimum, using the provided FieldFormatInfoDictMinimum1
-func (t *FieldFormatInfoDict_Minimum) MergeFieldFormatInfoDictMinimum1(v FieldFormatInfoDictMinimum1) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t FieldFormatInfoDict_Minimum) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *FieldFormatInfoDict_Minimum) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
 // AsFieldNotableValuesForResponse0 returns the union data inside the FieldNotableValuesForResponse_Item as a FieldNotableValuesForResponse0
 func (t FieldNotableValuesForResponse_Item) AsFieldNotableValuesForResponse0() (FieldNotableValuesForResponse0, error) {
 	var body FieldNotableValuesForResponse0
@@ -11495,12 +12023,6 @@ type ClientInterface interface {
 	// DisableSensorCronjobNow request
 	DisableSensorCronjobNow(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *DisableSensorCronjobNowParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// KeepAllRowsInQuarantineForDataSourceView request
-	KeepAllRowsInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ReleaseAllRowsFromQuarantineForDataSourceView request
-	ReleaseAllRowsFromQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ReprocessAllBadRowsForDataSourceView request
 	ReprocessAllBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -11512,6 +12034,49 @@ type ClientInterface interface {
 
 	// GetDataSourceTiny request
 	GetDataSourceTiny(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *GetDataSourceTinyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateKeepInQuarantineForDataSourceViewWithBody request with any body
+	UpdateKeepInQuarantineForDataSourceViewWithBody(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateKeepInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, body UpdateKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDatasetFieldKinds request
+	GetDatasetFieldKinds(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetFieldKindsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateDatasetFieldKindWithBody request with any body
+	CreateDatasetFieldKindWithBody(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, body CreateDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDatasetFieldKind request
+	DeleteDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *DeleteDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOneDatasetFieldKind request
+	GetOneDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *GetOneDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchDatasetFieldKindWithBody request with any body
+	PatchDatasetFieldKindWithBody(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, body PatchDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDatasetKinds request
+	GetDatasetKinds(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetKindsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateDatasetKindWithBody request with any body
+	CreateDatasetKindWithBody(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateDatasetKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteDatasetKind request
+	DeleteDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOneDatasetKind request
+	GetOneDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *GetOneDatasetKindParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchDatasetKindWithBody request with any body
+	PatchDatasetKindWithBody(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, body PatchDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDatasetRuleDetail request
 	GetDatasetRuleDetail(ctx context.Context, organizationID openapi_types.UUID, datasetRuleID openapi_types.UUID, params *GetDatasetRuleDetailParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11610,16 +12175,14 @@ type ClientInterface interface {
 
 	GetDatasetJobActivity(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetJobActivityParams, body GetDatasetJobActivityJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// KeepAllRowsInQuarantineView request
-	KeepAllRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// KeepRowsInQuarantineViewWithBody request with any body
-	KeepRowsInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	KeepRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, body KeepRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetDatasetMigrationDetails request
 	GetDatasetMigrationDetails(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationDetailsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetDatasetMigrationFields request
+	GetDatasetMigrationFields(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationFieldsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetFieldNotableValues request
+	GetFieldNotableValues(ctx context.Context, organizationID openapi_types.UUID, datasetID int, fieldName string, params *GetFieldNotableValuesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PatchMigrationWithBody request with any body
 	PatchMigrationWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *PatchMigrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11649,14 +12212,6 @@ type ClientInterface interface {
 
 	RecoverDataset(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RecoverDatasetParams, body RecoverDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ReleaseAllRowsFromQuarantineView request
-	ReleaseAllRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ReleaseRowsFromQuarantineViewWithBody request with any body
-	ReleaseRowsFromQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	ReleaseRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, body ReleaseRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ReprocessAllBadRowsForDatasetView request
 	ReprocessAllBadRowsForDatasetView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -11676,8 +12231,42 @@ type ClientInterface interface {
 
 	CreateOrUpdateDatasetReviewPolicy(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *CreateOrUpdateDatasetReviewPolicyParams, body CreateOrUpdateDatasetReviewPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListSuggestions request
+	ListSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ListSuggestionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// BulkAcceptSuggestionsWithBody request with any body
+	BulkAcceptSuggestionsWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	BulkAcceptSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, body BulkAcceptSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// BulkDismissSuggestionsWithBody request with any body
+	BulkDismissSuggestionsWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	BulkDismissSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, body BulkDismissSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSuggestion request
+	GetSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *GetSuggestionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSuggestionWithBody request with any body
+	PatchSuggestionWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, body PatchSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// AcceptSuggestion request
+	AcceptSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *AcceptSuggestionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DismissSuggestionWithBody request with any body
+	DismissSuggestionWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DismissSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, body DismissSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// RunTrainingJobNow request
 	RunTrainingJobNow(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RunTrainingJobNowParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SearchAndReplaceWithBody request with any body
+	SearchAndReplaceWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	SearchAndReplace(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, body SearchAndReplaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDatasetSmall request
 	GetDatasetSmall(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetSmallParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11692,6 +12281,11 @@ type ClientInterface interface {
 	TrackDatasetWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackDatasetParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	TrackDataset(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackDatasetParams, body TrackDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateKeepInQuarantineViewWithBody request with any body
+	UpdateKeepInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateKeepInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, body UpdateKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetWarningsMsgsListWithBody request with any body
 	GetWarningsMsgsListWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetWarningsMsgsListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12014,14 +12608,13 @@ type ClientInterface interface {
 
 	DeleteThirdPartyRowsInDataSource(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *DeleteThirdPartyRowsInDataSourceParams, body DeleteThirdPartyRowsInDataSourceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// KeepAllThirdPartyRowsInQuarantineForDataSourceView request
-	KeepAllThirdPartyRowsInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView request
-	ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ReprocessAllThirdPartyBadRowsForDataSourceView request
 	ReprocessAllThirdPartyBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllThirdPartyBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBody request with any body
+	UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBody(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateThirdPartyKeepInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, body UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetThirdPartyDatasets request
 	GetThirdPartyDatasets(ctx context.Context, organizationID openapi_types.UUID, params *GetThirdPartyDatasetsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12067,14 +12660,6 @@ type ClientInterface interface {
 	// GetThirdPartyDryRunJobs request
 	GetThirdPartyDryRunJobs(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyDryRunJobsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// KeepAllThirdPartyRowsInQuarantineView request
-	KeepAllThirdPartyRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllThirdPartyRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// KeepThirdPartyRowsInQuarantineViewWithBody request with any body
-	KeepThirdPartyRowsInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	KeepThirdPartyRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, body KeepThirdPartyRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ModifyThirdPartyCleanCellWithBody request with any body
 	ModifyThirdPartyCleanCellWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ModifyThirdPartyCleanCellParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -12093,14 +12678,6 @@ type ClientInterface interface {
 	// GetThirdPartyQuarantineCountByStatus request
 	GetThirdPartyQuarantineCountByStatus(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyQuarantineCountByStatusParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ReleaseAllThirdPartyRowsFromQuarantineView request
-	ReleaseAllThirdPartyRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllThirdPartyRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// ReleaseThirdPartyRowsFromQuarantineViewWithBody request with any body
-	ReleaseThirdPartyRowsFromQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	ReleaseThirdPartyRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, body ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ReprocessAllThirdPartyBadRowsForDatasetView request
 	ReprocessAllThirdPartyBadRowsForDatasetView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllThirdPartyBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -12116,6 +12693,11 @@ type ClientInterface interface {
 	TrackThirdPartyDatasetWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackThirdPartyDatasetParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	TrackThirdPartyDataset(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackThirdPartyDatasetParams, body TrackThirdPartyDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateThirdPartyKeepInQuarantineViewWithBody request with any body
+	UpdateThirdPartyKeepInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateThirdPartyKeepInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, body UpdateThirdPartyKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetThirdPartyWarnings request
 	GetThirdPartyWarnings(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyWarningsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -13040,30 +13622,6 @@ func (c *Client) DisableSensorCronjobNow(ctx context.Context, organizationID ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) KeepAllRowsInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepAllRowsInQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseAllRowsFromQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseAllRowsFromQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ReprocessAllBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessAllBadRowsForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
 	if err != nil {
@@ -13102,6 +13660,198 @@ func (c *Client) RunSensorJobNow(ctx context.Context, organizationID openapi_typ
 
 func (c *Client) GetDataSourceTiny(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *GetDataSourceTinyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDataSourceTinyRequest(c.Server, organizationID, dataSourceModelID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKeepInQuarantineForDataSourceViewWithBody(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKeepInQuarantineForDataSourceViewRequestWithBody(c.Server, organizationID, dataSourceModelID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKeepInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, body UpdateKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKeepInQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDatasetFieldKinds(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetFieldKindsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDatasetFieldKindsRequest(c.Server, organizationID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDatasetFieldKindWithBody(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDatasetFieldKindRequestWithBody(c.Server, organizationID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, body CreateDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDatasetFieldKindRequest(c.Server, organizationID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *DeleteDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDatasetFieldKindRequest(c.Server, organizationID, fieldKindID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOneDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *GetOneDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOneDatasetFieldKindRequest(c.Server, organizationID, fieldKindID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDatasetFieldKindWithBody(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDatasetFieldKindRequestWithBody(c.Server, organizationID, fieldKindID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDatasetFieldKind(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, body PatchDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDatasetFieldKindRequest(c.Server, organizationID, fieldKindID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDatasetKinds(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetKindsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDatasetKindsRequest(c.Server, organizationID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDatasetKindWithBody(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDatasetKindRequestWithBody(c.Server, organizationID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateDatasetKind(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateDatasetKindRequest(c.Server, organizationID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDatasetKindRequest(c.Server, organizationID, profileID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOneDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *GetOneDatasetKindParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOneDatasetKindRequest(c.Server, organizationID, profileID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDatasetKindWithBody(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDatasetKindRequestWithBody(c.Server, organizationID, profileID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDatasetKind(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, body PatchDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDatasetKindRequest(c.Server, organizationID, profileID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13544,44 +14294,32 @@ func (c *Client) GetDatasetJobActivity(ctx context.Context, organizationID opena
 	return c.Client.Do(req)
 }
 
-func (c *Client) KeepAllRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepAllRowsInQuarantineViewRequest(c.Server, organizationID, datasetID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) KeepRowsInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepRowsInQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) KeepRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, body KeepRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepRowsInQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) GetDatasetMigrationDetails(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationDetailsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDatasetMigrationDetailsRequest(c.Server, organizationID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetDatasetMigrationFields(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationFieldsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDatasetMigrationFieldsRequest(c.Server, organizationID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetFieldNotableValues(ctx context.Context, organizationID openapi_types.UUID, datasetID int, fieldName string, params *GetFieldNotableValuesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFieldNotableValuesRequest(c.Server, organizationID, datasetID, fieldName, params)
 	if err != nil {
 		return nil, err
 	}
@@ -13724,42 +14462,6 @@ func (c *Client) RecoverDataset(ctx context.Context, organizationID openapi_type
 	return c.Client.Do(req)
 }
 
-func (c *Client) ReleaseAllRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseAllRowsFromQuarantineViewRequest(c.Server, organizationID, datasetID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseRowsFromQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseRowsFromQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, body ReleaseRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseRowsFromQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ReprocessAllBadRowsForDatasetView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessAllBadRowsForDatasetViewRequest(c.Server, organizationID, datasetID, params)
 	if err != nil {
@@ -13844,8 +14546,164 @@ func (c *Client) CreateOrUpdateDatasetReviewPolicy(ctx context.Context, organiza
 	return c.Client.Do(req)
 }
 
+func (c *Client) ListSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ListSuggestionsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListSuggestionsRequest(c.Server, organizationID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BulkAcceptSuggestionsWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBulkAcceptSuggestionsRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BulkAcceptSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, body BulkAcceptSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBulkAcceptSuggestionsRequest(c.Server, organizationID, datasetID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BulkDismissSuggestionsWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBulkDismissSuggestionsRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) BulkDismissSuggestions(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, body BulkDismissSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewBulkDismissSuggestionsRequest(c.Server, organizationID, datasetID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *GetSuggestionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSuggestionRequest(c.Server, organizationID, datasetID, suggestionID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchSuggestionWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSuggestionRequestWithBody(c.Server, organizationID, datasetID, suggestionID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, body PatchSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSuggestionRequest(c.Server, organizationID, datasetID, suggestionID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) AcceptSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *AcceptSuggestionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewAcceptSuggestionRequest(c.Server, organizationID, datasetID, suggestionID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DismissSuggestionWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDismissSuggestionRequestWithBody(c.Server, organizationID, datasetID, suggestionID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DismissSuggestion(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, body DismissSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDismissSuggestionRequest(c.Server, organizationID, datasetID, suggestionID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) RunTrainingJobNow(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RunTrainingJobNowParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRunTrainingJobNowRequest(c.Server, organizationID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SearchAndReplaceWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchAndReplaceRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SearchAndReplace(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, body SearchAndReplaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchAndReplaceRequest(c.Server, organizationID, datasetID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13906,6 +14764,30 @@ func (c *Client) TrackDatasetWithBody(ctx context.Context, organizationID openap
 
 func (c *Client) TrackDataset(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackDatasetParams, body TrackDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTrackDatasetRequest(c.Server, organizationID, datasetID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKeepInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKeepInQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateKeepInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, body UpdateKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateKeepInQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -15344,32 +16226,32 @@ func (c *Client) DeleteThirdPartyRowsInDataSource(ctx context.Context, organizat
 	return c.Client.Do(req)
 }
 
-func (c *Client) KeepAllThirdPartyRowsInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepAllThirdPartyRowsInQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ReprocessAllThirdPartyBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllThirdPartyBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessAllThirdPartyBadRowsForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBody(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequestWithBody(c.Server, organizationID, dataSourceModelID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateThirdPartyKeepInQuarantineForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, body UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -15572,42 +16454,6 @@ func (c *Client) GetThirdPartyDryRunJobs(ctx context.Context, organizationID ope
 	return c.Client.Do(req)
 }
 
-func (c *Client) KeepAllThirdPartyRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllThirdPartyRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepAllThirdPartyRowsInQuarantineViewRequest(c.Server, organizationID, datasetID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) KeepThirdPartyRowsInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepThirdPartyRowsInQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) KeepThirdPartyRowsInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, body KeepThirdPartyRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewKeepThirdPartyRowsInQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ModifyThirdPartyCleanCellWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ModifyThirdPartyCleanCellParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewModifyThirdPartyCleanCellRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
 	if err != nil {
@@ -15692,42 +16538,6 @@ func (c *Client) GetThirdPartyQuarantineCountByStatus(ctx context.Context, organ
 	return c.Client.Do(req)
 }
 
-func (c *Client) ReleaseAllThirdPartyRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllThirdPartyRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseAllThirdPartyRowsFromQuarantineViewRequest(c.Server, organizationID, datasetID, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseThirdPartyRowsFromQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseThirdPartyRowsFromQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) ReleaseThirdPartyRowsFromQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, body ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewReleaseThirdPartyRowsFromQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) ReprocessAllThirdPartyBadRowsForDatasetView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllThirdPartyBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessAllThirdPartyBadRowsForDatasetViewRequest(c.Server, organizationID, datasetID, params)
 	if err != nil {
@@ -15790,6 +16600,30 @@ func (c *Client) TrackThirdPartyDatasetWithBody(ctx context.Context, organizatio
 
 func (c *Client) TrackThirdPartyDataset(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackThirdPartyDatasetParams, body TrackThirdPartyDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTrackThirdPartyDatasetRequest(c.Server, organizationID, datasetID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateThirdPartyKeepInQuarantineViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateThirdPartyKeepInQuarantineViewRequestWithBody(c.Server, organizationID, datasetID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateThirdPartyKeepInQuarantineView(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, body UpdateThirdPartyKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateThirdPartyKeepInQuarantineViewRequest(c.Server, organizationID, datasetID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -19980,122 +20814,6 @@ func NewDisableSensorCronjobNowRequest(server string, organizationID openapi_typ
 	return req, nil
 }
 
-// NewKeepAllRowsInQuarantineForDataSourceViewRequest generates requests for KeepAllRowsInQuarantineForDataSourceView
-func NewKeepAllRowsInQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllRowsInQuarantineForDataSourceViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/data-sources/%s/keep-all-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseAllRowsFromQuarantineForDataSourceViewRequest generates requests for ReleaseAllRowsFromQuarantineForDataSourceView
-func NewReleaseAllRowsFromQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllRowsFromQuarantineForDataSourceViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/data-sources/%s/release-all-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
 // NewReprocessAllBadRowsForDataSourceViewRequest generates requests for ReprocessAllBadRowsForDataSourceView
 func NewReprocessAllBadRowsForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams) (*http.Request, error) {
 	var err error
@@ -20307,6 +21025,901 @@ func NewGetDataSourceTinyRequest(server string, organizationID openapi_types.UUI
 	if err != nil {
 		return nil, err
 	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewUpdateKeepInQuarantineForDataSourceViewRequest calls the generic UpdateKeepInQuarantineForDataSourceView builder with application/json body
+func NewUpdateKeepInQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, body UpdateKeepInQuarantineForDataSourceViewJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateKeepInQuarantineForDataSourceViewRequestWithBody(server, organizationID, dataSourceModelID, params, "application/json", bodyReader)
+}
+
+// NewUpdateKeepInQuarantineForDataSourceViewRequestWithBody generates requests for UpdateKeepInQuarantineForDataSourceView with any type of body
+func NewUpdateKeepInQuarantineForDataSourceViewRequestWithBody(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/data-sources/%s/update-keep-in-quarantine", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetDatasetFieldKindsRequest generates requests for GetDatasetFieldKinds
+func NewGetDatasetFieldKindsRequest(server string, organizationID openapi_types.UUID, params *GetDatasetFieldKindsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-field-kinds", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DatasetKindID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dataset_kind_id", runtime.ParamLocationQuery, *params.DatasetKindID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrderBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "order_by", runtime.ParamLocationQuery, *params.OrderBy); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Reverse != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "reverse", runtime.ParamLocationQuery, *params.Reverse); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SearchQuery != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search_query", runtime.ParamLocationQuery, *params.SearchQuery); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.IncludeBuiltin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "include_builtin", runtime.ParamLocationQuery, *params.IncludeBuiltin); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewCreateDatasetFieldKindRequest calls the generic CreateDatasetFieldKind builder with application/json body
+func NewCreateDatasetFieldKindRequest(server string, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, body CreateDatasetFieldKindJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateDatasetFieldKindRequestWithBody(server, organizationID, params, "application/json", bodyReader)
+}
+
+// NewCreateDatasetFieldKindRequestWithBody generates requests for CreateDatasetFieldKind with any type of body
+func NewCreateDatasetFieldKindRequestWithBody(server string, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-field-kinds", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewDeleteDatasetFieldKindRequest generates requests for DeleteDatasetFieldKind
+func NewDeleteDatasetFieldKindRequest(server string, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *DeleteDatasetFieldKindParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "field_kind_id", runtime.ParamLocationPath, fieldKindID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-field-kinds/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetOneDatasetFieldKindRequest generates requests for GetOneDatasetFieldKind
+func NewGetOneDatasetFieldKindRequest(server string, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *GetOneDatasetFieldKindParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "field_kind_id", runtime.ParamLocationPath, fieldKindID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-field-kinds/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewPatchDatasetFieldKindRequest calls the generic PatchDatasetFieldKind builder with application/json body
+func NewPatchDatasetFieldKindRequest(server string, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, body PatchDatasetFieldKindJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchDatasetFieldKindRequestWithBody(server, organizationID, fieldKindID, params, "application/json", bodyReader)
+}
+
+// NewPatchDatasetFieldKindRequestWithBody generates requests for PatchDatasetFieldKind with any type of body
+func NewPatchDatasetFieldKindRequestWithBody(server string, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "field_kind_id", runtime.ParamLocationPath, fieldKindID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-field-kinds/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetDatasetKindsRequest generates requests for GetDatasetKinds
+func NewGetDatasetKindsRequest(server string, organizationID openapi_types.UUID, params *GetDatasetKindsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrderBy != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "order_by", runtime.ParamLocationQuery, *params.OrderBy); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Reverse != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "reverse", runtime.ParamLocationQuery, *params.Reverse); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SearchQuery != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "search_query", runtime.ParamLocationQuery, *params.SearchQuery); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.IncludeBuiltin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "include_builtin", runtime.ParamLocationQuery, *params.IncludeBuiltin); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewCreateDatasetKindRequest calls the generic CreateDatasetKind builder with application/json body
+func NewCreateDatasetKindRequest(server string, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateDatasetKindRequestWithBody(server, organizationID, params, "application/json", bodyReader)
+}
+
+// NewCreateDatasetKindRequestWithBody generates requests for CreateDatasetKind with any type of body
+func NewCreateDatasetKindRequestWithBody(server string, organizationID openapi_types.UUID, params *CreateDatasetKindParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewDeleteDatasetKindRequest generates requests for DeleteDatasetKind
+func NewDeleteDatasetKindRequest(server string, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "profile_id", runtime.ParamLocationPath, profileID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetOneDatasetKindRequest generates requests for GetOneDatasetKind
+func NewGetOneDatasetKindRequest(server string, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *GetOneDatasetKindParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "profile_id", runtime.ParamLocationPath, profileID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewPatchDatasetKindRequest calls the generic PatchDatasetKind builder with application/json body
+func NewPatchDatasetKindRequest(server string, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, body PatchDatasetKindJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchDatasetKindRequestWithBody(server, organizationID, profileID, params, "application/json", bodyReader)
+}
+
+// NewPatchDatasetKindRequestWithBody generates requests for PatchDatasetKind with any type of body
+func NewPatchDatasetKindRequestWithBody(server string, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "profile_id", runtime.ParamLocationPath, profileID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/dataset-profiles/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	if params != nil {
 
@@ -23349,135 +24962,6 @@ func NewGetDatasetJobActivityRequestWithBody(server string, organizationID opena
 	return req, nil
 }
 
-// NewKeepAllRowsInQuarantineViewRequest generates requests for KeepAllRowsInQuarantineView
-func NewKeepAllRowsInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *KeepAllRowsInQuarantineViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/keep-all-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewKeepRowsInQuarantineViewRequest calls the generic KeepRowsInQuarantineView builder with application/json body
-func NewKeepRowsInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, body KeepRowsInQuarantineViewJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewKeepRowsInQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
-}
-
-// NewKeepRowsInQuarantineViewRequestWithBody generates requests for KeepRowsInQuarantineView with any type of body
-func NewKeepRowsInQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/keep-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
 // NewGetDatasetMigrationDetailsRequest generates requests for GetDatasetMigrationDetails
 func NewGetDatasetMigrationDetailsRequest(server string, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationDetailsParams) (*http.Request, error) {
 	var err error
@@ -23502,6 +24986,129 @@ func NewGetDatasetMigrationDetailsRequest(server string, organizationID openapi_
 	}
 
 	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/migration-details", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetDatasetMigrationFieldsRequest generates requests for GetDatasetMigrationFields
+func NewGetDatasetMigrationFieldsRequest(server string, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationFieldsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/migration-fields", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetFieldNotableValuesRequest generates requests for GetFieldNotableValues
+func NewGetFieldNotableValuesRequest(server string, organizationID openapi_types.UUID, datasetID int, fieldName string, params *GetFieldNotableValuesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "field_name", runtime.ParamLocationPath, fieldName)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/migration-fields/%s/notable-values", pathParam0, pathParam1, pathParam2)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -23641,7 +25248,7 @@ func NewModifyCleanCellRequestWithBody(server string, organizationID openapi_typ
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/modify-normal-cell", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/modify-clean-cell", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -23920,157 +25527,6 @@ func NewRecoverDatasetRequestWithBody(server string, organizationID openapi_type
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseAllRowsFromQuarantineViewRequest generates requests for ReleaseAllRowsFromQuarantineView
-func NewReleaseAllRowsFromQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllRowsFromQuarantineViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/release-all-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseRowsFromQuarantineViewRequest calls the generic ReleaseRowsFromQuarantineView builder with application/json body
-func NewReleaseRowsFromQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, body ReleaseRowsFromQuarantineViewJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewReleaseRowsFromQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
-}
-
-// NewReleaseRowsFromQuarantineViewRequestWithBody generates requests for ReleaseRowsFromQuarantineView with any type of body
-func NewReleaseRowsFromQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/release-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.QuarantineStatus != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "quarantine_status", runtime.ParamLocationQuery, *params.QuarantineStatus); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), body)
@@ -24438,6 +25894,562 @@ func NewCreateOrUpdateDatasetReviewPolicyRequestWithBody(server string, organiza
 	return req, nil
 }
 
+// NewListSuggestionsRequest generates requests for ListSuggestions
+func NewListSuggestionsRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ListSuggestionsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.State != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "state", runtime.ParamLocationQuery, *params.State); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Source != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "source", runtime.ParamLocationQuery, *params.Source); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewBulkAcceptSuggestionsRequest calls the generic BulkAcceptSuggestions builder with application/json body
+func NewBulkAcceptSuggestionsRequest(server string, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, body BulkAcceptSuggestionsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewBulkAcceptSuggestionsRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
+}
+
+// NewBulkAcceptSuggestionsRequestWithBody generates requests for BulkAcceptSuggestions with any type of body
+func NewBulkAcceptSuggestionsRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/bulk-accept", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewBulkDismissSuggestionsRequest calls the generic BulkDismissSuggestions builder with application/json body
+func NewBulkDismissSuggestionsRequest(server string, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, body BulkDismissSuggestionsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewBulkDismissSuggestionsRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
+}
+
+// NewBulkDismissSuggestionsRequestWithBody generates requests for BulkDismissSuggestions with any type of body
+func NewBulkDismissSuggestionsRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/bulk-dismiss", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetSuggestionRequest generates requests for GetSuggestion
+func NewGetSuggestionRequest(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *GetSuggestionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "suggestion_id", runtime.ParamLocationPath, suggestionID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewPatchSuggestionRequest calls the generic PatchSuggestion builder with application/json body
+func NewPatchSuggestionRequest(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, body PatchSuggestionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchSuggestionRequestWithBody(server, organizationID, datasetID, suggestionID, params, "application/json", bodyReader)
+}
+
+// NewPatchSuggestionRequestWithBody generates requests for PatchSuggestion with any type of body
+func NewPatchSuggestionRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "suggestion_id", runtime.ParamLocationPath, suggestionID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewAcceptSuggestionRequest generates requests for AcceptSuggestion
+func NewAcceptSuggestionRequest(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *AcceptSuggestionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "suggestion_id", runtime.ParamLocationPath, suggestionID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/%s/accept", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewDismissSuggestionRequest calls the generic DismissSuggestion builder with application/json body
+func NewDismissSuggestionRequest(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, body DismissSuggestionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDismissSuggestionRequestWithBody(server, organizationID, datasetID, suggestionID, params, "application/json", bodyReader)
+}
+
+// NewDismissSuggestionRequestWithBody generates requests for DismissSuggestion with any type of body
+func NewDismissSuggestionRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "suggestion_id", runtime.ParamLocationPath, suggestionID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/rule-suggestions/%s/dismiss", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
 // NewRunTrainingJobNowRequest generates requests for RunTrainingJobNow
 func NewRunTrainingJobNowRequest(server string, organizationID openapi_types.UUID, datasetID int, params *RunTrainingJobNowParams) (*http.Request, error) {
 	var err error
@@ -24475,6 +26487,77 @@ func NewRunTrainingJobNowRequest(server string, organizationID openapi_types.UUI
 	if err != nil {
 		return nil, err
 	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewSearchAndReplaceRequest calls the generic SearchAndReplace builder with application/json body
+func NewSearchAndReplaceRequest(server string, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, body SearchAndReplaceJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSearchAndReplaceRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
+}
+
+// NewSearchAndReplaceRequestWithBody generates requests for SearchAndReplace with any type of body
+func NewSearchAndReplaceRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/search-and-replace", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	if params != nil {
 
@@ -24753,6 +26836,77 @@ func NewTrackDatasetRequestWithBody(server string, organizationID openapi_types.
 	}
 
 	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewUpdateKeepInQuarantineViewRequest calls the generic UpdateKeepInQuarantineView builder with application/json body
+func NewUpdateKeepInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, body UpdateKeepInQuarantineViewJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateKeepInQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
+}
+
+// NewUpdateKeepInQuarantineViewRequestWithBody generates requests for UpdateKeepInQuarantineView with any type of body
+func NewUpdateKeepInQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/update-keep-in-quarantine", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -31870,122 +34024,6 @@ func NewDeleteThirdPartyRowsInDataSourceRequestWithBody(server string, organizat
 	return req, nil
 }
 
-// NewKeepAllThirdPartyRowsInQuarantineForDataSourceViewRequest generates requests for KeepAllThirdPartyRowsInQuarantineForDataSourceView
-func NewKeepAllThirdPartyRowsInQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/data-sources/%s/keep-all-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewRequest generates requests for ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView
-func NewReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/data-sources/%s/release-all-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
 // NewReprocessAllThirdPartyBadRowsForDataSourceViewRequest generates requests for ReprocessAllThirdPartyBadRowsForDataSourceView
 func NewReprocessAllThirdPartyBadRowsForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllThirdPartyBadRowsForDataSourceViewParams) (*http.Request, error) {
 	var err error
@@ -32023,6 +34061,77 @@ func NewReprocessAllThirdPartyBadRowsForDataSourceViewRequest(server string, org
 	if err != nil {
 		return nil, err
 	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequest calls the generic UpdateThirdPartyKeepInQuarantineForDataSourceView builder with application/json body
+func NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, body UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequestWithBody(server, organizationID, dataSourceModelID, params, "application/json", bodyReader)
+}
+
+// NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequestWithBody generates requests for UpdateThirdPartyKeepInQuarantineForDataSourceView with any type of body
+func NewUpdateThirdPartyKeepInQuarantineForDataSourceViewRequestWithBody(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/data-sources/%s/update-keep-in-quarantine", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	if params != nil {
 
@@ -34362,135 +36471,6 @@ func NewGetThirdPartyDryRunJobsRequest(server string, organizationID openapi_typ
 	return req, nil
 }
 
-// NewKeepAllThirdPartyRowsInQuarantineViewRequest generates requests for KeepAllThirdPartyRowsInQuarantineView
-func NewKeepAllThirdPartyRowsInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *KeepAllThirdPartyRowsInQuarantineViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/keep-all-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewKeepThirdPartyRowsInQuarantineViewRequest calls the generic KeepThirdPartyRowsInQuarantineView builder with application/json body
-func NewKeepThirdPartyRowsInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, body KeepThirdPartyRowsInQuarantineViewJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewKeepThirdPartyRowsInQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
-}
-
-// NewKeepThirdPartyRowsInQuarantineViewRequestWithBody generates requests for KeepThirdPartyRowsInQuarantineView with any type of body
-func NewKeepThirdPartyRowsInQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/keep-rows-in-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
 // NewModifyThirdPartyCleanCellRequest calls the generic ModifyThirdPartyCleanCell builder with application/json body
 func NewModifyThirdPartyCleanCellRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ModifyThirdPartyCleanCellParams, body ModifyThirdPartyCleanCellJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -34525,7 +36505,7 @@ func NewModifyThirdPartyCleanCellRequestWithBody(server string, organizationID o
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/modify-normal-cell", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/modify-clean-cell", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -34741,157 +36721,6 @@ func NewGetThirdPartyQuarantineCountByStatusRequest(server string, organizationI
 	if err != nil {
 		return nil, err
 	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseAllThirdPartyRowsFromQuarantineViewRequest generates requests for ReleaseAllThirdPartyRowsFromQuarantineView
-func NewReleaseAllThirdPartyRowsFromQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllThirdPartyRowsFromQuarantineViewParams) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/release-all-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-
-		if params.OauthSession != nil {
-			var cookieParam0 string
-
-			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
-			if err != nil {
-				return nil, err
-			}
-
-			cookie0 := &http.Cookie{
-				Name:  "oauth_session",
-				Value: cookieParam0,
-			}
-			req.AddCookie(cookie0)
-		}
-	}
-	return req, nil
-}
-
-// NewReleaseThirdPartyRowsFromQuarantineViewRequest calls the generic ReleaseThirdPartyRowsFromQuarantineView builder with application/json body
-func NewReleaseThirdPartyRowsFromQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, body ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewReleaseThirdPartyRowsFromQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
-}
-
-// NewReleaseThirdPartyRowsFromQuarantineViewRequestWithBody generates requests for ReleaseThirdPartyRowsFromQuarantineView with any type of body
-func NewReleaseThirdPartyRowsFromQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
-	if err != nil {
-		return nil, err
-	}
-
-	var pathParam1 string
-
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/release-rows-from-quarantine", pathParam0, pathParam1)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.QuarantineStatus != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "quarantine_status", runtime.ParamLocationQuery, *params.QuarantineStatus); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	if params != nil {
 
@@ -35205,6 +37034,77 @@ func NewTrackThirdPartyDatasetRequestWithBody(server string, organizationID open
 	}
 
 	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewUpdateThirdPartyKeepInQuarantineViewRequest calls the generic UpdateThirdPartyKeepInQuarantineView builder with application/json body
+func NewUpdateThirdPartyKeepInQuarantineViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, body UpdateThirdPartyKeepInQuarantineViewJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateThirdPartyKeepInQuarantineViewRequestWithBody(server, organizationID, datasetID, params, "application/json", bodyReader)
+}
+
+// NewUpdateThirdPartyKeepInQuarantineViewRequestWithBody generates requests for UpdateThirdPartyKeepInQuarantineView with any type of body
+func NewUpdateThirdPartyKeepInQuarantineViewRequestWithBody(server string, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/third-party/datasets/%s/update-keep-in-quarantine", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -38171,12 +40071,6 @@ type ClientWithResponsesInterface interface {
 	// DisableSensorCronjobNowWithResponse request
 	DisableSensorCronjobNowWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *DisableSensorCronjobNowParams, reqEditors ...RequestEditorFn) (*DisableSensorCronjobNowResponse, error)
 
-	// KeepAllRowsInQuarantineForDataSourceViewWithResponse request
-	KeepAllRowsInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*KeepAllRowsInQuarantineForDataSourceViewResponse, error)
-
-	// ReleaseAllRowsFromQuarantineForDataSourceViewWithResponse request
-	ReleaseAllRowsFromQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllRowsFromQuarantineForDataSourceViewResponse, error)
-
 	// ReprocessAllBadRowsForDataSourceViewWithResponse request
 	ReprocessAllBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDataSourceViewResponse, error)
 
@@ -38188,6 +40082,49 @@ type ClientWithResponsesInterface interface {
 
 	// GetDataSourceTinyWithResponse request
 	GetDataSourceTinyWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *GetDataSourceTinyParams, reqEditors ...RequestEditorFn) (*GetDataSourceTinyResponse, error)
+
+	// UpdateKeepInQuarantineForDataSourceViewWithBodyWithResponse request with any body
+	UpdateKeepInQuarantineForDataSourceViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineForDataSourceViewResponse, error)
+
+	UpdateKeepInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, body UpdateKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineForDataSourceViewResponse, error)
+
+	// GetDatasetFieldKindsWithResponse request
+	GetDatasetFieldKindsWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetFieldKindsParams, reqEditors ...RequestEditorFn) (*GetDatasetFieldKindsResponse, error)
+
+	// CreateDatasetFieldKindWithBodyWithResponse request with any body
+	CreateDatasetFieldKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDatasetFieldKindResponse, error)
+
+	CreateDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, body CreateDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDatasetFieldKindResponse, error)
+
+	// DeleteDatasetFieldKindWithResponse request
+	DeleteDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *DeleteDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetFieldKindResponse, error)
+
+	// GetOneDatasetFieldKindWithResponse request
+	GetOneDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *GetOneDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*GetOneDatasetFieldKindResponse, error)
+
+	// PatchDatasetFieldKindWithBodyWithResponse request with any body
+	PatchDatasetFieldKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDatasetFieldKindResponse, error)
+
+	PatchDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, body PatchDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDatasetFieldKindResponse, error)
+
+	// GetDatasetKindsWithResponse request
+	GetDatasetKindsWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetKindsParams, reqEditors ...RequestEditorFn) (*GetDatasetKindsResponse, error)
+
+	// CreateDatasetKindWithBodyWithResponse request with any body
+	CreateDatasetKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDatasetKindResponse, error)
+
+	CreateDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDatasetKindResponse, error)
+
+	// DeleteDatasetKindWithResponse request
+	DeleteDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetKindResponse, error)
+
+	// GetOneDatasetKindWithResponse request
+	GetOneDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *GetOneDatasetKindParams, reqEditors ...RequestEditorFn) (*GetOneDatasetKindResponse, error)
+
+	// PatchDatasetKindWithBodyWithResponse request with any body
+	PatchDatasetKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDatasetKindResponse, error)
+
+	PatchDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, body PatchDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDatasetKindResponse, error)
 
 	// GetDatasetRuleDetailWithResponse request
 	GetDatasetRuleDetailWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetRuleID openapi_types.UUID, params *GetDatasetRuleDetailParams, reqEditors ...RequestEditorFn) (*GetDatasetRuleDetailResponse, error)
@@ -38286,16 +40223,14 @@ type ClientWithResponsesInterface interface {
 
 	GetDatasetJobActivityWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetJobActivityParams, body GetDatasetJobActivityJSONRequestBody, reqEditors ...RequestEditorFn) (*GetDatasetJobActivityResponse, error)
 
-	// KeepAllRowsInQuarantineViewWithResponse request
-	KeepAllRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*KeepAllRowsInQuarantineViewResponse, error)
-
-	// KeepRowsInQuarantineViewWithBodyWithResponse request with any body
-	KeepRowsInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KeepRowsInQuarantineViewResponse, error)
-
-	KeepRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, body KeepRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*KeepRowsInQuarantineViewResponse, error)
-
 	// GetDatasetMigrationDetailsWithResponse request
 	GetDatasetMigrationDetailsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationDetailsParams, reqEditors ...RequestEditorFn) (*GetDatasetMigrationDetailsResponse, error)
+
+	// GetDatasetMigrationFieldsWithResponse request
+	GetDatasetMigrationFieldsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationFieldsParams, reqEditors ...RequestEditorFn) (*GetDatasetMigrationFieldsResponse, error)
+
+	// GetFieldNotableValuesWithResponse request
+	GetFieldNotableValuesWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, fieldName string, params *GetFieldNotableValuesParams, reqEditors ...RequestEditorFn) (*GetFieldNotableValuesResponse, error)
 
 	// PatchMigrationWithBodyWithResponse request with any body
 	PatchMigrationWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *PatchMigrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchMigrationResponse, error)
@@ -38325,14 +40260,6 @@ type ClientWithResponsesInterface interface {
 
 	RecoverDatasetWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RecoverDatasetParams, body RecoverDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*RecoverDatasetResponse, error)
 
-	// ReleaseAllRowsFromQuarantineViewWithResponse request
-	ReleaseAllRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllRowsFromQuarantineViewResponse, error)
-
-	// ReleaseRowsFromQuarantineViewWithBodyWithResponse request with any body
-	ReleaseRowsFromQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReleaseRowsFromQuarantineViewResponse, error)
-
-	ReleaseRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, body ReleaseRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*ReleaseRowsFromQuarantineViewResponse, error)
-
 	// ReprocessAllBadRowsForDatasetViewWithResponse request
 	ReprocessAllBadRowsForDatasetViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDatasetViewResponse, error)
 
@@ -38352,8 +40279,42 @@ type ClientWithResponsesInterface interface {
 
 	CreateOrUpdateDatasetReviewPolicyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *CreateOrUpdateDatasetReviewPolicyParams, body CreateOrUpdateDatasetReviewPolicyJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrUpdateDatasetReviewPolicyResponse, error)
 
+	// ListSuggestionsWithResponse request
+	ListSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ListSuggestionsParams, reqEditors ...RequestEditorFn) (*ListSuggestionsResponse, error)
+
+	// BulkAcceptSuggestionsWithBodyWithResponse request with any body
+	BulkAcceptSuggestionsWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BulkAcceptSuggestionsResponse, error)
+
+	BulkAcceptSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, body BulkAcceptSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*BulkAcceptSuggestionsResponse, error)
+
+	// BulkDismissSuggestionsWithBodyWithResponse request with any body
+	BulkDismissSuggestionsWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BulkDismissSuggestionsResponse, error)
+
+	BulkDismissSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, body BulkDismissSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*BulkDismissSuggestionsResponse, error)
+
+	// GetSuggestionWithResponse request
+	GetSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *GetSuggestionParams, reqEditors ...RequestEditorFn) (*GetSuggestionResponse, error)
+
+	// PatchSuggestionWithBodyWithResponse request with any body
+	PatchSuggestionWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSuggestionResponse, error)
+
+	PatchSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, body PatchSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSuggestionResponse, error)
+
+	// AcceptSuggestionWithResponse request
+	AcceptSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *AcceptSuggestionParams, reqEditors ...RequestEditorFn) (*AcceptSuggestionResponse, error)
+
+	// DismissSuggestionWithBodyWithResponse request with any body
+	DismissSuggestionWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DismissSuggestionResponse, error)
+
+	DismissSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, body DismissSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*DismissSuggestionResponse, error)
+
 	// RunTrainingJobNowWithResponse request
 	RunTrainingJobNowWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RunTrainingJobNowParams, reqEditors ...RequestEditorFn) (*RunTrainingJobNowResponse, error)
+
+	// SearchAndReplaceWithBodyWithResponse request with any body
+	SearchAndReplaceWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchAndReplaceResponse, error)
+
+	SearchAndReplaceWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, body SearchAndReplaceJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchAndReplaceResponse, error)
 
 	// GetDatasetSmallWithResponse request
 	GetDatasetSmallWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetSmallParams, reqEditors ...RequestEditorFn) (*GetDatasetSmallResponse, error)
@@ -38368,6 +40329,11 @@ type ClientWithResponsesInterface interface {
 	TrackDatasetWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackDatasetParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TrackDatasetResponse, error)
 
 	TrackDatasetWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackDatasetParams, body TrackDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*TrackDatasetResponse, error)
+
+	// UpdateKeepInQuarantineViewWithBodyWithResponse request with any body
+	UpdateKeepInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineViewResponse, error)
+
+	UpdateKeepInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, body UpdateKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineViewResponse, error)
 
 	// GetWarningsMsgsListWithBodyWithResponse request with any body
 	GetWarningsMsgsListWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetWarningsMsgsListParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetWarningsMsgsListResponse, error)
@@ -38690,14 +40656,13 @@ type ClientWithResponsesInterface interface {
 
 	DeleteThirdPartyRowsInDataSourceWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *DeleteThirdPartyRowsInDataSourceParams, body DeleteThirdPartyRowsInDataSourceJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteThirdPartyRowsInDataSourceResponse, error)
 
-	// KeepAllThirdPartyRowsInQuarantineForDataSourceViewWithResponse request
-	KeepAllThirdPartyRowsInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse, error)
-
-	// ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewWithResponse request
-	ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse, error)
-
 	// ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse request
 	ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllThirdPartyBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllThirdPartyBadRowsForDataSourceViewResponse, error)
+
+	// UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBodyWithResponse request with any body
+	UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse, error)
+
+	UpdateThirdPartyKeepInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, body UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse, error)
 
 	// GetThirdPartyDatasetsWithResponse request
 	GetThirdPartyDatasetsWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetThirdPartyDatasetsParams, reqEditors ...RequestEditorFn) (*GetThirdPartyDatasetsResponse, error)
@@ -38743,14 +40708,6 @@ type ClientWithResponsesInterface interface {
 	// GetThirdPartyDryRunJobsWithResponse request
 	GetThirdPartyDryRunJobsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyDryRunJobsParams, reqEditors ...RequestEditorFn) (*GetThirdPartyDryRunJobsResponse, error)
 
-	// KeepAllThirdPartyRowsInQuarantineViewWithResponse request
-	KeepAllThirdPartyRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllThirdPartyRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*KeepAllThirdPartyRowsInQuarantineViewResponse, error)
-
-	// KeepThirdPartyRowsInQuarantineViewWithBodyWithResponse request with any body
-	KeepThirdPartyRowsInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KeepThirdPartyRowsInQuarantineViewResponse, error)
-
-	KeepThirdPartyRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, body KeepThirdPartyRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*KeepThirdPartyRowsInQuarantineViewResponse, error)
-
 	// ModifyThirdPartyCleanCellWithBodyWithResponse request with any body
 	ModifyThirdPartyCleanCellWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ModifyThirdPartyCleanCellParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ModifyThirdPartyCleanCellResponse, error)
 
@@ -38769,14 +40726,6 @@ type ClientWithResponsesInterface interface {
 	// GetThirdPartyQuarantineCountByStatusWithResponse request
 	GetThirdPartyQuarantineCountByStatusWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyQuarantineCountByStatusParams, reqEditors ...RequestEditorFn) (*GetThirdPartyQuarantineCountByStatusResponse, error)
 
-	// ReleaseAllThirdPartyRowsFromQuarantineViewWithResponse request
-	ReleaseAllThirdPartyRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllThirdPartyRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllThirdPartyRowsFromQuarantineViewResponse, error)
-
-	// ReleaseThirdPartyRowsFromQuarantineViewWithBodyWithResponse request with any body
-	ReleaseThirdPartyRowsFromQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReleaseThirdPartyRowsFromQuarantineViewResponse, error)
-
-	ReleaseThirdPartyRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, body ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*ReleaseThirdPartyRowsFromQuarantineViewResponse, error)
-
 	// ReprocessAllThirdPartyBadRowsForDatasetViewWithResponse request
 	ReprocessAllThirdPartyBadRowsForDatasetViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllThirdPartyBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllThirdPartyBadRowsForDatasetViewResponse, error)
 
@@ -38792,6 +40741,11 @@ type ClientWithResponsesInterface interface {
 	TrackThirdPartyDatasetWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackThirdPartyDatasetParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TrackThirdPartyDatasetResponse, error)
 
 	TrackThirdPartyDatasetWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *TrackThirdPartyDatasetParams, body TrackThirdPartyDatasetJSONRequestBody, reqEditors ...RequestEditorFn) (*TrackThirdPartyDatasetResponse, error)
+
+	// UpdateThirdPartyKeepInQuarantineViewWithBodyWithResponse request with any body
+	UpdateThirdPartyKeepInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineViewResponse, error)
+
+	UpdateThirdPartyKeepInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, body UpdateThirdPartyKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineViewResponse, error)
 
 	// GetThirdPartyWarningsWithResponse request
 	GetThirdPartyWarningsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetThirdPartyWarningsParams, reqEditors ...RequestEditorFn) (*GetThirdPartyWarningsResponse, error)
@@ -39969,52 +41923,6 @@ func (r DisableSensorCronjobNowResponse) StatusCode() int {
 	return 0
 }
 
-type KeepAllRowsInQuarantineForDataSourceViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepAllRowsInQuarantineForDataSourceViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepAllRowsInQuarantineForDataSourceViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ReleaseAllRowsFromQuarantineForDataSourceViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseAllRowsFromQuarantineForDataSourceViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseAllRowsFromQuarantineForDataSourceViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ReprocessAllBadRowsForDataSourceViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -40101,6 +42009,257 @@ func (r GetDataSourceTinyResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetDataSourceTinyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateKeepInQuarantineForDataSourceViewResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkActionByStatusResponseSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateKeepInQuarantineForDataSourceViewResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateKeepInQuarantineForDataSourceViewResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDatasetFieldKindsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetFieldKindsListSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDatasetFieldKindsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDatasetFieldKindsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateDatasetFieldKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DatasetFieldKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateDatasetFieldKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateDatasetFieldKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDatasetFieldKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDatasetFieldKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDatasetFieldKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOneDatasetFieldKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetFieldKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOneDatasetFieldKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOneDatasetFieldKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchDatasetFieldKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetFieldKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchDatasetFieldKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchDatasetFieldKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDatasetKindsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetKindsListSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDatasetKindsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDatasetKindsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateDatasetKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *DatasetKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateDatasetKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateDatasetKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteDatasetKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDatasetKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDatasetKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOneDatasetKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOneDatasetKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOneDatasetKindResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchDatasetKindResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetKindSchemaFull
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchDatasetKindResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchDatasetKindResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -40547,6 +42706,7 @@ type PatchDatasetRuleResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *DatasetRuleDetailSchema
+	JSON202      *DatasetRuleSuggestionSchema
 	JSON422      *HTTPValidationError
 }
 
@@ -40681,52 +42841,6 @@ func (r GetDatasetJobActivityResponse) StatusCode() int {
 	return 0
 }
 
-type KeepAllRowsInQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepAllRowsInQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepAllRowsInQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type KeepRowsInQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepRowsInQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepRowsInQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type GetDatasetMigrationDetailsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -40744,6 +42858,52 @@ func (r GetDatasetMigrationDetailsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetDatasetMigrationDetailsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetDatasetMigrationFieldsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *MigrationFieldsResponse
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDatasetMigrationFieldsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDatasetMigrationFieldsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetFieldNotableValuesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FieldNotableValuesResponse
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetFieldNotableValuesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetFieldNotableValuesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -40888,52 +43048,6 @@ func (r RecoverDatasetResponse) StatusCode() int {
 	return 0
 }
 
-type ReleaseAllRowsFromQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseAllRowsFromQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseAllRowsFromQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ReleaseRowsFromQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseRowsFromQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseRowsFromQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ReprocessAllBadRowsForDatasetViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -41048,6 +43162,167 @@ func (r CreateOrUpdateDatasetReviewPolicyResponse) StatusCode() int {
 	return 0
 }
 
+type ListSuggestionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleSuggestionListSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r ListSuggestionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListSuggestionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type BulkAcceptSuggestionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkSuggestionResultSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r BulkAcceptSuggestionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r BulkAcceptSuggestionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type BulkDismissSuggestionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkSuggestionResultSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r BulkDismissSuggestionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r BulkDismissSuggestionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSuggestionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleSuggestionSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSuggestionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSuggestionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchSuggestionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleSuggestionSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSuggestionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSuggestionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type AcceptSuggestionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleSuggestionSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r AcceptSuggestionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r AcceptSuggestionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DismissSuggestionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleSuggestionSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DismissSuggestionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DismissSuggestionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type RunTrainingJobNowResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -41065,6 +43340,29 @@ func (r RunTrainingJobNowResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RunTrainingJobNowResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SearchAndReplaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SearchAndReplaceResponseSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r SearchAndReplaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SearchAndReplaceResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -41157,6 +43455,29 @@ func (r TrackDatasetResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r TrackDatasetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateKeepInQuarantineViewResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkActionByStatusResponseSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateKeepInQuarantineViewResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateKeepInQuarantineViewResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -42660,6 +44981,7 @@ type InstantiateRuleResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *DatasetRuleDetailSchema
+	JSON202      *DatasetRuleSuggestionSchema
 	JSON422      *HTTPValidationError
 }
 
@@ -43070,52 +45392,6 @@ func (r DeleteThirdPartyRowsInDataSourceResponse) StatusCode() int {
 	return 0
 }
 
-type KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ReprocessAllThirdPartyBadRowsForDataSourceViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -43133,6 +45409,29 @@ func (r ReprocessAllThirdPartyBadRowsForDataSourceViewResponse) Status() string 
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ReprocessAllThirdPartyBadRowsForDataSourceViewResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkActionByStatusResponseSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -43415,52 +45714,6 @@ func (r GetThirdPartyDryRunJobsResponse) StatusCode() int {
 	return 0
 }
 
-type KeepAllThirdPartyRowsInQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepAllThirdPartyRowsInQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepAllThirdPartyRowsInQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type KeepThirdPartyRowsInQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *KeepRowsInQuarantineResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r KeepThirdPartyRowsInQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r KeepThirdPartyRowsInQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ModifyThirdPartyCleanCellResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -43553,52 +45806,6 @@ func (r GetThirdPartyQuarantineCountByStatusResponse) StatusCode() int {
 	return 0
 }
 
-type ReleaseAllThirdPartyRowsFromQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseAllThirdPartyRowsFromQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseAllThirdPartyRowsFromQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type ReleaseThirdPartyRowsFromQuarantineViewResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *BulkActionByStatusResponseSchema
-	JSON422      *HTTPValidationError
-}
-
-// Status returns HTTPResponse.Status
-func (r ReleaseThirdPartyRowsFromQuarantineViewResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r ReleaseThirdPartyRowsFromQuarantineViewResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type ReprocessAllThirdPartyBadRowsForDatasetViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -43685,6 +45892,29 @@ func (r TrackThirdPartyDatasetResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r TrackThirdPartyDatasetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateThirdPartyKeepInQuarantineViewResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *BulkActionByStatusResponseSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateThirdPartyKeepInQuarantineViewResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateThirdPartyKeepInQuarantineViewResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -45008,24 +47238,6 @@ func (c *ClientWithResponses) DisableSensorCronjobNowWithResponse(ctx context.Co
 	return ParseDisableSensorCronjobNowResponse(rsp)
 }
 
-// KeepAllRowsInQuarantineForDataSourceViewWithResponse request returning *KeepAllRowsInQuarantineForDataSourceViewResponse
-func (c *ClientWithResponses) KeepAllRowsInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*KeepAllRowsInQuarantineForDataSourceViewResponse, error) {
-	rsp, err := c.KeepAllRowsInQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepAllRowsInQuarantineForDataSourceViewResponse(rsp)
-}
-
-// ReleaseAllRowsFromQuarantineForDataSourceViewWithResponse request returning *ReleaseAllRowsFromQuarantineForDataSourceViewResponse
-func (c *ClientWithResponses) ReleaseAllRowsFromQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllRowsFromQuarantineForDataSourceViewResponse, error) {
-	rsp, err := c.ReleaseAllRowsFromQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseAllRowsFromQuarantineForDataSourceViewResponse(rsp)
-}
-
 // ReprocessAllBadRowsForDataSourceViewWithResponse request returning *ReprocessAllBadRowsForDataSourceViewResponse
 func (c *ClientWithResponses) ReprocessAllBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDataSourceViewResponse, error) {
 	rsp, err := c.ReprocessAllBadRowsForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
@@ -45060,6 +47272,145 @@ func (c *ClientWithResponses) GetDataSourceTinyWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseGetDataSourceTinyResponse(rsp)
+}
+
+// UpdateKeepInQuarantineForDataSourceViewWithBodyWithResponse request with arbitrary body returning *UpdateKeepInQuarantineForDataSourceViewResponse
+func (c *ClientWithResponses) UpdateKeepInQuarantineForDataSourceViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineForDataSourceViewResponse, error) {
+	rsp, err := c.UpdateKeepInQuarantineForDataSourceViewWithBody(ctx, organizationID, dataSourceModelID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKeepInQuarantineForDataSourceViewResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateKeepInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateKeepInQuarantineForDataSourceViewParams, body UpdateKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineForDataSourceViewResponse, error) {
+	rsp, err := c.UpdateKeepInQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKeepInQuarantineForDataSourceViewResponse(rsp)
+}
+
+// GetDatasetFieldKindsWithResponse request returning *GetDatasetFieldKindsResponse
+func (c *ClientWithResponses) GetDatasetFieldKindsWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetFieldKindsParams, reqEditors ...RequestEditorFn) (*GetDatasetFieldKindsResponse, error) {
+	rsp, err := c.GetDatasetFieldKinds(ctx, organizationID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDatasetFieldKindsResponse(rsp)
+}
+
+// CreateDatasetFieldKindWithBodyWithResponse request with arbitrary body returning *CreateDatasetFieldKindResponse
+func (c *ClientWithResponses) CreateDatasetFieldKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDatasetFieldKindResponse, error) {
+	rsp, err := c.CreateDatasetFieldKindWithBody(ctx, organizationID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDatasetFieldKindResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetFieldKindParams, body CreateDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDatasetFieldKindResponse, error) {
+	rsp, err := c.CreateDatasetFieldKind(ctx, organizationID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDatasetFieldKindResponse(rsp)
+}
+
+// DeleteDatasetFieldKindWithResponse request returning *DeleteDatasetFieldKindResponse
+func (c *ClientWithResponses) DeleteDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *DeleteDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetFieldKindResponse, error) {
+	rsp, err := c.DeleteDatasetFieldKind(ctx, organizationID, fieldKindID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDatasetFieldKindResponse(rsp)
+}
+
+// GetOneDatasetFieldKindWithResponse request returning *GetOneDatasetFieldKindResponse
+func (c *ClientWithResponses) GetOneDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *GetOneDatasetFieldKindParams, reqEditors ...RequestEditorFn) (*GetOneDatasetFieldKindResponse, error) {
+	rsp, err := c.GetOneDatasetFieldKind(ctx, organizationID, fieldKindID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOneDatasetFieldKindResponse(rsp)
+}
+
+// PatchDatasetFieldKindWithBodyWithResponse request with arbitrary body returning *PatchDatasetFieldKindResponse
+func (c *ClientWithResponses) PatchDatasetFieldKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDatasetFieldKindResponse, error) {
+	rsp, err := c.PatchDatasetFieldKindWithBody(ctx, organizationID, fieldKindID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDatasetFieldKindResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchDatasetFieldKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, fieldKindID openapi_types.UUID, params *PatchDatasetFieldKindParams, body PatchDatasetFieldKindJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDatasetFieldKindResponse, error) {
+	rsp, err := c.PatchDatasetFieldKind(ctx, organizationID, fieldKindID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDatasetFieldKindResponse(rsp)
+}
+
+// GetDatasetKindsWithResponse request returning *GetDatasetKindsResponse
+func (c *ClientWithResponses) GetDatasetKindsWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetDatasetKindsParams, reqEditors ...RequestEditorFn) (*GetDatasetKindsResponse, error) {
+	rsp, err := c.GetDatasetKinds(ctx, organizationID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDatasetKindsResponse(rsp)
+}
+
+// CreateDatasetKindWithBodyWithResponse request with arbitrary body returning *CreateDatasetKindResponse
+func (c *ClientWithResponses) CreateDatasetKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateDatasetKindResponse, error) {
+	rsp, err := c.CreateDatasetKindWithBody(ctx, organizationID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDatasetKindResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *CreateDatasetKindParams, body CreateDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateDatasetKindResponse, error) {
+	rsp, err := c.CreateDatasetKind(ctx, organizationID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateDatasetKindResponse(rsp)
+}
+
+// DeleteDatasetKindWithResponse request returning *DeleteDatasetKindResponse
+func (c *ClientWithResponses) DeleteDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *DeleteDatasetKindParams, reqEditors ...RequestEditorFn) (*DeleteDatasetKindResponse, error) {
+	rsp, err := c.DeleteDatasetKind(ctx, organizationID, profileID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteDatasetKindResponse(rsp)
+}
+
+// GetOneDatasetKindWithResponse request returning *GetOneDatasetKindResponse
+func (c *ClientWithResponses) GetOneDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *GetOneDatasetKindParams, reqEditors ...RequestEditorFn) (*GetOneDatasetKindResponse, error) {
+	rsp, err := c.GetOneDatasetKind(ctx, organizationID, profileID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOneDatasetKindResponse(rsp)
+}
+
+// PatchDatasetKindWithBodyWithResponse request with arbitrary body returning *PatchDatasetKindResponse
+func (c *ClientWithResponses) PatchDatasetKindWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDatasetKindResponse, error) {
+	rsp, err := c.PatchDatasetKindWithBody(ctx, organizationID, profileID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDatasetKindResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchDatasetKindWithResponse(ctx context.Context, organizationID openapi_types.UUID, profileID openapi_types.UUID, params *PatchDatasetKindParams, body PatchDatasetKindJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDatasetKindResponse, error) {
+	rsp, err := c.PatchDatasetKind(ctx, organizationID, profileID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchDatasetKindResponse(rsp)
 }
 
 // GetDatasetRuleDetailWithResponse request returning *GetDatasetRuleDetailResponse
@@ -45375,32 +47726,6 @@ func (c *ClientWithResponses) GetDatasetJobActivityWithResponse(ctx context.Cont
 	return ParseGetDatasetJobActivityResponse(rsp)
 }
 
-// KeepAllRowsInQuarantineViewWithResponse request returning *KeepAllRowsInQuarantineViewResponse
-func (c *ClientWithResponses) KeepAllRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*KeepAllRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepAllRowsInQuarantineView(ctx, organizationID, datasetID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepAllRowsInQuarantineViewResponse(rsp)
-}
-
-// KeepRowsInQuarantineViewWithBodyWithResponse request with arbitrary body returning *KeepRowsInQuarantineViewResponse
-func (c *ClientWithResponses) KeepRowsInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KeepRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepRowsInQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepRowsInQuarantineViewResponse(rsp)
-}
-
-func (c *ClientWithResponses) KeepRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepRowsInQuarantineViewParams, body KeepRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*KeepRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepRowsInQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepRowsInQuarantineViewResponse(rsp)
-}
-
 // GetDatasetMigrationDetailsWithResponse request returning *GetDatasetMigrationDetailsResponse
 func (c *ClientWithResponses) GetDatasetMigrationDetailsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationDetailsParams, reqEditors ...RequestEditorFn) (*GetDatasetMigrationDetailsResponse, error) {
 	rsp, err := c.GetDatasetMigrationDetails(ctx, organizationID, datasetID, params, reqEditors...)
@@ -45408,6 +47733,24 @@ func (c *ClientWithResponses) GetDatasetMigrationDetailsWithResponse(ctx context
 		return nil, err
 	}
 	return ParseGetDatasetMigrationDetailsResponse(rsp)
+}
+
+// GetDatasetMigrationFieldsWithResponse request returning *GetDatasetMigrationFieldsResponse
+func (c *ClientWithResponses) GetDatasetMigrationFieldsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDatasetMigrationFieldsParams, reqEditors ...RequestEditorFn) (*GetDatasetMigrationFieldsResponse, error) {
+	rsp, err := c.GetDatasetMigrationFields(ctx, organizationID, datasetID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDatasetMigrationFieldsResponse(rsp)
+}
+
+// GetFieldNotableValuesWithResponse request returning *GetFieldNotableValuesResponse
+func (c *ClientWithResponses) GetFieldNotableValuesWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, fieldName string, params *GetFieldNotableValuesParams, reqEditors ...RequestEditorFn) (*GetFieldNotableValuesResponse, error) {
+	rsp, err := c.GetFieldNotableValues(ctx, organizationID, datasetID, fieldName, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetFieldNotableValuesResponse(rsp)
 }
 
 // PatchMigrationWithBodyWithResponse request with arbitrary body returning *PatchMigrationResponse
@@ -45504,32 +47847,6 @@ func (c *ClientWithResponses) RecoverDatasetWithResponse(ctx context.Context, or
 	return ParseRecoverDatasetResponse(rsp)
 }
 
-// ReleaseAllRowsFromQuarantineViewWithResponse request returning *ReleaseAllRowsFromQuarantineViewResponse
-func (c *ClientWithResponses) ReleaseAllRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseAllRowsFromQuarantineView(ctx, organizationID, datasetID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseAllRowsFromQuarantineViewResponse(rsp)
-}
-
-// ReleaseRowsFromQuarantineViewWithBodyWithResponse request with arbitrary body returning *ReleaseRowsFromQuarantineViewResponse
-func (c *ClientWithResponses) ReleaseRowsFromQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReleaseRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseRowsFromQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseRowsFromQuarantineViewResponse(rsp)
-}
-
-func (c *ClientWithResponses) ReleaseRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseRowsFromQuarantineViewParams, body ReleaseRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*ReleaseRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseRowsFromQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseRowsFromQuarantineViewResponse(rsp)
-}
-
 // ReprocessAllBadRowsForDatasetViewWithResponse request returning *ReprocessAllBadRowsForDatasetViewResponse
 func (c *ClientWithResponses) ReprocessAllBadRowsForDatasetViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDatasetViewResponse, error) {
 	rsp, err := c.ReprocessAllBadRowsForDatasetView(ctx, organizationID, datasetID, params, reqEditors...)
@@ -45591,6 +47908,101 @@ func (c *ClientWithResponses) CreateOrUpdateDatasetReviewPolicyWithResponse(ctx 
 	return ParseCreateOrUpdateDatasetReviewPolicyResponse(rsp)
 }
 
+// ListSuggestionsWithResponse request returning *ListSuggestionsResponse
+func (c *ClientWithResponses) ListSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ListSuggestionsParams, reqEditors ...RequestEditorFn) (*ListSuggestionsResponse, error) {
+	rsp, err := c.ListSuggestions(ctx, organizationID, datasetID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListSuggestionsResponse(rsp)
+}
+
+// BulkAcceptSuggestionsWithBodyWithResponse request with arbitrary body returning *BulkAcceptSuggestionsResponse
+func (c *ClientWithResponses) BulkAcceptSuggestionsWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BulkAcceptSuggestionsResponse, error) {
+	rsp, err := c.BulkAcceptSuggestionsWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBulkAcceptSuggestionsResponse(rsp)
+}
+
+func (c *ClientWithResponses) BulkAcceptSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkAcceptSuggestionsParams, body BulkAcceptSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*BulkAcceptSuggestionsResponse, error) {
+	rsp, err := c.BulkAcceptSuggestions(ctx, organizationID, datasetID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBulkAcceptSuggestionsResponse(rsp)
+}
+
+// BulkDismissSuggestionsWithBodyWithResponse request with arbitrary body returning *BulkDismissSuggestionsResponse
+func (c *ClientWithResponses) BulkDismissSuggestionsWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*BulkDismissSuggestionsResponse, error) {
+	rsp, err := c.BulkDismissSuggestionsWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBulkDismissSuggestionsResponse(rsp)
+}
+
+func (c *ClientWithResponses) BulkDismissSuggestionsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *BulkDismissSuggestionsParams, body BulkDismissSuggestionsJSONRequestBody, reqEditors ...RequestEditorFn) (*BulkDismissSuggestionsResponse, error) {
+	rsp, err := c.BulkDismissSuggestions(ctx, organizationID, datasetID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBulkDismissSuggestionsResponse(rsp)
+}
+
+// GetSuggestionWithResponse request returning *GetSuggestionResponse
+func (c *ClientWithResponses) GetSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *GetSuggestionParams, reqEditors ...RequestEditorFn) (*GetSuggestionResponse, error) {
+	rsp, err := c.GetSuggestion(ctx, organizationID, datasetID, suggestionID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSuggestionResponse(rsp)
+}
+
+// PatchSuggestionWithBodyWithResponse request with arbitrary body returning *PatchSuggestionResponse
+func (c *ClientWithResponses) PatchSuggestionWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSuggestionResponse, error) {
+	rsp, err := c.PatchSuggestionWithBody(ctx, organizationID, datasetID, suggestionID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSuggestionResponse(rsp)
+}
+
+func (c *ClientWithResponses) PatchSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *PatchSuggestionParams, body PatchSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSuggestionResponse, error) {
+	rsp, err := c.PatchSuggestion(ctx, organizationID, datasetID, suggestionID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSuggestionResponse(rsp)
+}
+
+// AcceptSuggestionWithResponse request returning *AcceptSuggestionResponse
+func (c *ClientWithResponses) AcceptSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *AcceptSuggestionParams, reqEditors ...RequestEditorFn) (*AcceptSuggestionResponse, error) {
+	rsp, err := c.AcceptSuggestion(ctx, organizationID, datasetID, suggestionID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseAcceptSuggestionResponse(rsp)
+}
+
+// DismissSuggestionWithBodyWithResponse request with arbitrary body returning *DismissSuggestionResponse
+func (c *ClientWithResponses) DismissSuggestionWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DismissSuggestionResponse, error) {
+	rsp, err := c.DismissSuggestionWithBody(ctx, organizationID, datasetID, suggestionID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDismissSuggestionResponse(rsp)
+}
+
+func (c *ClientWithResponses) DismissSuggestionWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, suggestionID openapi_types.UUID, params *DismissSuggestionParams, body DismissSuggestionJSONRequestBody, reqEditors ...RequestEditorFn) (*DismissSuggestionResponse, error) {
+	rsp, err := c.DismissSuggestion(ctx, organizationID, datasetID, suggestionID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDismissSuggestionResponse(rsp)
+}
+
 // RunTrainingJobNowWithResponse request returning *RunTrainingJobNowResponse
 func (c *ClientWithResponses) RunTrainingJobNowWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RunTrainingJobNowParams, reqEditors ...RequestEditorFn) (*RunTrainingJobNowResponse, error) {
 	rsp, err := c.RunTrainingJobNow(ctx, organizationID, datasetID, params, reqEditors...)
@@ -45598,6 +48010,23 @@ func (c *ClientWithResponses) RunTrainingJobNowWithResponse(ctx context.Context,
 		return nil, err
 	}
 	return ParseRunTrainingJobNowResponse(rsp)
+}
+
+// SearchAndReplaceWithBodyWithResponse request with arbitrary body returning *SearchAndReplaceResponse
+func (c *ClientWithResponses) SearchAndReplaceWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SearchAndReplaceResponse, error) {
+	rsp, err := c.SearchAndReplaceWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchAndReplaceResponse(rsp)
+}
+
+func (c *ClientWithResponses) SearchAndReplaceWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *SearchAndReplaceParams, body SearchAndReplaceJSONRequestBody, reqEditors ...RequestEditorFn) (*SearchAndReplaceResponse, error) {
+	rsp, err := c.SearchAndReplace(ctx, organizationID, datasetID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchAndReplaceResponse(rsp)
 }
 
 // GetDatasetSmallWithResponse request returning *GetDatasetSmallResponse
@@ -45642,6 +48071,23 @@ func (c *ClientWithResponses) TrackDatasetWithResponse(ctx context.Context, orga
 		return nil, err
 	}
 	return ParseTrackDatasetResponse(rsp)
+}
+
+// UpdateKeepInQuarantineViewWithBodyWithResponse request with arbitrary body returning *UpdateKeepInQuarantineViewResponse
+func (c *ClientWithResponses) UpdateKeepInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineViewResponse, error) {
+	rsp, err := c.UpdateKeepInQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKeepInQuarantineViewResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateKeepInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateKeepInQuarantineViewParams, body UpdateKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateKeepInQuarantineViewResponse, error) {
+	rsp, err := c.UpdateKeepInQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateKeepInQuarantineViewResponse(rsp)
 }
 
 // GetWarningsMsgsListWithBodyWithResponse request with arbitrary body returning *GetWarningsMsgsListResponse
@@ -46679,24 +49125,6 @@ func (c *ClientWithResponses) DeleteThirdPartyRowsInDataSourceWithResponse(ctx c
 	return ParseDeleteThirdPartyRowsInDataSourceResponse(rsp)
 }
 
-// KeepAllThirdPartyRowsInQuarantineForDataSourceViewWithResponse request returning *KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse
-func (c *ClientWithResponses) KeepAllThirdPartyRowsInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *KeepAllThirdPartyRowsInQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse, error) {
-	rsp, err := c.KeepAllThirdPartyRowsInQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse(rsp)
-}
-
-// ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewWithResponse request returning *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse
-func (c *ClientWithResponses) ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse, error) {
-	rsp, err := c.ReleaseAllThirdPartyRowsFromQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse(rsp)
-}
-
 // ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse request returning *ReprocessAllThirdPartyBadRowsForDataSourceViewResponse
 func (c *ClientWithResponses) ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllThirdPartyBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllThirdPartyBadRowsForDataSourceViewResponse, error) {
 	rsp, err := c.ReprocessAllThirdPartyBadRowsForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
@@ -46704,6 +49132,23 @@ func (c *ClientWithResponses) ReprocessAllThirdPartyBadRowsForDataSourceViewWith
 		return nil, err
 	}
 	return ParseReprocessAllThirdPartyBadRowsForDataSourceViewResponse(rsp)
+}
+
+// UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBodyWithResponse request with arbitrary body returning *UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse
+func (c *ClientWithResponses) UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse, error) {
+	rsp, err := c.UpdateThirdPartyKeepInQuarantineForDataSourceViewWithBody(ctx, organizationID, dataSourceModelID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateThirdPartyKeepInQuarantineForDataSourceViewResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateThirdPartyKeepInQuarantineForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *UpdateThirdPartyKeepInQuarantineForDataSourceViewParams, body UpdateThirdPartyKeepInQuarantineForDataSourceViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse, error) {
+	rsp, err := c.UpdateThirdPartyKeepInQuarantineForDataSourceView(ctx, organizationID, dataSourceModelID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateThirdPartyKeepInQuarantineForDataSourceViewResponse(rsp)
 }
 
 // GetThirdPartyDatasetsWithResponse request returning *GetThirdPartyDatasetsResponse
@@ -46846,32 +49291,6 @@ func (c *ClientWithResponses) GetThirdPartyDryRunJobsWithResponse(ctx context.Co
 	return ParseGetThirdPartyDryRunJobsResponse(rsp)
 }
 
-// KeepAllThirdPartyRowsInQuarantineViewWithResponse request returning *KeepAllThirdPartyRowsInQuarantineViewResponse
-func (c *ClientWithResponses) KeepAllThirdPartyRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepAllThirdPartyRowsInQuarantineViewParams, reqEditors ...RequestEditorFn) (*KeepAllThirdPartyRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepAllThirdPartyRowsInQuarantineView(ctx, organizationID, datasetID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepAllThirdPartyRowsInQuarantineViewResponse(rsp)
-}
-
-// KeepThirdPartyRowsInQuarantineViewWithBodyWithResponse request with arbitrary body returning *KeepThirdPartyRowsInQuarantineViewResponse
-func (c *ClientWithResponses) KeepThirdPartyRowsInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*KeepThirdPartyRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepThirdPartyRowsInQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepThirdPartyRowsInQuarantineViewResponse(rsp)
-}
-
-func (c *ClientWithResponses) KeepThirdPartyRowsInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *KeepThirdPartyRowsInQuarantineViewParams, body KeepThirdPartyRowsInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*KeepThirdPartyRowsInQuarantineViewResponse, error) {
-	rsp, err := c.KeepThirdPartyRowsInQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseKeepThirdPartyRowsInQuarantineViewResponse(rsp)
-}
-
 // ModifyThirdPartyCleanCellWithBodyWithResponse request with arbitrary body returning *ModifyThirdPartyCleanCellResponse
 func (c *ClientWithResponses) ModifyThirdPartyCleanCellWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ModifyThirdPartyCleanCellParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ModifyThirdPartyCleanCellResponse, error) {
 	rsp, err := c.ModifyThirdPartyCleanCellWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
@@ -46932,32 +49351,6 @@ func (c *ClientWithResponses) GetThirdPartyQuarantineCountByStatusWithResponse(c
 	return ParseGetThirdPartyQuarantineCountByStatusResponse(rsp)
 }
 
-// ReleaseAllThirdPartyRowsFromQuarantineViewWithResponse request returning *ReleaseAllThirdPartyRowsFromQuarantineViewResponse
-func (c *ClientWithResponses) ReleaseAllThirdPartyRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseAllThirdPartyRowsFromQuarantineViewParams, reqEditors ...RequestEditorFn) (*ReleaseAllThirdPartyRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseAllThirdPartyRowsFromQuarantineView(ctx, organizationID, datasetID, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseAllThirdPartyRowsFromQuarantineViewResponse(rsp)
-}
-
-// ReleaseThirdPartyRowsFromQuarantineViewWithBodyWithResponse request with arbitrary body returning *ReleaseThirdPartyRowsFromQuarantineViewResponse
-func (c *ClientWithResponses) ReleaseThirdPartyRowsFromQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReleaseThirdPartyRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseThirdPartyRowsFromQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseThirdPartyRowsFromQuarantineViewResponse(rsp)
-}
-
-func (c *ClientWithResponses) ReleaseThirdPartyRowsFromQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReleaseThirdPartyRowsFromQuarantineViewParams, body ReleaseThirdPartyRowsFromQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*ReleaseThirdPartyRowsFromQuarantineViewResponse, error) {
-	rsp, err := c.ReleaseThirdPartyRowsFromQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseReleaseThirdPartyRowsFromQuarantineViewResponse(rsp)
-}
-
 // ReprocessAllThirdPartyBadRowsForDatasetViewWithResponse request returning *ReprocessAllThirdPartyBadRowsForDatasetViewResponse
 func (c *ClientWithResponses) ReprocessAllThirdPartyBadRowsForDatasetViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *ReprocessAllThirdPartyBadRowsForDatasetViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllThirdPartyBadRowsForDatasetViewResponse, error) {
 	rsp, err := c.ReprocessAllThirdPartyBadRowsForDatasetView(ctx, organizationID, datasetID, params, reqEditors...)
@@ -47008,6 +49401,23 @@ func (c *ClientWithResponses) TrackThirdPartyDatasetWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseTrackThirdPartyDatasetResponse(rsp)
+}
+
+// UpdateThirdPartyKeepInQuarantineViewWithBodyWithResponse request with arbitrary body returning *UpdateThirdPartyKeepInQuarantineViewResponse
+func (c *ClientWithResponses) UpdateThirdPartyKeepInQuarantineViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineViewResponse, error) {
+	rsp, err := c.UpdateThirdPartyKeepInQuarantineViewWithBody(ctx, organizationID, datasetID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateThirdPartyKeepInQuarantineViewResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateThirdPartyKeepInQuarantineViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *UpdateThirdPartyKeepInQuarantineViewParams, body UpdateThirdPartyKeepInQuarantineViewJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateThirdPartyKeepInQuarantineViewResponse, error) {
+	rsp, err := c.UpdateThirdPartyKeepInQuarantineView(ctx, organizationID, datasetID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateThirdPartyKeepInQuarantineViewResponse(rsp)
 }
 
 // GetThirdPartyWarningsWithResponse request returning *GetThirdPartyWarningsResponse
@@ -48897,72 +51307,6 @@ func ParseDisableSensorCronjobNowResponse(rsp *http.Response) (*DisableSensorCro
 	return response, nil
 }
 
-// ParseKeepAllRowsInQuarantineForDataSourceViewResponse parses an HTTP response from a KeepAllRowsInQuarantineForDataSourceViewWithResponse call
-func ParseKeepAllRowsInQuarantineForDataSourceViewResponse(rsp *http.Response) (*KeepAllRowsInQuarantineForDataSourceViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &KeepAllRowsInQuarantineForDataSourceViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReleaseAllRowsFromQuarantineForDataSourceViewResponse parses an HTTP response from a ReleaseAllRowsFromQuarantineForDataSourceViewWithResponse call
-func ParseReleaseAllRowsFromQuarantineForDataSourceViewResponse(rsp *http.Response) (*ReleaseAllRowsFromQuarantineForDataSourceViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseAllRowsFromQuarantineForDataSourceViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BulkActionByStatusResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseReprocessAllBadRowsForDataSourceViewResponse parses an HTTP response from a ReprocessAllBadRowsForDataSourceViewWithResponse call
 func ParseReprocessAllBadRowsForDataSourceViewResponse(rsp *http.Response) (*ReprocessAllBadRowsForDataSourceViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -49078,6 +51422,355 @@ func ParseGetDataSourceTinyResponse(rsp *http.Response) (*GetDataSourceTinyRespo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest DataSourceModelTinySchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateKeepInQuarantineForDataSourceViewResponse parses an HTTP response from a UpdateKeepInQuarantineForDataSourceViewWithResponse call
+func ParseUpdateKeepInQuarantineForDataSourceViewResponse(rsp *http.Response) (*UpdateKeepInQuarantineForDataSourceViewResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateKeepInQuarantineForDataSourceViewResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BulkActionByStatusResponseSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDatasetFieldKindsResponse parses an HTTP response from a GetDatasetFieldKindsWithResponse call
+func ParseGetDatasetFieldKindsResponse(rsp *http.Response) (*GetDatasetFieldKindsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDatasetFieldKindsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetFieldKindsListSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateDatasetFieldKindResponse parses an HTTP response from a CreateDatasetFieldKindWithResponse call
+func ParseCreateDatasetFieldKindResponse(rsp *http.Response) (*CreateDatasetFieldKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateDatasetFieldKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DatasetFieldKindSchemaFull
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDatasetFieldKindResponse parses an HTTP response from a DeleteDatasetFieldKindWithResponse call
+func ParseDeleteDatasetFieldKindResponse(rsp *http.Response) (*DeleteDatasetFieldKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDatasetFieldKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOneDatasetFieldKindResponse parses an HTTP response from a GetOneDatasetFieldKindWithResponse call
+func ParseGetOneDatasetFieldKindResponse(rsp *http.Response) (*GetOneDatasetFieldKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOneDatasetFieldKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetFieldKindSchemaFull
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchDatasetFieldKindResponse parses an HTTP response from a PatchDatasetFieldKindWithResponse call
+func ParsePatchDatasetFieldKindResponse(rsp *http.Response) (*PatchDatasetFieldKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchDatasetFieldKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetFieldKindSchemaFull
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDatasetKindsResponse parses an HTTP response from a GetDatasetKindsWithResponse call
+func ParseGetDatasetKindsResponse(rsp *http.Response) (*GetDatasetKindsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDatasetKindsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetKindsListSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateDatasetKindResponse parses an HTTP response from a CreateDatasetKindWithResponse call
+func ParseCreateDatasetKindResponse(rsp *http.Response) (*CreateDatasetKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateDatasetKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest DatasetKindSchemaFull
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteDatasetKindResponse parses an HTTP response from a DeleteDatasetKindWithResponse call
+func ParseDeleteDatasetKindResponse(rsp *http.Response) (*DeleteDatasetKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDatasetKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOneDatasetKindResponse parses an HTTP response from a GetOneDatasetKindWithResponse call
+func ParseGetOneDatasetKindResponse(rsp *http.Response) (*GetOneDatasetKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOneDatasetKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetKindSchemaFull
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchDatasetKindResponse parses an HTTP response from a PatchDatasetKindWithResponse call
+func ParsePatchDatasetKindResponse(rsp *http.Response) (*PatchDatasetKindResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchDatasetKindResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetKindSchemaFull
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -49736,6 +52429,13 @@ func ParsePatchDatasetRuleResponse(rsp *http.Response) (*PatchDatasetRuleRespons
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest HTTPValidationError
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -49913,72 +52613,6 @@ func ParseGetDatasetJobActivityResponse(rsp *http.Response) (*GetDatasetJobActiv
 	return response, nil
 }
 
-// ParseKeepAllRowsInQuarantineViewResponse parses an HTTP response from a KeepAllRowsInQuarantineViewWithResponse call
-func ParseKeepAllRowsInQuarantineViewResponse(rsp *http.Response) (*KeepAllRowsInQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &KeepAllRowsInQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseKeepRowsInQuarantineViewResponse parses an HTTP response from a KeepRowsInQuarantineViewWithResponse call
-func ParseKeepRowsInQuarantineViewResponse(rsp *http.Response) (*KeepRowsInQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &KeepRowsInQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetDatasetMigrationDetailsResponse parses an HTTP response from a GetDatasetMigrationDetailsWithResponse call
 func ParseGetDatasetMigrationDetailsResponse(rsp *http.Response) (*GetDatasetMigrationDetailsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -49995,6 +52629,72 @@ func ParseGetDatasetMigrationDetailsResponse(rsp *http.Response) (*GetDatasetMig
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest MigrationDetailResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetDatasetMigrationFieldsResponse parses an HTTP response from a GetDatasetMigrationFieldsWithResponse call
+func ParseGetDatasetMigrationFieldsResponse(rsp *http.Response) (*GetDatasetMigrationFieldsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDatasetMigrationFieldsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MigrationFieldsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetFieldNotableValuesResponse parses an HTTP response from a GetFieldNotableValuesWithResponse call
+func ParseGetFieldNotableValuesResponse(rsp *http.Response) (*GetFieldNotableValuesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetFieldNotableValuesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FieldNotableValuesResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50210,72 +52910,6 @@ func ParseRecoverDatasetResponse(rsp *http.Response) (*RecoverDatasetResponse, e
 	return response, nil
 }
 
-// ParseReleaseAllRowsFromQuarantineViewResponse parses an HTTP response from a ReleaseAllRowsFromQuarantineViewWithResponse call
-func ParseReleaseAllRowsFromQuarantineViewResponse(rsp *http.Response) (*ReleaseAllRowsFromQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseAllRowsFromQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BulkActionByStatusResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReleaseRowsFromQuarantineViewResponse parses an HTTP response from a ReleaseRowsFromQuarantineViewWithResponse call
-func ParseReleaseRowsFromQuarantineViewResponse(rsp *http.Response) (*ReleaseRowsFromQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseRowsFromQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BulkActionByStatusResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseReprocessAllBadRowsForDatasetViewResponse parses an HTTP response from a ReprocessAllBadRowsForDatasetViewWithResponse call
 func ParseReprocessAllBadRowsForDatasetViewResponse(rsp *http.Response) (*ReprocessAllBadRowsForDatasetViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -50434,6 +53068,237 @@ func ParseCreateOrUpdateDatasetReviewPolicyResponse(rsp *http.Response) (*Create
 	return response, nil
 }
 
+// ParseListSuggestionsResponse parses an HTTP response from a ListSuggestionsWithResponse call
+func ParseListSuggestionsResponse(rsp *http.Response) (*ListSuggestionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListSuggestionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleSuggestionListSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseBulkAcceptSuggestionsResponse parses an HTTP response from a BulkAcceptSuggestionsWithResponse call
+func ParseBulkAcceptSuggestionsResponse(rsp *http.Response) (*BulkAcceptSuggestionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &BulkAcceptSuggestionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BulkSuggestionResultSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseBulkDismissSuggestionsResponse parses an HTTP response from a BulkDismissSuggestionsWithResponse call
+func ParseBulkDismissSuggestionsResponse(rsp *http.Response) (*BulkDismissSuggestionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &BulkDismissSuggestionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BulkSuggestionResultSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSuggestionResponse parses an HTTP response from a GetSuggestionWithResponse call
+func ParseGetSuggestionResponse(rsp *http.Response) (*GetSuggestionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSuggestionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSuggestionResponse parses an HTTP response from a PatchSuggestionWithResponse call
+func ParsePatchSuggestionResponse(rsp *http.Response) (*PatchSuggestionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSuggestionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseAcceptSuggestionResponse parses an HTTP response from a AcceptSuggestionWithResponse call
+func ParseAcceptSuggestionResponse(rsp *http.Response) (*AcceptSuggestionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &AcceptSuggestionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDismissSuggestionResponse parses an HTTP response from a DismissSuggestionWithResponse call
+func ParseDismissSuggestionResponse(rsp *http.Response) (*DismissSuggestionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DismissSuggestionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseRunTrainingJobNowResponse parses an HTTP response from a RunTrainingJobNowWithResponse call
 func ParseRunTrainingJobNowResponse(rsp *http.Response) (*RunTrainingJobNowResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -50450,6 +53315,39 @@ func ParseRunTrainingJobNowResponse(rsp *http.Response) (*RunTrainingJobNowRespo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest TrainingJobRunSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSearchAndReplaceResponse parses an HTTP response from a SearchAndReplaceWithResponse call
+func ParseSearchAndReplaceResponse(rsp *http.Response) (*SearchAndReplaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SearchAndReplaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SearchAndReplaceResponseSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50582,6 +53480,39 @@ func ParseTrackDatasetResponse(rsp *http.Response) (*TrackDatasetResponse, error
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest UserTrackedDatasetResponseSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateKeepInQuarantineViewResponse parses an HTTP response from a UpdateKeepInQuarantineViewWithResponse call
+func ParseUpdateKeepInQuarantineViewResponse(rsp *http.Response) (*UpdateKeepInQuarantineViewResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateKeepInQuarantineViewResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BulkActionByStatusResponseSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52751,6 +55682,13 @@ func ParseInstantiateRuleResponse(rsp *http.Response) (*InstantiateRuleResponse,
 		}
 		response.JSON201 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest DatasetRuleSuggestionSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest HTTPValidationError
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -53324,48 +56262,15 @@ func ParseDeleteThirdPartyRowsInDataSourceResponse(rsp *http.Response) (*DeleteT
 	return response, nil
 }
 
-// ParseKeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse parses an HTTP response from a KeepAllThirdPartyRowsInQuarantineForDataSourceViewWithResponse call
-func ParseKeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse(rsp *http.Response) (*KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse, error) {
+// ParseReprocessAllThirdPartyBadRowsForDataSourceViewResponse parses an HTTP response from a ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse call
+func ParseReprocessAllThirdPartyBadRowsForDataSourceViewResponse(rsp *http.Response) (*ReprocessAllThirdPartyBadRowsForDataSourceViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &KeepAllThirdPartyRowsInQuarantineForDataSourceViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse parses an HTTP response from a ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewWithResponse call
-func ParseReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse(rsp *http.Response) (*ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse{
+	response := &ReprocessAllThirdPartyBadRowsForDataSourceViewResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -53390,15 +56295,15 @@ func ParseReleaseAllThirdPartyRowsFromQuarantineForDataSourceViewResponse(rsp *h
 	return response, nil
 }
 
-// ParseReprocessAllThirdPartyBadRowsForDataSourceViewResponse parses an HTTP response from a ReprocessAllThirdPartyBadRowsForDataSourceViewWithResponse call
-func ParseReprocessAllThirdPartyBadRowsForDataSourceViewResponse(rsp *http.Response) (*ReprocessAllThirdPartyBadRowsForDataSourceViewResponse, error) {
+// ParseUpdateThirdPartyKeepInQuarantineForDataSourceViewResponse parses an HTTP response from a UpdateThirdPartyKeepInQuarantineForDataSourceViewWithResponse call
+func ParseUpdateThirdPartyKeepInQuarantineForDataSourceViewResponse(rsp *http.Response) (*UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &ReprocessAllThirdPartyBadRowsForDataSourceViewResponse{
+	response := &UpdateThirdPartyKeepInQuarantineForDataSourceViewResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -53819,72 +56724,6 @@ func ParseGetThirdPartyDryRunJobsResponse(rsp *http.Response) (*GetThirdPartyDry
 	return response, nil
 }
 
-// ParseKeepAllThirdPartyRowsInQuarantineViewResponse parses an HTTP response from a KeepAllThirdPartyRowsInQuarantineViewWithResponse call
-func ParseKeepAllThirdPartyRowsInQuarantineViewResponse(rsp *http.Response) (*KeepAllThirdPartyRowsInQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &KeepAllThirdPartyRowsInQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseKeepThirdPartyRowsInQuarantineViewResponse parses an HTTP response from a KeepThirdPartyRowsInQuarantineViewWithResponse call
-func ParseKeepThirdPartyRowsInQuarantineViewResponse(rsp *http.Response) (*KeepThirdPartyRowsInQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &KeepThirdPartyRowsInQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest KeepRowsInQuarantineResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseModifyThirdPartyCleanCellResponse parses an HTTP response from a ModifyThirdPartyCleanCellWithResponse call
 func ParseModifyThirdPartyCleanCellResponse(rsp *http.Response) (*ModifyThirdPartyCleanCellResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -54017,72 +56856,6 @@ func ParseGetThirdPartyQuarantineCountByStatusResponse(rsp *http.Response) (*Get
 	return response, nil
 }
 
-// ParseReleaseAllThirdPartyRowsFromQuarantineViewResponse parses an HTTP response from a ReleaseAllThirdPartyRowsFromQuarantineViewWithResponse call
-func ParseReleaseAllThirdPartyRowsFromQuarantineViewResponse(rsp *http.Response) (*ReleaseAllThirdPartyRowsFromQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseAllThirdPartyRowsFromQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BulkActionByStatusResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseReleaseThirdPartyRowsFromQuarantineViewResponse parses an HTTP response from a ReleaseThirdPartyRowsFromQuarantineViewWithResponse call
-func ParseReleaseThirdPartyRowsFromQuarantineViewResponse(rsp *http.Response) (*ReleaseThirdPartyRowsFromQuarantineViewResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &ReleaseThirdPartyRowsFromQuarantineViewResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BulkActionByStatusResponseSchema
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseReprocessAllThirdPartyBadRowsForDatasetViewResponse parses an HTTP response from a ReprocessAllThirdPartyBadRowsForDatasetViewWithResponse call
 func ParseReprocessAllThirdPartyBadRowsForDatasetViewResponse(rsp *http.Response) (*ReprocessAllThirdPartyBadRowsForDatasetViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -54198,6 +56971,39 @@ func ParseTrackThirdPartyDatasetResponse(rsp *http.Response) (*TrackThirdPartyDa
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest UserTrackedDatasetResponseSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateThirdPartyKeepInQuarantineViewResponse parses an HTTP response from a UpdateThirdPartyKeepInQuarantineViewWithResponse call
+func ParseUpdateThirdPartyKeepInQuarantineViewResponse(rsp *http.Response) (*UpdateThirdPartyKeepInQuarantineViewResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateThirdPartyKeepInQuarantineViewResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BulkActionByStatusResponseSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

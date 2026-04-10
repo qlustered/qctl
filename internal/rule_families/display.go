@@ -12,7 +12,7 @@ import (
 // Each RuleFamilyItem produces 1 row (primary revision) or 2 rows
 // (primary + secondary revision with "Newer than default" in tags).
 type RuleFamilyDisplay struct {
-	Name      string `json:"name"`
+	Slug      string `json:"slug"`
 	Release   string `json:"release"`
 	State     string `json:"state"`
 	Tags      string `json:"tags"`
@@ -30,19 +30,19 @@ func ToDisplayList(families []RuleFamilyItem) []RuleFamilyDisplay {
 	for _, f := range families {
 		hasNewer := f.SecondaryRevision != nil
 		if f.PrimaryRevision != nil {
-			result = append(result, revisionToDisplay(f.Name, f.IsBuiltin, f.PrimaryRevision, hasNewer, false))
+			result = append(result, revisionToDisplay(f.Slug, f.IsBuiltin, f.PrimaryRevision, hasNewer, false))
 		}
 		if f.SecondaryRevision != nil {
-			row := revisionToDisplay(f.Name, f.IsBuiltin, f.SecondaryRevision, false, true)
+			row := revisionToDisplay(f.Slug, f.IsBuiltin, f.SecondaryRevision, false, true)
 			result = append(result, row)
 		}
 	}
 	return result
 }
 
-func revisionToDisplay(name string, isBuiltin bool, rev *RuleFamilyRevisionTiny, updateAvailable bool, newerThanDefault bool) RuleFamilyDisplay {
+func revisionToDisplay(slug string, isBuiltin bool, rev *RuleFamilyRevisionTiny, updateAvailable bool, newerThanDefault bool) RuleFamilyDisplay {
 	return RuleFamilyDisplay{
-		Name:    name,
+		Slug:    slug,
 		Release: rev.Release,
 		State:   string(rev.State),
 		Tags: tags.Build(

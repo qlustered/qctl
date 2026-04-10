@@ -126,9 +126,9 @@ func parseRuleRevisionFilters(cmd *cobra.Command, params *rule_versions.GetRuleR
 
 // printRuleRevisionsResults prints the rule revisions with default columns for table format.
 func printRuleRevisionsResults(cmd *cobra.Command, results []rule_versions.RuleRevisionTiny, verbosity int) error {
-	defaultCols := "name,release,state,tags,short_id"
+	defaultCols := "slug,release,state,tags,short_id"
 	if verbosity >= 1 {
-		defaultCols = "name,release,state,tags,id,description,interacts_with_columns"
+		defaultCols = "slug,release,state,tags,id,description,affected_columns"
 	}
 
 	displayResults := rule_versions.ToDisplayList(results)
@@ -152,5 +152,5 @@ func addRuleRevisionsFlags(cmd *cobra.Command) {
 	cmd.Flags().String("has-upgrade-available", "", "Filter by upgrade availability (true|false)")
 
 	// Output control
-	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: name, release, state, tags, short_id, id, description, interacts_with_columns, created_at, updated_at")
+	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: slug, release, state, tags, short_id, id, description, affected_columns, created_at, updated_at")
 }

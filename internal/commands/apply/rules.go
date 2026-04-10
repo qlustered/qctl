@@ -33,7 +33,7 @@ var immutableSpecFields = []string{
 	"validates_columns",
 	"corrects_columns",
 	"enriches_columns",
-	"interacts_with_columns",
+	"affected_columns",
 	"param_schema",
 	"is_builtin",
 	"is_caf",
@@ -213,18 +213,6 @@ func processOneRuleDoc(client *rule_versions.Client, token string, doc map[strin
 	patchReq := api.PatchRuleRevisionJSONRequestBody{}
 	changed := false
 
-	// description: from spec
-	if specMap != nil {
-		if userDesc, ok := specMap["description"]; ok {
-			liveDesc := getLiveFieldValue("description", live)
-			if !fieldEquals(userDesc, liveDesc) {
-				s, _ := userDesc.(string)
-				patchReq.Description = &s
-				changed = true
-			}
-		}
-	}
-
 	// state: prefer spec, fall back to status
 	if userState := getFieldFromMaps("state", specMap, statusMap); userState != nil {
 		liveState := getLiveFieldValue("state", live)
@@ -322,8 +310,8 @@ func getLiveFieldValue(fieldName string, live *rule_versions.RuleRevisionFull) i
 		return live.CorrectsColumns
 	case "enriches_columns":
 		return live.EnrichesColumns
-	case "interacts_with_columns":
-		return live.InteractsWithColumns
+	case "affected_columns":
+		return live.AffectedColumns
 	case "param_schema":
 		return live.ParamSchema
 	default:

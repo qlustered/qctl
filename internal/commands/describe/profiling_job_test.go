@@ -56,7 +56,7 @@ func sampleProfilingJobFull() profiling.ProfilingJobFull {
 		SettingsModelID:  30,
 		MigrationModelID: nil,
 		State:            api.TrainingJobStateFinished,
-		Step:             api.TrainingJobStepFinished,
+		Step:             api.Finished,
 		AttemptID:        1,
 		UnresolvedAlerts: 0,
 		Msg:              &msg,

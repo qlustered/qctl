@@ -43,7 +43,7 @@ func sampleProfilingJobTinyForRun() api.TrainingJobTinySchema {
 		DatasetName:     "test-dataset",
 		SettingsModelID: 10,
 		State:           state,
-		Step:            api.TrainingJobStepAnalysis,
+		Step:            api.Analysis,
 		UpdatedAt:       updatedAt,
 	}
 }

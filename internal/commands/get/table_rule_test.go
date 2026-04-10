@@ -58,9 +58,10 @@ func sampleDatasetRuleDetail() *dataset_rules.DatasetRuleDetail {
 		TreatAsAlert:   false,
 		CreatedAt:      createdAt,
 		UpdatedAt:      updatedAt,
-		RuleRevision: api.RuleRevisionTinySchema{
+		RuleRevision: api.RuleRevisionSmallSchema{
 			ID:      revisionID,
 			Name:    "email_validator",
+			Slug:    "email_validator",
 			Release: "1.0.0",
 		},
 		Params:            map[string]interface{}{"threshold": float64(0.9)},

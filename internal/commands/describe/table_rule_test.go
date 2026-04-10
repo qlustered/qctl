@@ -59,9 +59,10 @@ func sampleDatasetRuleDetail() dataset_rules.DatasetRuleDetail {
 		ColumnMappingDict: map[string]string{
 			"email": "email_column",
 		},
-		RuleRevision: api.RuleRevisionTinySchema{
+		RuleRevision: api.RuleRevisionSmallSchema{
 			ID:          revisionID,
 			Name:        "email_validator",
+			Slug:        "email_validator",
 			Release:     "1.0.0",
 			State:       "enabled",
 			IsDefault:   true,

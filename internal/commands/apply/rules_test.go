@@ -35,9 +35,10 @@ func sampleLiveRule() api.RuleRevisionFullSchema {
 		ID:                   parseUUID(testRuleID),
 		FamilyID:             parseUUID(testFamilyID),
 		Name:                 "check_email",
+		Slug:                 "check_email",
 		Release:              "1.0.0",
 		Description:          &desc,
-		State:                api.RuleStateEnabled,
+		State:                api.Enabled,
 		IsDefault:            true,
 		IsBuiltin:            false,
 		IsCaf:                false,
@@ -46,7 +47,7 @@ func sampleLiveRule() api.RuleRevisionFullSchema {
 		ValidatesColumns:     []string{"email"},
 		CorrectsColumns:      []string{},
 		EnrichesColumns:      []string{},
-		InteractsWithColumns: []string{"email"},
+		AffectedColumns: []string{"email"},
 		ParamSchema:          nil,
 		CreatedAt:            time.Now(),
 		UpdatedAt:            time.Now(),
@@ -118,7 +119,7 @@ metadata:
   id: `+testRuleID+`
   name: check_email
 spec:
-  description: updated description
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -128,8 +129,8 @@ spec:
 	if !strings.Contains(out, "patched") {
 		t.Fatalf("expected 'patched' in output, got: %s", out)
 	}
-	if received.Description == nil || *received.Description != "updated description" {
-		t.Fatalf("expected description 'updated description', got %+v", received.Description)
+	if received.State == nil || string(*received.State) != "disabled" {
+		t.Fatalf("expected state 'disabled', got %+v", received.State)
 	}
 }
 
@@ -190,10 +191,6 @@ spec:
 	if received.State == nil || string(*received.State) != "disabled" {
 		t.Fatalf("expected state 'disabled', got %+v", received.State)
 	}
-	// Description should NOT be set since it wasn't in the manifest
-	if received.Description != nil {
-		t.Fatalf("expected description nil (not in manifest), got %+v", received.Description)
-	}
 }
 
 func TestApplyRuleMultiDocMixed(t *testing.T) {
@@ -205,6 +202,7 @@ func TestApplyRuleMultiDocMixed(t *testing.T) {
 	live2 := sampleLiveRule()
 	live2.ID = parseUUID(testRuleID2)
 	live2.Name = "check_phone"
+	live2.Slug = "check_phone"
 
 	registerRuleGetHandler(mock, testRuleID, live1)
 	registerRuleGetHandler(mock, testRuleID2, live2)
@@ -217,7 +215,7 @@ metadata:
   id: `+testRuleID+`
   name: check_email
 spec:
-  description: new desc
+  state: disabled
 ---
 apiVersion: qluster.ai/v1
 kind: Rule
@@ -225,7 +223,7 @@ metadata:
   id: `+testRuleID2+`
   name: check_phone
 spec:
-  description: original description
+  state: enabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -442,7 +440,7 @@ kind: Rule
 metadata:
   id: `+testRuleID+`
 spec:
-  description: new description
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -506,6 +504,7 @@ func TestApplyRuleContinueOnError(t *testing.T) {
 	live := sampleLiveRule()
 	live.ID = parseUUID(testRuleID2)
 	live.Name = "check_phone"
+	live.Slug = "check_phone"
 	registerRuleGetHandler(mock, testRuleID2, live)
 	registerRulePatchHandler(mock, testRuleID2, nil)
 
@@ -515,7 +514,7 @@ kind: Rule
 metadata:
   name: bad_rule
 spec:
-  description: test
+  state: disabled
 ---
 apiVersion: qluster.ai/v1
 kind: Rule
@@ -523,7 +522,7 @@ metadata:
   id: `+testRuleID2+`
   name: check_phone
 spec:
-  description: new desc
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -587,14 +586,14 @@ func TestApplyRuleOnlyPresentFieldsCompared(t *testing.T) {
 	var received api.PatchRuleRevisionJSONRequestBody
 	registerRulePatchHandler(mock, testRuleID, &received)
 
-	// Only description in manifest — state, is_default should not be compared or patched
+	// Only state in manifest — is_default should not be compared or patched
 	manifestPath := env.CreateFile("rule.yaml", `
 apiVersion: qluster.ai/v1
 kind: Rule
 metadata:
   id: `+testRuleID+`
 spec:
-  description: new description
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -604,18 +603,15 @@ spec:
 	if !strings.Contains(out, "patched") {
 		t.Fatalf("expected 'patched' in output, got: %s", out)
 	}
-	if received.Description == nil || *received.Description != "new description" {
-		t.Fatalf("expected description 'new description', got %+v", received.Description)
-	}
-	if received.State != nil {
-		t.Fatalf("expected state nil (not in manifest), got %+v", received.State)
+	if received.State == nil || string(*received.State) != "disabled" {
+		t.Fatalf("expected state 'disabled', got %+v", received.State)
 	}
 	if received.IsDefault != nil {
 		t.Fatalf("expected is_default nil (not in manifest), got %+v", received.IsDefault)
 	}
 }
 
-func TestApplyRuleDescriptionAndStateChanged(t *testing.T) {
+func TestApplyRuleStateAndIsDefaultChanged(t *testing.T) {
 	env, mock := setupRuleTest(t)
 	defer env.Cleanup()
 	defer mock.Close()
@@ -632,8 +628,8 @@ kind: Rule
 metadata:
   id: `+testRuleID+`
 spec:
-  description: new desc
   state: disabled
+  is_default: false
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -643,11 +639,11 @@ spec:
 	if !strings.Contains(out, "patched") {
 		t.Fatalf("expected 'patched' in output, got: %s", out)
 	}
-	if received.Description == nil || *received.Description != "new desc" {
-		t.Fatalf("expected description 'new desc', got %+v", received.Description)
-	}
 	if received.State == nil || string(*received.State) != "disabled" {
 		t.Fatalf("expected state 'disabled', got %+v", received.State)
+	}
+	if received.IsDefault == nil || *received.IsDefault != false {
+		t.Fatalf("expected is_default false, got %+v", received.IsDefault)
 	}
 }
 
@@ -693,7 +689,7 @@ metadata:
   id: `+testRuleID+`
   name: check_email
 spec:
-  description: dispatched desc
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)
@@ -703,8 +699,8 @@ spec:
 	if !strings.Contains(out, "patched") {
 		t.Fatalf("expected 'patched' in output from generic dispatch, got: %s", out)
 	}
-	if received.Description == nil || *received.Description != "dispatched desc" {
-		t.Fatalf("expected description 'dispatched desc', got %+v", received.Description)
+	if received.State == nil || string(*received.State) != "disabled" {
+		t.Fatalf("expected state 'disabled', got %+v", received.State)
 	}
 }
 
@@ -717,6 +713,7 @@ func TestApplyRuleThreeDocSecondFails(t *testing.T) {
 	live3 := sampleLiveRule()
 	live3.ID = parseUUID(testRuleID3)
 	live3.Name = "check_address"
+	live3.Slug = "check_address"
 
 	registerRuleGetHandler(mock, testRuleID, live1)
 	registerRuleGetHandler(mock, testRuleID3, live3)
@@ -730,14 +727,14 @@ metadata:
   id: `+testRuleID+`
   name: check_email
 spec:
-  description: new desc 1
+  state: disabled
 ---
 apiVersion: v2-bad
 kind: Rule
 metadata:
   id: `+testRuleID2+`
 spec:
-  description: test
+  state: disabled
 ---
 apiVersion: qluster.ai/v1
 kind: Rule
@@ -745,7 +742,7 @@ metadata:
   id: `+testRuleID3+`
   name: check_address
 spec:
-  description: new desc 3
+  state: disabled
 `)
 
 	out, err := execApply(t, env, manifestPath)

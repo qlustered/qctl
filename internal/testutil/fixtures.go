@@ -24,12 +24,13 @@ func BoolPtr(b bool) *bool {
 // MakeRuleRevisionTiny creates a minimal RuleRevisionTinySchema for resolution tests.
 func MakeRuleRevisionTiny(id, name, release, state string) api.RuleRevisionTinySchema {
 	return api.RuleRevisionTinySchema{
-		ID:                   openapi_types.UUID(uuid.MustParse(id)),
-		Name:                 name,
-		Release:              release,
-		State:                api.RuleState(state),
-		CreatedAt:            time.Date(2025, 6, 15, 10, 0, 0, 0, time.UTC),
-		UpdatedAt:            time.Date(2025, 6, 20, 14, 0, 0, 0, time.UTC),
-		InteractsWithColumns: []string{},
+		ID:              openapi_types.UUID(uuid.MustParse(id)),
+		Name:            name,
+		Slug:            name,
+		Release:         release,
+		State:           api.RuleState(state),
+		CreatedAt:       time.Date(2025, 6, 15, 10, 0, 0, 0, time.UTC),
+		UpdatedAt:       time.Date(2025, 6, 20, 14, 0, 0, 0, time.UTC),
+		AffectedColumns: []string{},
 	}
 }

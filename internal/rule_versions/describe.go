@@ -44,7 +44,7 @@ func FormatDescribe(detail *RuleRevisionFull, showCode bool) string {
 	fmt.Fprintf(&b, "  Validates:       %s\n", joinOrDash(detail.ValidatesColumns))
 	fmt.Fprintf(&b, "  Corrects:        %s\n", joinOrDash(detail.CorrectsColumns))
 	fmt.Fprintf(&b, "  Enriches:        %s\n", joinOrDash(detail.EnrichesColumns))
-	fmt.Fprintf(&b, "  Interacts with:  %s\n", joinOrDash(detail.InteractsWithColumns))
+	fmt.Fprintf(&b, "  Affected:        %s\n", joinOrDash(detail.AffectedColumns))
 
 	// Param Schema
 	b.WriteString("\n")

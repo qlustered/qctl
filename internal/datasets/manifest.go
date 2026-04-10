@@ -40,7 +40,6 @@ type SettingsModel struct {
 	NullValues                                   *[]string            `yaml:"null_values,omitempty" json:"null_values,omitempty"`
 	NullValuesPerColumn                          map[string][]string  `yaml:"null_values_per_column,omitempty" json:"null_values_per_column,omitempty"`
 	PercentToDecimal                             *bool                `yaml:"percent_to_decimal,omitempty" json:"percent_to_decimal,omitempty"`
-	QuarantineRowIfRowLevelIssue                 *bool                `yaml:"quarantine_row_if_row_level_issue,omitempty" json:"quarantine_row_if_row_level_issue,omitempty"`
 	StringFieldPadding                           *int                 `yaml:"string_field_padding,omitempty" json:"string_field_padding,omitempty"`
 	StringFieldsCanBeNullable                    *bool                `yaml:"string_fields_can_be_nullable,omitempty" json:"string_fields_can_be_nullable,omitempty"`
 	TrimStringInsteadOfRaisingErr                *bool                `yaml:"trim_string_instead_of_raising_err,omitempty" json:"trim_string_instead_of_raising_err,omitempty"`
@@ -237,7 +236,6 @@ func settingsSchemaToSettingsModel(ss *SettingsSchema) *SettingsModel {
 		InferDatetime:                          ss.InferDatetime,
 		NonStringFieldsAreAllNullable:          ss.NonStringFieldsAreAllNullable,
 		PercentToDecimal:                       ss.PercentToDecimal,
-		QuarantineRowIfRowLevelIssue:           ss.QuarantineRowIfRowLevelIssue,
 		StringFieldsCanBeNullable:              ss.StringFieldsCanBeNullable,
 		TrimStringInsteadOfRaisingErr:          ss.TrimStringInsteadOfRaisingErr,
 		UseTextInsteadOfString:                 ss.UseTextInsteadOfString,

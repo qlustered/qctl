@@ -10,7 +10,7 @@ import (
 )
 
 var validRuleFamilySortFields = []string{
-	"name", "impact_score", "is_builtin", "created_at",
+	"slug", "impact_score", "is_builtin", "created_at",
 }
 
 // NewRuleFamiliesCommand creates the get rules command (rule families)
@@ -97,7 +97,7 @@ func parseRuleFamiliesParams(cmd *cobra.Command) (rule_families.GetRuleFamiliesP
 // printRuleFamiliesResults prints rule families with default columns for table format.
 func printRuleFamiliesResults(cmd *cobra.Command, results []rule_families.RuleFamilyItem) error {
 	displayResults := rule_families.ToDisplayList(results)
-	return tableui.PrintFromCmd(cmd, displayResults, "name,release,state,tags,author,short_id")
+	return tableui.PrintFromCmd(cmd, displayResults, "slug,release,state,tags,author,short_id")
 }
 
 // addRuleFamiliesFlags adds all flags for the rules (rule families) command.
@@ -107,7 +107,7 @@ func addRuleFamiliesFlags(cmd *cobra.Command) {
 	cmd.Flags().Int("page", 1, "Page number")
 
 	// Sorting
-	cmd.Flags().String("order-by", "impact_score", "Order by field (name, impact_score, is_builtin, created_at)")
+	cmd.Flags().String("order-by", "impact_score", "Order by field (slug, impact_score, is_builtin, created_at)")
 	cmd.Flags().Bool("reverse", false, "Reverse the sort order")
 
 	// Filtering
@@ -115,5 +115,5 @@ func addRuleFamiliesFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("exclude-builtin", false, "Exclude built-in rule families")
 
 	// Output control
-	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: name, release, state, tags, author, short_id, created_at, updated_at")
+	cmd.Flags().String("columns", "", "Comma-separated list of columns to display (table format only)\nAvailable: slug, release, state, tags, author, short_id, created_at, updated_at")
 }

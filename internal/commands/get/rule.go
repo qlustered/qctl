@@ -101,9 +101,9 @@ func getRuleSingleRelease(cmd *cobra.Command, client *rule_versions.Client, ctx 
 		if revision == nil {
 			return fmt.Errorf("rule revision %s not found in results", ruleRevisionID)
 		}
-		defaultCols := "name,release,state,tags,short_id"
+		defaultCols := "slug,release,state,tags,short_id"
 		if ctx.Verbosity >= 1 {
-			defaultCols = "name,release,state,tags,id,description,interacts_with_columns"
+			defaultCols = "slug,release,state,tags,id,description,affected_columns"
 		}
 		computeUpgradeAvailable(family.Results)
 		displayResults := rule_versions.ToDisplayList([]rule_versions.RuleRevisionTiny{*revision})
@@ -164,9 +164,9 @@ func getRuleAllReleases(cmd *cobra.Command, client *rule_versions.Client, ctx *c
 		return fmt.Errorf("rule '%s' has %d releases; use --release to select one for %s output, or use table format to see all", input, len(results), outputFormat)
 
 	default:
-		defaultCols := "name,release,state,tags,short_id"
+		defaultCols := "slug,release,state,tags,short_id"
 		if ctx.Verbosity >= 1 {
-			defaultCols = "name,release,state,tags,id,description,interacts_with_columns"
+			defaultCols = "slug,release,state,tags,id,description,affected_columns"
 		}
 		computeUpgradeAvailable(results)
 		displayResults := rule_versions.ToDisplayList(results)
