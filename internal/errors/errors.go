@@ -103,6 +103,23 @@ func FromHTTPStatus(statusCode int, message string) *Error {
 	}
 }
 
+// FromHTTPStatusWithCause maps an HTTP status code to an appropriate exit code,
+// wrapping the given cause error so it can be unwrapped later.
+func FromHTTPStatusWithCause(statusCode int, cause error, contextMsg string) *Error {
+	switch {
+	case statusCode == http.StatusNotFound:
+		return Wrap(ExitNotFound, cause, contextMsg)
+	case statusCode == http.StatusUnauthorized || statusCode == http.StatusForbidden:
+		return Wrap(ExitUnauthorized, cause, contextMsg)
+	case statusCode >= 500:
+		return Wrap(ExitGenericError, cause, contextMsg)
+	case statusCode >= 400:
+		return Wrap(ExitBadUsage, cause, contextMsg)
+	default:
+		return Wrap(ExitGenericError, cause, contextMsg)
+	}
+}
+
 // GetExitCode extracts the exit code from an error
 // Returns ExitGenericError (1) if the error is not an *Error
 func GetExitCode(err error) int {

@@ -31,12 +31,7 @@ func HandleHTTPErrorFromBytes(statusCode int, body []byte, contextMsg string) er
 		)
 	}
 
-	// Format user-friendly message
-	message := opError.Format()
-	if contextMsg != "" {
-		message = fmt.Sprintf("%s: %s", contextMsg, message)
-	}
-
-	// Map to appropriate exit code
-	return errors.FromHTTPStatus(statusCode, message)
+	// Wrap the OperationalError as the cause so callers can unwrap it
+	// to inspect error codes, severity, etc.
+	return errors.FromHTTPStatusWithCause(statusCode, opError, contextMsg)
 }

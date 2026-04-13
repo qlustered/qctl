@@ -2,16 +2,17 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/qlustered/qctl/internal/apierror"
 	"github.com/qlustered/qctl/internal/auth"
 	"github.com/qlustered/qctl/internal/auth/oauth"
 	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/qlustered/qctl/internal/config"
-	"github.com/qlustered/qctl/internal/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -252,13 +253,14 @@ func exchangeWithRetry(ctx context.Context, authClient *auth.Client, kindeAccess
 }
 
 // isRetryable returns true for transient errors worth retrying (network failures,
-// server 5xx). Returns false for permanent client errors (4xx) like account setup
-// issues, auth failures, or bad requests.
+// generic server errors). Returns false when the server returned a structured error
+// with an error code — those are intentional responses that won't change on retry.
 func isRetryable(err error) bool {
-	exitCode := errors.GetExitCode(err)
-	// ExitGenericError (1) covers 5xx and untyped errors (e.g. network failures).
-	// All other exit codes (bad usage, not found, unauthorized) are permanent.
-	return exitCode == errors.ExitGenericError
+	var opErr *apierror.OperationalError
+	if errors.As(err, &opErr) && opErr.ErrorCode != "" {
+		return false
+	}
+	return true
 }
 
 // promptRetry asks the user if they want to retry the operation

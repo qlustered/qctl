@@ -170,6 +170,11 @@ func formatField(loc []interface{}) string {
 	return strings.Join(parts, ".")
 }
 
+// Error implements the error interface so OperationalError can be wrapped in error chains.
+func (e *OperationalError) Error() string {
+	return e.Format()
+}
+
 // Format returns a user-friendly error message
 func (e *OperationalError) Format() string {
 	var parts []string
