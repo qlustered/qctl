@@ -19,6 +19,7 @@ type Response struct {
 // OperationalError is the parsed, user-friendly error structure
 type OperationalError struct {
 	Message     string
+	ResponseMsg string // human-readable message from the API (preferred over Message for display)
 	Title       string
 	Severity    string // "error", "warning", "info"
 	ErrorCode   string
@@ -36,6 +37,7 @@ type ValidationError struct {
 // StructuredError represents Format 2 (structured error object)
 type StructuredError struct {
 	Msg         string `json:"msg"`
+	ResponseMsg string `json:"response_msg,omitempty"`
 	Title       string `json:"title,omitempty"`
 	Severity    string `json:"severity,omitempty"`
 	ErrorCode   string `json:"error_code,omitempty"`
@@ -89,13 +91,14 @@ func parseDetail(detail json.RawMessage) (*OperationalError, error) {
 
 	// Try Format 2: Structured error object
 	var structuredErr StructuredError
-	if err := json.Unmarshal(detail, &structuredErr); err == nil && structuredErr.Msg != "" {
+	if err := json.Unmarshal(detail, &structuredErr); err == nil && (structuredErr.Msg != "" || structuredErr.ResponseMsg != "") {
 		severity := structuredErr.Severity
 		if severity == "" {
 			severity = SeverityError
 		}
 		return &OperationalError{
 			Message:     structuredErr.Msg,
+			ResponseMsg: structuredErr.ResponseMsg,
 			Title:       structuredErr.Title,
 			Severity:    severity,
 			ErrorCode:   structuredErr.ErrorCode,
@@ -176,8 +179,14 @@ func (e *OperationalError) Format() string {
 		parts = append(parts, e.Title)
 	}
 
+	// Prefer response_msg (human-readable) over msg for display
+	displayMsg := e.Message
+	if e.ResponseMsg != "" {
+		displayMsg = e.ResponseMsg
+	}
+
 	// Convert HTML to plain text for terminal display
-	message := htmlToPlainText(e.Message)
+	message := htmlToPlainText(displayMsg)
 
 	// Add main message
 	parts = append(parts, message)

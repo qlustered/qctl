@@ -74,6 +74,62 @@ func TestParseErrorResponse_Format2_StructuredError(t *testing.T) {
 	}
 }
 
+func TestParseErrorResponse_Format2_WithResponseMsg(t *testing.T) {
+	body := []byte(`{
+		"detail": {
+			"msg": "Error",
+			"response_msg": "Your account setup isn't complete.\nPlease contact support.",
+			"severity": "error",
+			"error_code": "ERR_DB_ASYNC_TABLE_NOT_SETUP",
+			"error_id": "CE7B4C7C"
+		}
+	}`)
+	opErr, err := ParseErrorResponse(body, 400)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if opErr.Message != "Error" {
+		t.Errorf("expected message 'Error', got '%s'", opErr.Message)
+	}
+
+	if opErr.ResponseMsg != "Your account setup isn't complete.\nPlease contact support." {
+		t.Errorf("expected response_msg to be set, got '%s'", opErr.ResponseMsg)
+	}
+
+	// Format should prefer response_msg over msg
+	formatted := opErr.Format()
+	expected := "Your account setup isn't complete.\nPlease contact support.\n(Code: ERR_DB_ASYNC_TABLE_NOT_SETUP, ID: CE7B4C7C)"
+	if formatted != expected {
+		t.Errorf("expected formatted message:\n%s\ngot:\n%s", expected, formatted)
+	}
+}
+
+func TestParseErrorResponse_Format2_ResponseMsgWithoutMsg(t *testing.T) {
+	body := []byte(`{
+		"detail": {
+			"response_msg": "Something went wrong on the server.",
+			"error_code": "ERR_INTERNAL"
+		}
+	}`)
+	opErr, err := ParseErrorResponse(body, 500)
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if opErr.ResponseMsg != "Something went wrong on the server." {
+		t.Errorf("expected response_msg 'Something went wrong on the server.', got '%s'", opErr.ResponseMsg)
+	}
+
+	formatted := opErr.Format()
+	expected := "Something went wrong on the server.\n(Code: ERR_INTERNAL)"
+	if formatted != expected {
+		t.Errorf("expected formatted message:\n%s\ngot:\n%s", expected, formatted)
+	}
+}
+
 func TestParseErrorResponse_Format2_WithWarning(t *testing.T) {
 	body := []byte(`{
 		"detail": {

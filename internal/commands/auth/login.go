@@ -11,6 +11,7 @@ import (
 	"github.com/qlustered/qctl/internal/auth/oauth"
 	"github.com/qlustered/qctl/internal/cmdutil"
 	"github.com/qlustered/qctl/internal/config"
+	"github.com/qlustered/qctl/internal/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -224,7 +225,9 @@ func addLoginFlags(cmd *cobra.Command, tokenName *string, allowPlaintextStore *b
 	cmd.Flags().BoolVar(allowPlaintextStore, "allow-plaintext-token-store", false, "Allow storing tokens in plaintext file if keyring fails")
 }
 
-// exchangeWithRetry attempts the token exchange and prompts for retry on failure
+// exchangeWithRetry attempts the token exchange and prompts for retry on transient failures.
+// Permanent errors (4xx, auth issues, account setup errors) are returned immediately
+// without offering retry, since retrying won't help.
 func exchangeWithRetry(ctx context.Context, authClient *auth.Client, kindeAccessToken, tokenName string) (*auth.CLIExchangeResponse, error) {
 	for {
 		resp, err := authClient.ExchangeForCLIToken(ctx, kindeAccessToken, tokenName)
@@ -232,13 +235,30 @@ func exchangeWithRetry(ctx context.Context, authClient *auth.Client, kindeAccess
 			return resp, nil
 		}
 
-		// Show error and prompt for retry
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+
+		// Only offer retry for transient errors (network issues, server 5xx).
+		// Permanent errors (4xx → bad usage / not found / unauthorized) won't
+		// be fixed by retrying from the client.
+		if !isRetryable(err) {
+			return nil, err
+		}
+
 		if !promptRetry() {
 			return nil, err
 		}
 		fmt.Println("Retrying...")
 	}
+}
+
+// isRetryable returns true for transient errors worth retrying (network failures,
+// server 5xx). Returns false for permanent client errors (4xx) like account setup
+// issues, auth failures, or bad requests.
+func isRetryable(err error) bool {
+	exitCode := errors.GetExitCode(err)
+	// ExitGenericError (1) covers 5xx and untyped errors (e.g. network failures).
+	// All other exit codes (bad usage, not found, unauthorized) are permanent.
+	return exitCode == errors.ExitGenericError
 }
 
 // promptRetry asks the user if they want to retry the operation
