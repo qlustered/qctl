@@ -46,6 +46,13 @@ func NewDatasetsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get tables: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "tables") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printDatasetsResults(cmd, resp.Results); err != nil {
 				return err

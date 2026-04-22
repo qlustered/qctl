@@ -50,6 +50,13 @@ func NewCloudSourcesCommand() *cobra.Command {
 				return fmt.Errorf("failed to get cloud sources: %w", err)
 			}
 
+			if len(results) == 0 {
+				if printEmptyResult(cmd, ctx, "cloud sources") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			return printCloudSourcesResults(cmd, results)
 		},

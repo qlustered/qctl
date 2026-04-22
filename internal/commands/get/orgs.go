@@ -56,6 +56,13 @@ func NewOrgsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get orgs: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "orgs") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printOrgsResults(cmd, resp.Results, ctx.OrganizationID); err != nil {
 				return err

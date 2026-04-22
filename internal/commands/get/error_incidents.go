@@ -104,6 +104,13 @@ Examples:
 				return fmt.Errorf("failed to get error incidents: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "error incidents") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Get output format
 			outputFormat, _ := cmd.Flags().GetString("output")
 

@@ -479,6 +479,76 @@ func TestGetDatasetsCommand_Pagination(t *testing.T) {
 	}
 }
 
+func TestGetDatasetsCommand_EmptyStateBanner(t *testing.T) {
+	tests := []struct {
+		name              string
+		args              []string
+		wantStderrContain string
+		wantStderrAbsent  string
+		wantStdout        string
+	}{
+		{
+			name:              "empty results in table format writes message to stderr",
+			args:              []string{"get", "tables"},
+			wantStderrContain: `No tables found in org "` + testOrgID + `" (context: "default")`,
+			wantStdout:        "",
+		},
+		{
+			name:             "empty results in json format does not write empty-state message",
+			args:             []string{"get", "tables", "--output", "json"},
+			wantStderrAbsent: "No tables found",
+			wantStdout:       "[]",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			env := testutil.NewTestEnv(t)
+			defer env.Cleanup()
+
+			mock := testutil.NewMockAPIServer()
+			defer mock.Close()
+
+			endpointKey, _ := config.NormalizeEndpointKey(mock.Server.URL)
+			env.SetupConfigWithOrg(mock.Server.URL, "test@example.com", testOrgID)
+			env.SetupCredential(endpointKey, testOrgID, "test-token")
+
+			mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/datasets", func(w http.ResponseWriter, r *http.Request) {
+				totalRows := 0
+				pageNum := 1
+				response := datasets.DatasetsListResponse{
+					Results:   []datasets.DatasetTiny{},
+					TotalRows: &totalRows,
+					Page:      &pageNum,
+				}
+				testutil.RespondJSON(w, http.StatusOK, response)
+			})
+
+			cmd := setupTestCommand()
+			cmd.SetArgs(tt.args)
+
+			var stdout, stderr bytes.Buffer
+			cmd.SetOut(&stdout)
+			cmd.SetErr(&stderr)
+
+			if err := cmd.Execute(); err != nil {
+				t.Fatalf("Execute() error = %v", err)
+			}
+
+			if tt.wantStderrContain != "" && !strings.Contains(stderr.String(), tt.wantStderrContain) {
+				t.Errorf("Expected stderr to contain %q, got: %q", tt.wantStderrContain, stderr.String())
+			}
+			if tt.wantStderrAbsent != "" && strings.Contains(stderr.String(), tt.wantStderrAbsent) {
+				t.Errorf("Expected stderr to NOT contain %q, got: %q", tt.wantStderrAbsent, stderr.String())
+			}
+			gotStdout := strings.TrimSpace(stdout.String())
+			if gotStdout != tt.wantStdout {
+				t.Errorf("Expected stdout %q, got: %q", tt.wantStdout, gotStdout)
+			}
+		})
+	}
+}
+
 func TestGetDatasetsCommand_CustomColumns(t *testing.T) {
 	// Test custom column selection for table output
 	env := testutil.NewTestEnv(t)

@@ -44,6 +44,13 @@ func NewRuleRevisionsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get rule revisions: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "rule revisions") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printRuleRevisionsResults(cmd, resp.Results, ctx.Verbosity); err != nil {
 				return err

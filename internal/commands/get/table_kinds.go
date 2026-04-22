@@ -36,6 +36,13 @@ func NewTableKindsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get table kinds: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "table kinds") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			displayResults := dataset_kinds.ToDisplayList(resp.Results)
 
 			if err := tableui.PrintFromCmd(cmd, displayResults, "slug,name,tags,updated_at,short_id"); err != nil {

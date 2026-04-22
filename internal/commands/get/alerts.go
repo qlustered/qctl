@@ -41,6 +41,13 @@ func NewAlertsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get alerts: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "alerts") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printAlertsResults(cmd, resp.Results); err != nil {
 				return err

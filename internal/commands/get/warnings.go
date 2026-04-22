@@ -40,6 +40,13 @@ func NewWarningsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get warnings: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "warnings") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printWarningsResults(cmd, resp.Results); err != nil {
 				return err

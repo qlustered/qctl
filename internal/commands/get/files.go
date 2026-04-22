@@ -52,6 +52,13 @@ func NewFilesCommand() *cobra.Command {
 				return fmt.Errorf("failed to fetch files: %w", err)
 			}
 
+			if len(results) == 0 {
+				if printEmptyResult(cmd, ctx, "files") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			return printFilesResults(cmd, results)
 		},

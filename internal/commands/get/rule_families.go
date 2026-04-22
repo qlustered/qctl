@@ -39,6 +39,13 @@ func NewRuleFamiliesCommand() *cobra.Command {
 				return fmt.Errorf("failed to get rules: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "rules") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printRuleFamiliesResults(cmd, resp.Results); err != nil {
 				return err

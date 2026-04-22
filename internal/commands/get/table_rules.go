@@ -57,6 +57,13 @@ Examples:
 				return fmt.Errorf("failed to get table rules: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "table rules") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Print results
 			if err := printTableRulesResults(cmd, resp.Results, ctx.Verbosity); err != nil {
 				return err

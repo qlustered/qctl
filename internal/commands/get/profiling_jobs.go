@@ -48,7 +48,7 @@ func NewProfilingJobsCommand() *cobra.Command {
 			}
 
 			// Get and print results
-			return fetchAndPrintProfilingJobs(client, token, params, cmd)
+			return fetchAndPrintProfilingJobs(client, token, params, cmd, ctx)
 		},
 	}
 
@@ -134,6 +134,7 @@ func fetchAndPrintProfilingJobs(
 	accessToken string,
 	params profiling.GetProfilingJobsParams,
 	cmd *cobra.Command,
+	ctx *cmdutil.CommandContext,
 ) error {
 	setDefaultProfilingColumns(cmd, "id,dataset_id,dataset_name,state,step,updated_at")
 
@@ -141,6 +142,13 @@ func fetchAndPrintProfilingJobs(
 	if err != nil {
 		return fmt.Errorf("failed to get profiling jobs: %w", err)
 	}
+
+	if len(resp.Results) == 0 {
+		if printEmptyResult(cmd, ctx, "profiling jobs") {
+			return nil
+		}
+	}
+	printContextBanner(cmd, ctx)
 
 	// Use markdown rendering for the msg field
 	printer, err := output.NewPrinterFromCmdWithMarkdown(cmd, []string{"msg"})

@@ -82,6 +82,13 @@ func fetchAndPrintDryRunJobs(cmd *cobra.Command, ctx *cmdutil.CommandContext, cl
 		return fmt.Errorf("failed to list dry-run jobs: %w", err)
 	}
 
+	if len(resp.Results) == 0 {
+		if printEmptyResult(cmd, ctx, "dry-run jobs") {
+			return nil
+		}
+	}
+	printContextBanner(cmd, ctx)
+
 	printer, err := output.NewPrinterFromCmd(cmd)
 	if err != nil {
 		return fmt.Errorf("failed to create output printer: %w", err)

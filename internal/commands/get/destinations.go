@@ -73,6 +73,13 @@ func NewDestinationsCommand() *cobra.Command {
 				return fmt.Errorf("failed to get destinations: %w", err)
 			}
 
+			if len(resp.Results) == 0 {
+				if printEmptyResult(cmd, ctx, "destinations") {
+					return nil
+				}
+			}
+			printContextBanner(cmd, ctx)
+
 			// Get output format
 			outputFormat, _ := cmd.Flags().GetString("output")
 

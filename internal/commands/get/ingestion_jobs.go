@@ -54,7 +54,7 @@ func NewIngestionJobsCommand() *cobra.Command {
 			}
 
 			// Get and print results
-			return fetchAndPrintIngestionJobs(client, token, params, cmd)
+			return fetchAndPrintIngestionJobs(client, token, params, cmd, ctx)
 		},
 	}
 
@@ -181,6 +181,7 @@ func fetchAndPrintIngestionJobs(
 	accessToken string,
 	params ingestion.GetIngestionJobsParams,
 	cmd *cobra.Command,
+	ctx *cmdutil.CommandContext,
 ) error {
 	setDefaultColumns(cmd, "id,table_id,state,file_name,updated_at")
 
@@ -188,6 +189,13 @@ func fetchAndPrintIngestionJobs(
 	if err != nil {
 		return fmt.Errorf("failed to get ingestion jobs: %w", err)
 	}
+
+	if len(resp.Results) == 0 {
+		if printEmptyResult(cmd, ctx, "ingestion jobs") {
+			return nil
+		}
+	}
+	printContextBanner(cmd, ctx)
 
 	// Use markdown rendering for the msg field
 	printer, err := output.NewPrinterFromCmdWithMarkdown(cmd, []string{"msg"})
