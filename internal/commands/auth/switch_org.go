@@ -117,7 +117,6 @@ func switchOrgOps(cmd *cobra.Command, cfg *config.Config, cmdCtx *cmdutil.Comman
 	// Request device code with openid scope (needed for id_token with auth_time)
 	scopes := []string{"openid", "profile", "email"}
 	fmt.Println("Ops user detected — re-authenticating to switch organization...")
-	fmt.Fprintf(os.Stderr, "[debug] requesting device code with scope=%q\n", strings.Join(scopes, " "))
 	deviceAuth, err := kindeClient.RequestDeviceCode(cmd.Context(), scopes...)
 	if err != nil {
 		return fmt.Errorf("failed to initiate device auth: %w", err)
@@ -152,13 +151,6 @@ func switchOrgOps(cmd *cobra.Command, cfg *config.Config, cmdCtx *cmdutil.Comman
 	if err != nil {
 		return fmt.Errorf("authentication failed: %w", err)
 	}
-
-	// Debug: show what Kinde returned
-	fmt.Fprintf(os.Stderr, "[debug] access_token length: %d\n", len(kindeTokens.AccessToken))
-	fmt.Fprintf(os.Stderr, "[debug] id_token length:     %d\n", len(kindeTokens.IDToken))
-	fmt.Fprintf(os.Stderr, "[debug] token_type:          %s\n", kindeTokens.TokenType)
-	fmt.Fprintf(os.Stderr, "[debug] scope:               %q\n", kindeTokens.Scope)
-	fmt.Fprintf(os.Stderr, "[debug] expires_in:          %d\n", kindeTokens.ExpiresIn)
 
 	if kindeTokens.IDToken == "" {
 		return fmt.Errorf("no id_token received from Kinde (openid scope may not be configured)")
