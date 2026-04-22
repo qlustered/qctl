@@ -40,6 +40,14 @@ func Bootstrap(cmd *cobra.Command) (*CommandContext, error) {
 		return nil, fmt.Errorf("failed to load config: %w", err)
 	}
 
+	return BootstrapFromConfig(cmd, cfg)
+}
+
+// BootstrapFromConfig is like Bootstrap, but uses a pre-loaded config.
+// Useful for callers that need to apply in-memory overrides (e.g. a --context
+// flag that switches the active context for a single command) before
+// resolving server/org/credentials.
+func BootstrapFromConfig(cmd *cobra.Command, cfg *config.Config) (*CommandContext, error) {
 	// Resolve server
 	serverFlag, _ := cmd.Flags().GetString("server")
 	allowInsecure := config.IsInsecureHTTPAllowed()

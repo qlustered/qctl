@@ -34,6 +34,7 @@ func NewCommand() *cobra.Command {
 	cmd.AddCommand(NewDryRunJobsCommand())
 	cmd.AddCommand(NewTableKindsCommand())
 	cmd.AddCommand(NewTableKindGetCommand())
+	cmd.AddCommand(NewOrgsCommand())
 
 	return cmd
 }

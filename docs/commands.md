@@ -41,6 +41,7 @@ Use this to jump straight to code without exploring the codebase.
 | `get job-activity` | `internal/commands/get/job_activity.go` | `ingestion.NewClient` | `output.NewPrinterFromCmd` | `job_activity_test.go` |
 | `get table-kinds` | `internal/commands/get/table_kinds.go` | `dataset_kinds.NewClient` | `output.NewPrinterFromCmd` | `table_kinds_test.go` |
 | `get table-kind <slug>` | `internal/commands/get/table_kind.go` | `dataset_kinds.NewClient` | `output.NewPrinterFromCmd` | `table_kind_test.go` |
+| `get orgs` | `internal/commands/get/orgs.go` | `orgs.NewClient` | `tableui.PrintFromCmd` | `orgs_test.go` |
 
 Notes:
 - `get rules` lists rule **families** (grouped by name), not individual revisions.
@@ -195,6 +196,7 @@ Notes:
 | `rule_versions` | `internal/rule_versions/client.go` | `NewClient(base, orgID, verb)` | **Returns `(*Client, error)`** |
 | `dataset_rules` | `internal/dataset_rules/client.go` | `NewClient(base, orgID, verb)` | **Returns `(*Client, error)`** |
 | `dataset_kinds` | `internal/dataset_kinds/client.go` | `NewClient(base, orgID, verb)` | Standard |
+| `orgs` | `internal/orgs/client.go` | `NewClient(base, orgID, verb)` | Standard |
 
 ## Parent Command Files (register subcommands)
 

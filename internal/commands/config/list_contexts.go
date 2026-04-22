@@ -32,8 +32,8 @@ func newListContextsCommand() *cobra.Command {
 			sort.Strings(names)
 
 			// Print header
-			fmt.Printf("%-20s %-50s %-30s\n", "NAME", "SERVER", "ORGANIZATION")
-			fmt.Printf("%-20s %-50s %-30s\n", "----", "------", "------------")
+			fmt.Printf("%-20s %-50s %-40s\n", "NAME", "SERVER", "ORGANIZATION")
+			fmt.Printf("%-20s %-50s %-40s\n", "----", "------", "------------")
 
 			// Print contexts
 			for _, name := range names {
@@ -42,11 +42,8 @@ func newListContextsCommand() *cobra.Command {
 				if name == cfg.CurrentContext {
 					current = "*"
 				}
-				orgDisplay := ctx.Organization
-				if ctx.OrganizationName != "" {
-					orgDisplay = ctx.OrganizationName
-				}
-				fmt.Printf("%-1s%-19s %-50s %-30s\n", current, name, ctx.Server, orgDisplay)
+				orgDisplay := renderOrgDisplay(ctx)
+				fmt.Printf("%-1s%-19s %-50s %-40s\n", current, name, ctx.Server, orgDisplay)
 			}
 
 			return nil
@@ -54,4 +51,23 @@ func newListContextsCommand() *cobra.Command {
 	}
 
 	return cmd
+}
+
+// renderOrgDisplay formats the organization column for a context row.
+// Appends "(+N more)" when the cached org list has more than one entry.
+func renderOrgDisplay(ctx *config.Context) string {
+	primary := ctx.OrganizationName
+	if primary == "" {
+		primary = ctx.Organization
+	}
+
+	extra := len(ctx.Organizations) - 1
+	if extra <= 0 {
+		return primary
+	}
+
+	if primary == "" {
+		return fmt.Sprintf("(+%d orgs)", len(ctx.Organizations))
+	}
+	return fmt.Sprintf("%s (+%d more)", primary, extra)
 }
