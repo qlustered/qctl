@@ -156,6 +156,48 @@ func (c *Client) ExchangeForOpsToken(ctx context.Context, kindeAccessToken, idTo
 	return &exchangeResp, nil
 }
 
+// SwitchOrganizationIdp updates the IDP's default organization for the current user
+// via POST /api/orgs/{current_org_id}/users/switch-organization-idp. Used for
+// non-ops users; the caller must re-authenticate to obtain a token scoped to
+// the new organization.
+func (c *Client) SwitchOrganizationIdp(ctx context.Context, accessToken, currentOrgID, targetOrgID string) error {
+	apiClient, err := client.New(client.Config{
+		BaseURL:     c.baseURL,
+		AccessToken: accessToken,
+		Verbosity:   c.verbosity,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create API client: %w", err)
+	}
+
+	currentUUID, err := uuid.Parse(currentOrgID)
+	if err != nil {
+		return fmt.Errorf("invalid current organization ID: %w", err)
+	}
+	targetUUID, err := uuid.Parse(targetOrgID)
+	if err != nil {
+		return fmt.Errorf("invalid target organization ID: %w", err)
+	}
+
+	resp, err := apiClient.API.SwitchOrganizationIdpWithResponse(
+		ctx,
+		openapi_types.UUID(currentUUID),
+		&api.SwitchOrganizationIdpParams{},
+		api.SwitchOrganizationIdpJSONRequestBody{
+			TargetOrganizationID: openapi_types.UUID(targetUUID),
+		},
+	)
+	if err != nil {
+		return apiClient.HandleError(err, "switch-organization-idp request failed")
+	}
+
+	if resp.StatusCode() != http.StatusOK {
+		return apierror.HandleHTTPErrorFromBytes(resp.StatusCode(), resp.Body, "switch-organization-idp failed")
+	}
+
+	return nil
+}
+
 // UserMeResponse represents the response from /api/orgs/{org_id}/users/me
 // This is a compatibility wrapper around the generated api.MyUserSchema
 type UserMeResponse struct {

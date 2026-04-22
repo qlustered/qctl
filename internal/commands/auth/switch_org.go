@@ -81,13 +81,17 @@ Examples:
 				// We have a valid credential — check if user is ops
 				authClient := auth.NewClient(cmdCtx.ServerURL, cmdCtx.Verbosity)
 				userInfo, meErr := authClient.GetMe(cmdCtx.Credential.AccessToken, cmdCtx.OrganizationID)
-				if meErr == nil && userInfo.Role == "ops" {
-					return switchOrgOps(cmd, cfg, cmdCtx, authClient, orgID, orgName, tokenName, allowPlaintextStore)
+				if meErr == nil {
+					if userInfo.Role == "ops" {
+						return switchOrgOps(cmd, cfg, cmdCtx, authClient, orgID, orgName, tokenName, allowPlaintextStore)
+					}
+					// Non-ops with valid auth: update IDP's default organization.
+					return switchOrgDefault(cmd, cfg, cmdCtx, authClient, orgID, orgName)
 				}
 			}
 
-			// Non-ops path (or bootstrap/GetMe failed): update local config only
-			return switchOrgDefault(cmd, cfg, orgID, orgName)
+			// Bootstrap or GetMe failed: update local config only.
+			return switchOrgDefault(cmd, cfg, nil, nil, orgID, orgName)
 		},
 	}
 
@@ -208,8 +212,16 @@ func switchOrgOps(cmd *cobra.Command, cfg *config.Config, cmdCtx *cmdutil.Comman
 }
 
 // switchOrgDefault handles organization switching for non-ops users.
-// It updates the local config and hints to re-login if needed.
-func switchOrgDefault(cmd *cobra.Command, cfg *config.Config, orgID, orgName string) error {
+// When cmdCtx and authClient are non-nil, it first calls the
+// switch-organization-idp endpoint so the IDP reflects the new default.
+// In all cases it updates the local config and hints to re-login.
+func switchOrgDefault(cmd *cobra.Command, cfg *config.Config, cmdCtx *cmdutil.CommandContext, authClient *auth.Client, orgID, orgName string) error {
+	if cmdCtx != nil && authClient != nil {
+		if err := authClient.SwitchOrganizationIdp(cmd.Context(), cmdCtx.Credential.AccessToken, cmdCtx.OrganizationID, orgID); err != nil {
+			return fmt.Errorf("failed to switch organization at IDP: %w", err)
+		}
+	}
+
 	if err := updateContextOrganization(cfg, orgID, orgName); err != nil {
 		return fmt.Errorf("failed to update config: %w", err)
 	}
