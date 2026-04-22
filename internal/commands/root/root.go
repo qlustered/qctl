@@ -72,6 +72,7 @@ func init() {
 	// Add subcommands
 	rootCmd.AddCommand(version.NewCommand())
 	rootCmd.AddCommand(config.NewCommand())
+	rootCmd.AddCommand(config.NewInfoCommand())
 	rootCmd.AddCommand(auth.NewCommand())
 	rootCmd.AddCommand(get.NewCommand())
 	rootCmd.AddCommand(describe.NewCommand())

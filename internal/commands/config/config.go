@@ -25,3 +25,15 @@ Contexts allow you to switch between different Qluster deployments and user acco
 
 	return cmd
 }
+
+// NewInfoCommand returns a top-level "info" command that is a shortcut for
+// "qctl config current-context".
+func NewInfoCommand() *cobra.Command {
+	cmd := newCurrentContextCommand()
+	cmd.Use = "info"
+	cmd.Short = "Display the current context (shortcut for 'config current-context')"
+	cmd.Long = `Display the current context name and configuration.
+
+Shortcut for "qctl config current-context".`
+	return cmd
+}
