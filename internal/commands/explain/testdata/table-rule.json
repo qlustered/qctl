@@ -1,0 +1,325 @@
+{
+  "name": "TableRule",
+  "description": "Manifest for `qctl apply -f`. Instantiates a rule revision onto a table (creates a table rule) when spec.rule_revision_id is set and metadata.id is absent; patches an existing table rule when metadata.id is set. See also: qctl guide instantiate-rule.",
+  "type": "object",
+  "properties": [
+    {
+      "name": "apiVersion",
+      "type": "string",
+      "description": "Must be qluster.ai/v1.",
+      "required": true
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "description": "Must be TableRule.",
+      "required": true
+    },
+    {
+      "name": "metadata",
+      "type": "object",
+      "description": "Optional for instantiate ('metadata: {}' is valid). Setting metadata.id switches to patch mode.",
+      "properties": [
+        {
+          "name": "id",
+          "type": "string",
+          "format": "uuid",
+          "description": "Existing table rule ID. Present: patch that rule. Absent: instantiate a new one from spec.rule_revision_id."
+        },
+        {
+          "name": "instance_name",
+          "type": "string",
+          "description": "The same field as spec.instance_name, under the key `get table-rule -o yaml` writes. Either key alone names the rule; setting both to different names exits 2."
+        }
+      ]
+    },
+    {
+      "name": "spec",
+      "type": "object",
+      "required": true,
+      "properties": [
+        {
+          "name": "dataset_id",
+          "type": "integer",
+          "description": "Target table (dataset) ID.",
+          "required": true
+        },
+        {
+          "name": "rule_revision_id",
+          "type": "string",
+          "description": "Rule revision to attach, as a full UUID, a SHORT-ID, or a slug. Required for instantiate unless spec.rule is set. In patch mode it means rebind this rule to that revision, which starts a revalidation candidate."
+        },
+        {
+          "name": "rule",
+          "type": "string",
+          "description": "Mutually exclusive with rule_revision_id: a rule name or slug to attach, resolved to a revision at apply time. Pair with spec.release when the name has several releases. Accepted in patch mode too, where it names the revision to rebind to."
+        },
+        {
+          "name": "release",
+          "type": "string",
+          "description": "Which release of spec.rule to attach. Only valid alongside spec.rule."
+        },
+        {
+          "name": "instance_name",
+          "type": "string",
+          "description": "Optional, unique per table; omit it for a server-generated name. When both spec.instance_name and metadata.instance_name are omitted, the server takes the first of `\u003cFamily\u003e`, `\u003cFamily\u003e on \u003ccols\u003e`, `\u003cFamily\u003e on \u003ccols\u003e (2)`, ... that the table does not hold: a built-in family's name as it is or a custom family's humanized, and at most two mapped columns, then `+N more`. A name you set is used verbatim on an immediate create; accepting a staged create, by hand or inside apply_migration, may add a suffix. Uniqueness is exact and case-sensitive and counts every rule on the table: a deleted or validation_failed rule keeps its name, and an upgrade (spec.upgradedFrom) cannot reuse its predecessor's. A create whose name is taken is refused with exit 2 before the request, even with --yes. spec.force lifts that refusal, and a forced create on a taken name can update the rule holding it in place and try to enable it with no validation dry run. A rule in error or a failed produced-field activation check (for example, a produced column missing from the live schema) still returns 409 (exit 2)."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "description": "Patch mode only: an instantiate manifest's spec.state is silently dropped, not rejected. `enabled`/`disabled` are the two worth sending by hand. `error`, `pending_validation` and `validation_failed` are refused with exit 2 before the request, because the server sets them and answers a requested one with a 422 -- delete the key a round-tripped manifest carries. `deleted` is a real, working soft delete, not backend-managed (`qctl explain table-rule --grep 'soft delete'` says why `disabled` is usually the better choice).",
+          "enum": [
+            "enabled",
+            "disabled"
+          ]
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "What this rule instance does with the severity each of its findings declares. `warning` forces every finding to a warning, `blocker` forces every one to quarantine the row as an alert, and `as_declared` keeps the severity the rule itself gave each finding -- so only `as_declared` leaves both classes reachable. On instantiate, omitting it takes the rule revision's declared default_severity, NOT a fixed value: qctl has no local copy of that declaration, so state the key explicitly whenever the answer matters. On patch, omitting it leaves the current value unchanged, and setting it applies to the live rule right away even when a draft migration holds spec.params and spec.state for review -- unless the request rides a revalidation candidate, one it starts by also changing the revision, column mapping or produced fields, or one already pending, which bakes severity into that candidate's snapshot instead and leaves the live rule untouched until its dry run passes. A value outside the three is refused with exit 2 before the request. Replaced the boolean treat_as_alert in the 2026-09-10 spec: a manifest still carrying that key is refused with exit 2 rather than dropped, since `treat_as_alert: true` is `severity: as_declared` and `false` is `severity: warning`.",
+          "enum": [
+            "warning",
+            "blocker",
+            "as_declared"
+          ]
+        },
+        {
+          "name": "row_filter",
+          "type": "object",
+          "description": "Rows this rule checks. Set conditions and/or a predicate plus description. On patch, omission keeps the filter and null removes it.",
+          "properties": [
+            {
+              "name": "description",
+              "type": "string",
+              "description": "Which rows the saved filter keeps; non-blank, at most 200 characters.",
+              "required": true
+            },
+            {
+              "name": "conditions",
+              "type": "array",
+              "description": "AND-ed conditions on table columns.",
+              "items": {
+                "type": "object",
+                "properties": [
+                  {
+                    "name": "column_name",
+                    "type": "string",
+                    "description": "Table column to compare.",
+                    "required": true
+                  },
+                  {
+                    "name": "operator",
+                    "type": "string",
+                    "description": "Comparison operator.",
+                    "required": true,
+                    "enum": [
+                      "eq",
+                      "neq",
+                      "in",
+                      "not_in",
+                      "gt",
+                      "gte",
+                      "lt",
+                      "lte",
+                      "between",
+                      "is_blank",
+                      "not_blank"
+                    ]
+                  },
+                  {
+                    "name": "value",
+                    "type": "string",
+                    "description": "Operand for eq, neq, gt, gte, lt, lte, or the low end of between."
+                  },
+                  {
+                    "name": "value_high",
+                    "type": "string",
+                    "description": "Inclusive high end of between."
+                  },
+                  {
+                    "name": "value_list",
+                    "type": "array",
+                    "description": "Non-empty operands for in and not_in.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "case_sensitive",
+                    "type": "boolean",
+                    "description": "Text comparisons are case insensitive by default."
+                  }
+                ]
+              },
+              "properties": [
+                {
+                  "name": "column_name",
+                  "type": "string",
+                  "description": "Table column to compare.",
+                  "required": true
+                },
+                {
+                  "name": "operator",
+                  "type": "string",
+                  "description": "Comparison operator.",
+                  "required": true,
+                  "enum": [
+                    "eq",
+                    "neq",
+                    "in",
+                    "not_in",
+                    "gt",
+                    "gte",
+                    "lt",
+                    "lte",
+                    "between",
+                    "is_blank",
+                    "not_blank"
+                  ]
+                },
+                {
+                  "name": "value",
+                  "type": "string",
+                  "description": "Operand for eq, neq, gt, gte, lt, lte, or the low end of between."
+                },
+                {
+                  "name": "value_high",
+                  "type": "string",
+                  "description": "Inclusive high end of between."
+                },
+                {
+                  "name": "value_list",
+                  "type": "array",
+                  "description": "Non-empty operands for in and not_in.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "case_sensitive",
+                  "type": "boolean",
+                  "description": "Text comparisons are case insensitive by default."
+                }
+              ]
+            },
+            {
+              "name": "predicate",
+              "type": "object",
+              "description": "Optional Starlark predicate evaluated after all conditions match.",
+              "properties": [
+                {
+                  "name": "source",
+                  "type": "string",
+                  "description": "Module defining def applies(row), returning a bool. Use decimal(\"12.5\") for decimal literals.",
+                  "required": true
+                },
+                {
+                  "name": "columns",
+                  "type": "array",
+                  "description": "Table columns available in row.",
+                  "required": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "params",
+          "type": "object",
+          "description": "Rule parameters. Validated client-side against the revision's param_schema before the request is sent. A builtin range_rule's min and max are in the bounded column's display units, which differ from the stored ones only on a percent column: max: 12.5 there is 12.5%, stored as 0.125."
+        },
+        {
+          "name": "column",
+          "type": "string",
+          "description": "Instantiate-only shorthand: the table column to attach the rule to. Expands to column_mapping with the rule's single required field as the key, so `column: booking_number` on required_field sends {value: booking_number}. Mutually exclusive with column_mapping, rejected in patch mode, and rejected for a rule with zero or several required fields -- use column_mapping there. Count distinct input/validates/corrects/enriches fields, excluding '*' and optional_columns, including fields supplied by produced declarations or standard fields."
+        },
+        {
+          "name": "column_mapping",
+          "type": "object",
+          "description": "Maps rule fields to existing table columns. On instantiate, a non-optional field with a standard field carried by exactly one table column is left out of the request so the server fills it; an explicit mapping wins. When column_mapping is omitted or empty, other inputs (including optional ones) and required validates/corrects/enriches fields not declared in produced_fields use the same name as the table column. Optional role-only fields stay unbound. A builtin's input names (value, field, operand_1) are often placeholders, so use spec.column or a mapping when no unique standard field column exists. An explicit mapping must bind every non-optional input/validates/corrects/enriches field except '*' unless a produced_fields declaration or unique standard field column supplies it; missing fields are rejected locally with exit 2, including under spec.force. Fields in optional_columns may be left unbound in an explicit mapping. Patch mode sends the mapping as written."
+        },
+        {
+          "name": "force",
+          "type": "boolean",
+          "description": "Instantiate mode: override the controller-level force flag."
+        },
+        {
+          "name": "upgradedFrom",
+          "type": "string",
+          "description": "Instantiate mode only: the existing table rule this one replaces, as a full dataset-rule UUID or an r-* alias. qctl resolves and fetches it before the POST, requires it to be on spec.dataset_id and in the new revision's rule family, and sends its UUID as upgraded_from_dataset_rule_id. The predecessor remains active until the replacement is enabled; a staged replacement remains active until its suggestion is accepted. Atlas then retires the predecessor and puts the replacement in its rule position."
+        },
+        {
+          "name": "produced_fields",
+          "type": "array",
+          "description": "Table columns this rule writes -- what makes an enrichment or correcting rule attachable at all: the backend requires each output field the mapping has to bind (all of them bar the revision's optional_columns) to be either mapped to an existing column or declared here, and one named in neither is what the API rejects as `rule_column_mapping lacks keys for required columns`. Declaring any makes the new rule land in pending_validation. Once validation passes, existing matching predecessor columns let an upgrade enable directly; new columns need a draft migration applied first. In patch mode the key ADDS an output column, validated as a revalidation candidate before it reaches the live rule; omitting it leaves the rule's declarations alone. Dropping one (an empty list included) or retyping one without adding a column is refused with exit 2: a drop of an active column read by a linked table gets a 409 at PATCH time; otherwise the candidate can pass its dry run but fail promotion.",
+          "items": {
+            "type": "object",
+            "properties": [
+              {
+                "name": "rule_field_name",
+                "type": "string",
+                "description": "The rule's own name for the output field -- one of the revision's enriches_columns or corrects_columns, which `qctl get rule \u003cname\u003e -o yaml` lists. The \"*\" wildcard names no single column and is never one of them.",
+                "required": true
+              },
+              {
+                "name": "dataset_field_name",
+                "type": "string",
+                "description": "The table column to create or reclaim for this output. It must not be a reserved metadata column and must already be in Atlas normalized form (`Gross Premium` is rejected, `gross_premium` accepted). An existing column must belong to this rule, or to the upgrade predecessor with the same rule field and schema; normal and unrelated rule columns cannot be reclaimed.",
+                "required": true
+              },
+              {
+                "name": "field_schema",
+                "type": "object",
+                "description": "Optional: omitted, qctl sends the rule author's own declaration for that output field, which is what the web wizard sends. State it to override: type (required) plus the optional args, is_nullable, indexed and the rest of a TableSchema column block. A `generated_by` written here is dropped -- the server stamps its own ownership block."
+              }
+            ]
+          },
+          "properties": [
+            {
+              "name": "rule_field_name",
+              "type": "string",
+              "description": "The rule's own name for the output field -- one of the revision's enriches_columns or corrects_columns, which `qctl get rule \u003cname\u003e -o yaml` lists. The \"*\" wildcard names no single column and is never one of them.",
+              "required": true
+            },
+            {
+              "name": "dataset_field_name",
+              "type": "string",
+              "description": "The table column to create or reclaim for this output. It must not be a reserved metadata column and must already be in Atlas normalized form (`Gross Premium` is rejected, `gross_premium` accepted). An existing column must belong to this rule, or to the upgrade predecessor with the same rule field and schema; normal and unrelated rule columns cannot be reclaimed.",
+              "required": true
+            },
+            {
+              "name": "field_schema",
+              "type": "object",
+              "description": "Optional: omitted, qctl sends the rule author's own declaration for that output field, which is what the web wizard sends. State it to override: type (required) plus the optional args, is_nullable, indexed and the rest of a TableSchema column block. A `generated_by` written here is dropped -- the server stamps its own ownership block."
+            }
+          ]
+        },
+        {
+          "name": "produced_fields.rule_field_name",
+          "type": "string",
+          "description": "The rule's own name for the output field -- one of the revision's enriches_columns or corrects_columns, which `qctl get rule \u003cname\u003e -o yaml` lists. The \"*\" wildcard names no single column and is never one of them.",
+          "required": true
+        },
+        {
+          "name": "produced_fields.dataset_field_name",
+          "type": "string",
+          "description": "The table column to create or reclaim for this output. It must not be a reserved metadata column and must already be in Atlas normalized form (`Gross Premium` is rejected, `gross_premium` accepted). An existing column must belong to this rule, or to the upgrade predecessor with the same rule field and schema; normal and unrelated rule columns cannot be reclaimed.",
+          "required": true
+        },
+        {
+          "name": "produced_fields.field_schema",
+          "type": "object",
+          "description": "Optional: omitted, qctl sends the rule author's own declaration for that output field, which is what the web wizard sends. State it to override: type (required) plus the optional args, is_nullable, indexed and the rest of a TableSchema column block. A `generated_by` written here is dropped -- the server stamps its own ownership block."
+        }
+      ]
+    }
+  ],
+  "required": [
+    "apiVersion",
+    "kind",
+    "spec"
+  ]
+}

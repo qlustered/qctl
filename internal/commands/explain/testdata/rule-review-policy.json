@@ -1,0 +1,93 @@
+{
+  "name": "RuleReviewPolicy",
+  "description": "Manifest for `qctl apply -f`. Governs how submitted rule revisions are reviewed before they can be enabled: whether review is required, how many reviewers, and dry-run requirements. Omit spec.dataset_id for an org-level policy. See also: qctl guide review-rules.",
+  "type": "object",
+  "properties": [
+    {
+      "name": "apiVersion",
+      "type": "string",
+      "description": "Must be qluster.ai/v1.",
+      "required": true
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "description": "Must be RuleReviewPolicy.",
+      "required": true
+    },
+    {
+      "name": "metadata",
+      "type": "object",
+      "description": "Optional. metadata.name is a human label; metadata.id is set on round-tripped output.",
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Human-readable policy name."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "format": "uuid",
+          "description": "Existing policy ID (present on `get -o yaml` output)."
+        }
+      ]
+    },
+    {
+      "name": "spec",
+      "type": "object",
+      "required": true,
+      "properties": [
+        {
+          "name": "dataset_id",
+          "type": "integer",
+          "description": "Target table (dataset) ID. Omit for an org-level policy."
+        },
+        {
+          "name": "requires_review",
+          "type": "boolean",
+          "description": "If true, a submitted rule revision must pass review before it can be enabled."
+        },
+        {
+          "name": "min_reviewers",
+          "type": "integer",
+          "description": "Minimum number of distinct reviewers who must approve a rule revision."
+        },
+        {
+          "name": "designated_reviewer_ids",
+          "type": "array",
+          "description": "If set, only these reviewers' approvals count toward min_reviewers.",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "dismiss_stale_reviews",
+          "type": "boolean",
+          "description": "If true, existing approvals are dismissed when the rule revision changes."
+        },
+        {
+          "name": "require_dry_run",
+          "type": "boolean",
+          "description": "If true, a dry run must be linked to the review before the revision can be enabled."
+        },
+        {
+          "name": "require_dry_run_success",
+          "type": "boolean",
+          "description": "If true, the linked dry run must have passed before the revision can be enabled: finished, with no rule load errors and no rule-bug or sandbox failure."
+        },
+        {
+          "name": "auto_enable_on_approval",
+          "type": "boolean",
+          "description": "If true, an approved rule revision is enabled automatically."
+        }
+      ]
+    }
+  ],
+  "required": [
+    "apiVersion",
+    "kind",
+    "spec"
+  ]
+}

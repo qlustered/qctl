@@ -1,0 +1,45 @@
+{
+  "dataset_name": "orders",
+  "fields": ["id", "row_logs_", "email"],
+  "labels": [null, null, "Email"],
+  "field_types": ["integer", "json", "text"],
+  "field_display_formats": [null, null, null],
+  "results": [
+    [22, {"email": [
+      {"value": "old@example.com"},
+      {
+        "value": "new@example.com", "baseline": {"upstream": 9007199254740993},
+        "history_id": 9007199254740995, "datetime": "2026-10-20T10:00:00Z",
+        "why": "Overwritten by user for only this instance.",
+        "whodunit": {"id": "aaaaaaaa-1111-2222-3333-444444444444", "first_name": "Ada", "role": "external"},
+        "approvals": [
+          {"source": "per_change", "decision": "approve", "actor": {"id": "bbbbbbbb-1111-2222-3333-444444444444", "first_name": "Bea", "role": "admin"}, "decided_at": "2026-10-20T11:00:00Z", "comment": "Checked the source"},
+          {"source": "row", "decision": "approve", "actor": {"id": "cccccccc-1111-2222-3333-444444444444", "email": "cam@example.com", "role": "member"}, "decided_at": "2026-10-20T12:00:00Z", "comment": null},
+          {"source": "row", "decision": "approve", "actor": null, "decided_at": "2026-10-20T13:00:00Z", "comment": "Former reviewer"}
+        ],
+        "review_requests": [
+          {"review_group_id": "dddddddd-1111-2222-3333-444444444444", "data_review_id": "eeeeeeee-1111-2222-3333-444444444444", "title": "October fixes", "requestor": {"id": "aaaaaaaa-1111-2222-3333-444444444444", "first_name": "Ada", "role": "external"}, "sent_at": "2026-10-20T10:30:00Z"},
+          {"review_group_id": "ffffffff-1111-2222-3333-444444444444", "data_review_id": "eeeeeeee-1111-2222-3333-444444444444", "title": "Resubmitted fixes", "requestor": null, "sent_at": "2026-10-20T10:45:00Z"}
+        ]
+      }
+    ]}, "new@example.com"],
+    [11, null, "flag-only@example.com"],
+    [33, {}, "untouched@example.com"]
+  ],
+  "cell_flag_events": [
+    {"email": [
+      {"id": "11111111-1111-2222-3333-444444444444", "kind": "alert", "event": "raised", "actor": {"id": "aaaaaaaa-1111-2222-3333-444444444444", "first_name": "Ada", "role": "external"}, "created_at": "2026-10-20T10:05:00Z", "comment": "Wrong address", "observed_value": "old@example.com", "thread_id": "22222222-1111-2222-3333-444444444444"},
+      {"id": "11111111-1111-2222-3333-444444444444", "kind": "alert", "event": "cleared", "actor": null, "created_at": "2026-10-20T10:10:00Z", "comment": "Wrong address", "observed_value": "old@example.com", "thread_id": "22222222-1111-2222-3333-444444444444", "detach_reason": "value_changed"},
+      {"id": "33333333-1111-2222-3333-444444444444", "kind": "warning", "event": "resolved", "actor": {"id": "bbbbbbbb-1111-2222-3333-444444444444", "first_name": "Bea", "role": "admin"}, "created_at": "2026-10-20T11:10:00Z", "comment": "Confirmed", "observed_value": null, "thread_id": null, "detach_reason": "resolved"}
+    ]},
+    {"email": [
+      {"id": "44444444-1111-2222-3333-444444444444", "kind": "warning", "event": "retracted", "actor": null, "created_at": "2026-10-20T14:00:00Z", "comment": "Withdrawn", "observed_value": "flag-only@example.com", "thread_id": null}
+    ], "hidden_field": [
+      {"id": "55555555-1111-2222-3333-444444444444", "kind": "alert", "event": "raised", "actor": null, "created_at": "2026-10-20T14:00:00Z", "comment": "On a field outside the grid", "observed_value": "hidden", "thread_id": null}
+    ]},
+    {}
+  ],
+  "has_history": [[false, false, true], [false, false, false], [false, false, false]],
+  "total_page_count": 1,
+  "total_rows": 3
+}

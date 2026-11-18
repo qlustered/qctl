@@ -1,0 +1,18 @@
+{
+  "total_page_count": 1,
+  "total_rows": 2,
+  "dataset_name": "work_orders",
+  "fields": ["id", "district"],
+  "labels": [null, "District"],
+  "field_types": ["Integer", "Text"],
+  "field_display_formats": [null, null],
+  "results": [
+    [2000, "East"],
+    [1999, "South"]
+  ],
+  "steward_overrides": [
+    {"notes": {"target_value": "call first", "base_displaced_value": "none"}}
+  ],
+  "clean_rows_count": 2,
+  "bad_rows_count": 0
+}

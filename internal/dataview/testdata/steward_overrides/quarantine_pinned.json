@@ -1,0 +1,23 @@
+{
+  "total_page_count": 1,
+  "total_rows": 3,
+  "dataset_name": "work_orders",
+  "fields": ["id", "row_number_", "initial_signature_", "alert_item_ids_", "warning_item_ids_", "passes_validation_", "district", "discount"],
+  "labels": [null, null, null, null, null, null, "District", "Discount"],
+  "field_types": ["Integer", "Integer", "Binary", "Text", "Text", "Boolean", "Text", "Text"],
+  "field_display_formats": [null, null, null, null, null, null, null, {"kind": "percent", "decimals": 2}],
+  "results": [
+    [1, 4, "9f2ac41b", ["8817-district"], null, false, "East", "0.5"],
+    [2, 5, "0b77e3d9", null, null, true, "West", "0.25"],
+    [3, 6, "5c1d0e2a", null, null, true, "South", "0.15"]
+  ],
+  "steward_overrides": [
+    {"district": {"target_value": "East", "base_displaced_value": "North"}},
+    {"district": {"target_value": "West", "base_displaced_value": null}},
+    {"discount": {"target_value": "0.15", "base_displaced_value": "1500"}}
+  ],
+  "clean_rows_count": 3,
+  "bad_rows_count": 3,
+  "not_converted": [[], [], []],
+  "approval_hold_reasons": [null, null, null]
+}

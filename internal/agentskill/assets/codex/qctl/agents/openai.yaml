@@ -1,0 +1,6 @@
+interface:
+  display_name: "qctl"
+  short_description: "Operate Qluster safely through qctl"
+  default_prompt: "Use $qctl to operate Qluster through the qctl CLI."
+policy:
+  allow_implicit_invocation: true

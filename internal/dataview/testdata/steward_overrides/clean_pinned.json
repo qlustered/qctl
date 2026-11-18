@@ -1,0 +1,26 @@
+{
+  "total_page_count": 1,
+  "total_rows": 3,
+  "dataset_name": "work_orders",
+  "fields": ["id", "district", "discount", "warning_item_ids_"],
+  "labels": [null, "District", "Discount", null],
+  "field_types": ["Integer", "Text", "Decimal", "Text"],
+  "field_display_formats": [null, null, {"kind": "percent", "decimals": 2}, null],
+  "results": [
+    [2001, "North", "0.1", null],
+    [2000, "East", "0.13", ["55-discount"]],
+    [1999, "South", "0.2", null]
+  ],
+  "steward_overrides": [
+    null,
+    {"discount": {"target_value": "0.13", "base_displaced_value": 0.125}},
+    null
+  ],
+  "clean_rows_count": 3,
+  "bad_rows_count": 0,
+  "has_history": [
+    [false, false, false, false],
+    [false, false, true, false],
+    [false, false, false, false]
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "name": "DataReviewPolicy",
+  "description": "Manifest for `qctl apply -f`. Gates rows that land in quarantine: whether they require reviewer approval before release, how many reviewers, and whether approval releases them automatically. Omit spec.dataset_id for an org-level policy. See also: qctl guide data-review-policy.",
+  "type": "object",
+  "properties": [
+    {
+      "name": "apiVersion",
+      "type": "string",
+      "description": "Must be qluster.ai/v1.",
+      "required": true
+    },
+    {
+      "name": "kind",
+      "type": "string",
+      "description": "Must be DataReviewPolicy.",
+      "required": true
+    },
+    {
+      "name": "metadata",
+      "type": "object",
+      "description": "Optional. metadata.name is a human label; metadata.id is set on round-tripped output.",
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Human-readable policy name."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "format": "uuid",
+          "description": "Existing policy ID (present on `get -o yaml` output)."
+        }
+      ]
+    },
+    {
+      "name": "spec",
+      "type": "object",
+      "required": true,
+      "properties": [
+        {
+          "name": "dataset_id",
+          "type": "integer",
+          "description": "Target table (dataset) ID. Omit for an org-level policy that applies to every table."
+        },
+        {
+          "name": "requires_review",
+          "type": "boolean",
+          "description": "If true, rows landing in quarantine require reviewer approval before they can be released.",
+          "required": true
+        },
+        {
+          "name": "auto_release_on_approval",
+          "type": "boolean",
+          "description": "If true, a row whose data review is approved is released out of quarantine automatically; if false, release is a separate step. 'qctl rows release' ignores this setting: it records the caller's approval and releases a row only once it has enough approvals, skipping rows the caller edited or submitted for review."
+        },
+        {
+          "name": "min_reviewers",
+          "type": "integer",
+          "description": "Minimum number of distinct eligible reviewers who must approve the row's current version before release. Anyone who submitted or ever edited the row, including undo and redo actors, is excluded."
+        },
+        {
+          "name": "designated_reviewer_ids",
+          "type": "array",
+          "description": "If set, only these reviewers' approvals count toward min_reviewers.",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ]
+    }
+  ],
+  "required": [
+    "apiVersion",
+    "kind",
+    "spec"
+  ]
+}

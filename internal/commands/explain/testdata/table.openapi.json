@@ -1,0 +1,33 @@
+{
+  "name": "DataSetSchemaFull",
+  "description": "A table as the API returns it.",
+  "type": "object",
+  "properties": [
+    {
+      "name": "id",
+      "type": "string",
+      "format": "uuid",
+      "required": true,
+      "readOnly": true
+    },
+    {
+      "name": "migration_policy",
+      "type": "string",
+      "description": "How a schema change is applied.",
+      "enum": [
+        "auto",
+        "manual"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Table name.",
+      "required": true
+    }
+  ],
+  "required": [
+    "id",
+    "name"
+  ]
+}

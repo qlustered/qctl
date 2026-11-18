@@ -1,0 +1,15 @@
+{
+  "total_page_count": 1,
+  "total_rows": 2,
+  "dataset_name": "work_orders",
+  "fields": ["id", "district", "discount"],
+  "labels": [null, "District", "Discount"],
+  "field_types": ["Integer", "Text", "Decimal"],
+  "field_display_formats": [null, null, {"kind": "percent", "decimals": 2}],
+  "results": [
+    [2000, "East", "0.13"],
+    [1999, "South", "0.2"]
+  ],
+  "clean_rows_count": 2,
+  "bad_rows_count": 0
+}

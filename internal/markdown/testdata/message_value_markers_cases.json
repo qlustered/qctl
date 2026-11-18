@@ -1,0 +1,1655 @@
+{
+  "description": "Canonical value-marker cases. See docs/message_value_markers.md.",
+  "value_cases": [
+    {
+      "name": "short",
+      "value": "Sonata",
+      "serialized": "~*Sonata*~"
+    },
+    {
+      "name": "empty",
+      "value": "",
+      "serialized": "~**~"
+    },
+    {
+      "name": "long filename",
+      "value": "quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv",
+      "serialized": "~*quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv*~"
+    },
+    {
+      "name": "single character",
+      "value": "x",
+      "serialized": "~*x*~"
+    },
+    {
+      "name": "unicode",
+      "value": "Zürich 東京 déjà vu",
+      "serialized": "~*Zürich 東京 déjà vu*~"
+    },
+    {
+      "name": "grapheme clusters",
+      "value": "👩‍👩‍👧 family, é, 🇺🇸",
+      "serialized": "~*👩‍👩‍👧 family, é, 🇺🇸*~"
+    },
+    {
+      "name": "multiline",
+      "value": "line 1\nline 2\r\nline 3",
+      "serialized": "~*line 1\nline 2\r\nline 3*~"
+    },
+    {
+      "name": "tab",
+      "value": "a\tb",
+      "serialized": "~*a\tb*~"
+    },
+    {
+      "name": "surrounding spaces",
+      "value": "  padded  ",
+      "serialized": "~*  padded  *~"
+    },
+    {
+      "name": "quotes",
+      "value": "He said \"hi\", 'bye' and “curly”",
+      "serialized": "~*He said \"hi\", 'bye' and “curly”*~"
+    },
+    {
+      "name": "quotes at payload boundaries",
+      "value": "\"quoted\"",
+      "serialized": "~*\"quoted\"*~"
+    },
+    {
+      "name": "lone quote",
+      "value": "\"",
+      "serialized": "~*\"*~"
+    },
+    {
+      "name": "star",
+      "value": "3 Series*",
+      "serialized": "~*3 Series\\**~"
+    },
+    {
+      "name": "lone star",
+      "value": "*",
+      "serialized": "~*\\**~"
+    },
+    {
+      "name": "leading star",
+      "value": "*x",
+      "serialized": "~*\\*x*~"
+    },
+    {
+      "name": "markdown bold",
+      "value": "**bold**",
+      "serialized": "~*\\*\\*bold\\*\\**~"
+    },
+    {
+      "name": "markdown punctuation",
+      "value": "_under_ `code` # > + - = ! { } ( ) .",
+      "serialized": "~*_under_ `code` # > + - = ! { } ( ) .*~"
+    },
+    {
+      "name": "brackets and link",
+      "value": "[Hello](https://hello.com)",
+      "serialized": "~*[Hello](https://hello.com)*~"
+    },
+    {
+      "name": "tooltip link shape",
+      "value": "[**3.8%**](## \"3.5%\")",
+      "serialized": "~*[\\*\\*3.8%\\*\\*](## \"3.5%\")*~"
+    },
+    {
+      "name": "html",
+      "value": "<br><script>alert(1)</script> &amp;",
+      "serialized": "~*<br><script>alert(1)</script> &amp;*~"
+    },
+    {
+      "name": "pipe inside",
+      "value": "a|b",
+      "serialized": "~*a|b*~"
+    },
+    {
+      "name": "pipe leading",
+      "value": "|leading",
+      "serialized": "~*|leading*~"
+    },
+    {
+      "name": "pipe trailing",
+      "value": "trailing|",
+      "serialized": "~*trailing|*~"
+    },
+    {
+      "name": "pipes around",
+      "value": "|value|",
+      "serialized": "~*|value|*~"
+    },
+    {
+      "name": "lone pipe",
+      "value": "|",
+      "serialized": "~*|*~"
+    },
+    {
+      "name": "bold-red closer inside",
+      "value": "a|~b",
+      "serialized": "~*a|~b*~"
+    },
+    {
+      "name": "bold-red opener inside",
+      "value": "a~|b",
+      "serialized": "~*a~|b*~"
+    },
+    {
+      "name": "bold-red closer at end",
+      "value": "x|~",
+      "serialized": "~*x|~*~"
+    },
+    {
+      "name": "backslash path",
+      "value": "C:\\temp\\",
+      "serialized": "~*C:\\\\temp\\\\*~"
+    },
+    {
+      "name": "lone backslash",
+      "value": "\\",
+      "serialized": "~*\\\\*~"
+    },
+    {
+      "name": "double backslash",
+      "value": "\\\\",
+      "serialized": "~*\\\\\\\\*~"
+    },
+    {
+      "name": "backslash before star",
+      "value": "\\*",
+      "serialized": "~*\\\\\\**~"
+    },
+    {
+      "name": "backslash before pipe",
+      "value": "\\|",
+      "serialized": "~*\\\\|*~"
+    },
+    {
+      "name": "markdown escape shape",
+      "value": "\\_\\[",
+      "serialized": "~*\\\\_\\\\[*~"
+    },
+    {
+      "name": "tilde",
+      "value": "~",
+      "serialized": "~*~*~"
+    },
+    {
+      "name": "trailing tilde",
+      "value": "x~",
+      "serialized": "~*x~*~"
+    },
+    {
+      "name": "marker shape",
+      "value": "~*x*~",
+      "serialized": "~*~\\*x\\*~*~"
+    },
+    {
+      "name": "removed combined marker shape",
+      "value": "~*|x|*~",
+      "serialized": "~*~\\*|x|\\*~*~"
+    },
+    {
+      "name": "existing bold-red shape",
+      "value": "~|x|~",
+      "serialized": "~*~|x|~*~"
+    },
+    {
+      "name": "styled marker shape",
+      "value": "~|\"~*x*~\"|~",
+      "serialized": "~*~|\"~\\*x\\*~\"|~*~"
+    },
+    {
+      "name": "terminator shape",
+      "value": "*~",
+      "serialized": "~*\\*~*~"
+    },
+    {
+      "name": "opener shape",
+      "value": "~*",
+      "serialized": "~*~\\**~"
+    }
+  ],
+  "producer_cases": [
+    {
+      "name": "short bad value",
+      "formatter": "value_bad_value",
+      "value": "abc",
+      "message": "~|\"abc\"|~",
+      "tokens": [
+        {
+          "text": "~|\"abc\"|~"
+        }
+      ]
+    },
+    {
+      "name": "short bold value",
+      "formatter": "value_bold",
+      "value": "Sonata",
+      "message": "**\"Sonata\"**",
+      "tokens": [
+        {
+          "text": "**\"Sonata\"**"
+        }
+      ]
+    },
+    {
+      "name": "short plain value",
+      "formatter": "value_plain",
+      "value": "Sonata",
+      "message": "\"Sonata\"",
+      "tokens": [
+        {
+          "text": "\"Sonata\""
+        }
+      ]
+    },
+    {
+      "name": "short column name",
+      "formatter": "column_name",
+      "value": "Model Year",
+      "message": "**Model Year**",
+      "tokens": [
+        {
+          "text": "**Model Year**"
+        }
+      ]
+    },
+    {
+      "name": "short value is not escaped",
+      "formatter": "value_bad_value",
+      "value": "3 Series*",
+      "message": "~|\"3 Series*\"|~",
+      "tokens": [
+        {
+          "text": "~|\"3 Series*\"|~"
+        }
+      ]
+    },
+    {
+      "name": "short value with backslash is not escaped",
+      "formatter": "value_bold",
+      "value": "C:\\temp\\",
+      "message": "**\"C:\\temp\\\"**",
+      "tokens": [
+        {
+          "text": "**\"C:\\temp\\\"**"
+        }
+      ]
+    },
+    {
+      "name": "value at the length limit",
+      "formatter": "value_bad_value",
+      "value": "abcdefghijklmnopqrstuvw",
+      "message": "~|\"abcdefghijklmnopqrstuvw\"|~",
+      "tokens": [
+        {
+          "text": "~|\"abcdefghijklmnopqrstuvw\"|~"
+        }
+      ]
+    },
+    {
+      "name": "value just over the length limit",
+      "formatter": "value_bad_value",
+      "value": "abcdefghijklmnopqrstuvwx",
+      "message": "~|\"~*abcdefghijklmnopqrstuvwx*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "abcdefghijklmnopqrstuvwx"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "column name at the length limit",
+      "formatter": "column_name",
+      "value": "column_name_19_char",
+      "message": "**column_name_19_char**",
+      "tokens": [
+        {
+          "text": "**column_name_19_char**"
+        }
+      ]
+    },
+    {
+      "name": "column name just over the length limit",
+      "formatter": "column_name",
+      "value": "column_name_20_chars",
+      "message": "**~*column_name_20_chars*~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "value": "column_name_20_chars"
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "long bad value",
+      "formatter": "value_bad_value",
+      "value": "Hyundai Sonata Hybrid Limited",
+      "message": "~|\"~*Hyundai Sonata Hybrid Limited*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long bold value",
+      "formatter": "value_bold",
+      "value": "Hyundai Sonata Hybrid Limited",
+      "message": "**\"~*Hyundai Sonata Hybrid Limited*~\"**",
+      "tokens": [
+        {
+          "text": "**\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited"
+        },
+        {
+          "text": "\"**"
+        }
+      ]
+    },
+    {
+      "name": "long plain value",
+      "formatter": "value_plain",
+      "value": "Hyundai Sonata Hybrid Limited",
+      "message": "\"~*Hyundai Sonata Hybrid Limited*~\"",
+      "tokens": [
+        {
+          "text": "\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited"
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "long filename",
+      "formatter": "value_plain",
+      "value": "quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv",
+      "message": "\"~*quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv*~\"",
+      "tokens": [
+        {
+          "text": "\""
+        },
+        {
+          "value": "quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv"
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "long column name",
+      "formatter": "column_name",
+      "value": "Policy Effective Date (UTC)",
+      "message": "**~*Policy Effective Date (UTC)*~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "value": "Policy Effective Date (UTC)"
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "long value with pipes",
+      "formatter": "value_bad_value",
+      "value": "|pipes| around a long value",
+      "message": "~|\"~*|pipes| around a long value*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "|pipes| around a long value"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long value with bold-red delimiters",
+      "formatter": "value_bad_value",
+      "value": "a|~ then ~|b in a long value",
+      "message": "~|\"~*a|~ then ~|b in a long value*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "a|~ then ~|b in a long value"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long value with quotes at boundaries",
+      "formatter": "value_bad_value",
+      "value": "\"quoted value that is long\"",
+      "message": "~|\"~*\"quoted value that is long\"*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "\"quoted value that is long\""
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long value with backslashes and star",
+      "formatter": "value_bad_value",
+      "value": "C:\\temp\\*.csv in a long path",
+      "message": "~|\"~*C:\\\\temp\\\\\\*.csv in a long path*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "C:\\temp\\*.csv in a long path"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long bold value with stars",
+      "formatter": "value_bold",
+      "value": "**bold** text in a long value",
+      "message": "**\"~*\\*\\*bold\\*\\* text in a long value*~\"**",
+      "tokens": [
+        {
+          "text": "**\""
+        },
+        {
+          "value": "**bold** text in a long value"
+        },
+        {
+          "text": "\"**"
+        }
+      ]
+    },
+    {
+      "name": "long column name with star and pipe",
+      "formatter": "column_name",
+      "value": "column*|name that is long",
+      "message": "**~*column\\*|name that is long*~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "value": "column*|name that is long"
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "blank bad value",
+      "formatter": "value_bad_value",
+      "value": "",
+      "message": "~|(Blank)|~",
+      "tokens": [
+        {
+          "text": "~|(Blank)|~"
+        }
+      ]
+    },
+    {
+      "name": "None bad value",
+      "formatter": "value_bad_value",
+      "value": null,
+      "message": "~|(Blank)|~",
+      "tokens": [
+        {
+          "text": "~|(Blank)|~"
+        }
+      ]
+    },
+    {
+      "name": "blank bold value",
+      "formatter": "value_bold",
+      "value": "  ",
+      "message": "**(Blank)**",
+      "tokens": [
+        {
+          "text": "**(Blank)**"
+        }
+      ]
+    },
+    {
+      "name": "None plain value",
+      "formatter": "value_plain",
+      "value": null,
+      "message": "**(Blank)**",
+      "tokens": [
+        {
+          "text": "**(Blank)**"
+        }
+      ]
+    },
+    {
+      "name": "short bad value pii",
+      "formatter": "value_bad_value_pii",
+      "value": "abc",
+      "message": "~|\"~{abc}~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "text": "abc",
+          "pii": true
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "long bold value pii",
+      "formatter": "value_bold_pii",
+      "value": "Hyundai Sonata Hybrid Limited",
+      "message": "**\"~{~*Hyundai Sonata Hybrid Limited*~}~\"**",
+      "tokens": [
+        {
+          "text": "**\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited",
+          "pii": true
+        },
+        {
+          "text": "\"**"
+        }
+      ]
+    },
+    {
+      "name": "short plain value pii with tilde",
+      "formatter": "value_plain_pii",
+      "value": "a~b",
+      "message": "\"~{~*a~b*~}~\"",
+      "tokens": [
+        {
+          "text": "\""
+        },
+        {
+          "value": "a~b",
+          "pii": true
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "short bad value pii with backslash",
+      "formatter": "value_bad_value_pii",
+      "value": "C:\\temp\\",
+      "message": "~|\"~{C:\\\\temp\\\\}~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "text": "C:\\temp\\",
+          "pii": true
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "short bold value pii with marker-shaped text",
+      "formatter": "value_bold_pii",
+      "value": "~*x*~",
+      "message": "**\"~{~*~\\*x\\*~*~}~\"**",
+      "tokens": [
+        {
+          "text": "**\""
+        },
+        {
+          "value": "~*x*~",
+          "pii": true
+        },
+        {
+          "text": "\"**"
+        }
+      ]
+    },
+    {
+      "name": "long plain value pii with closer",
+      "formatter": "value_plain_pii",
+      "value": "a}~ closer inside a long value",
+      "message": "\"~{~*a}~ closer inside a long value*~}~\"",
+      "tokens": [
+        {
+          "text": "\""
+        },
+        {
+          "value": "a}~ closer inside a long value",
+          "pii": true
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "blank bad value pii",
+      "formatter": "value_bad_value_pii",
+      "value": null,
+      "message": "~|(Blank)|~",
+      "tokens": [
+        {
+          "text": "~|(Blank)|~"
+        }
+      ]
+    },
+    {
+      "name": "blank bold value pii",
+      "formatter": "value_bold_pii",
+      "value": "  ",
+      "message": "**(Blank)**",
+      "tokens": [
+        {
+          "text": "**(Blank)**"
+        }
+      ]
+    },
+    {
+      "name": "short column name field",
+      "formatter": "column_name_field",
+      "value": "Model Year",
+      "message": "**~[Model Year]~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "text": "Model Year",
+          "field_name": true
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "long column name field",
+      "formatter": "column_name_field",
+      "value": "Policy Effective Date (UTC)",
+      "message": "**~[~*Policy Effective Date (UTC)*~]~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "value": "Policy Effective Date (UTC)",
+          "field_name": true
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "short column name field with closer",
+      "formatter": "column_name_field",
+      "value": "a]~b",
+      "message": "**~[~*a]~b*~]~**",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "value": "a]~b",
+          "field_name": true
+        },
+        {
+          "text": "**"
+        }
+      ]
+    },
+    {
+      "name": "empty column name field",
+      "formatter": "column_name_field",
+      "value": "",
+      "message": "",
+      "tokens": []
+    }
+  ],
+  "message_cases": [
+    {
+      "name": "short bad value in prose",
+      "message": "~|\"abc\"|~ is not a valid integer.",
+      "tokens": [
+        {
+          "text": "~|\"abc\"|~ is not a valid integer."
+        }
+      ]
+    },
+    {
+      "name": "short and long values in prose",
+      "message": "Name changed from **\"Sonata\"** to **\"~*Hyundai Sonata Hybrid Limited*~\"**.",
+      "tokens": [
+        {
+          "text": "Name changed from **\"Sonata\"** to **\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited"
+        },
+        {
+          "text": "\"**."
+        }
+      ]
+    },
+    {
+      "name": "unquoted numbers and long link text",
+      "message": "**max_days_back** changed from **5** to **10** in [~*Very long dataset rule name for the claims table*~](/orgs/1/datasets/2).",
+      "tokens": [
+        {
+          "text": "**max_days_back** changed from **5** to **10** in ["
+        },
+        {
+          "value": "Very long dataset rule name for the claims table"
+        },
+        {
+          "text": "](/orgs/1/datasets/2)."
+        }
+      ]
+    },
+    {
+      "name": "long column name with line break",
+      "message": "Inconsistent date format in **~*Policy Effective Date (UTC)*~** column.<br>Modify this to the format: `%Y`",
+      "tokens": [
+        {
+          "text": "Inconsistent date format in **"
+        },
+        {
+          "value": "Policy Effective Date (UTC)"
+        },
+        {
+          "text": "** column.<br>Modify this to the format: `%Y`"
+        }
+      ]
+    },
+    {
+      "name": "long bad values with bold-italic prose",
+      "message": "~|\"~*Accord Hybrid Touring Sedan*~\"|~ is not a valid ***Car model*** in the column: **model** when:<br>**make** is ~|\"Ford\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "Accord Hybrid Touring Sedan"
+        },
+        {
+          "text": "\"|~ is not a valid ***Car model*** in the column: **model** when:<br>**make** is ~|\"Ford\"|~"
+        }
+      ]
+    },
+    {
+      "name": "typographic quotes around a marker",
+      "message": "~|“~*Hyundai Sonata Hybrid Limited*~”|~ is invalid",
+      "tokens": [
+        {
+          "text": "~|“"
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited"
+        },
+        {
+          "text": "”|~ is invalid"
+        }
+      ]
+    },
+    {
+      "name": "long value mid-sentence",
+      "message": "The file \"~*quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv*~\" could not be read.",
+      "tokens": [
+        {
+          "text": "The file \""
+        },
+        {
+          "value": "quarterly_bordereau_2026_Q3_final_revised_after_review_by_underwriting_team_v12 (copy).csv"
+        },
+        {
+          "text": "\" could not be read."
+        }
+      ]
+    },
+    {
+      "name": "adjacent markers",
+      "message": "~*a*~~*b*~~**~",
+      "tokens": [
+        {
+          "value": "a"
+        },
+        {
+          "value": "b"
+        },
+        {
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "adjacent quoted markers",
+      "message": "\"~*a*~\"\"~*b*~\"",
+      "tokens": [
+        {
+          "text": "\""
+        },
+        {
+          "value": "a"
+        },
+        {
+          "text": "\"\""
+        },
+        {
+          "value": "b"
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "adjacent bold-red values",
+      "message": "~|\"~*a*~\"|~~|\"~*b*~\"|~",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "a"
+        },
+        {
+          "text": "\"|~~|\""
+        },
+        {
+          "value": "b"
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "space-separated list",
+      "message": "~|(Blank)|~ ~|\"foo\"|~ ~|\"~*bar|baz with a long tail*~\"|~ ...",
+      "tokens": [
+        {
+          "text": "~|(Blank)|~ ~|\"foo\"|~ ~|\""
+        },
+        {
+          "value": "bar|baz with a long tail"
+        },
+        {
+          "text": "\"|~ ..."
+        }
+      ]
+    },
+    {
+      "name": "marker in link text",
+      "message": "[~*Q3 2026 bordereau final revised after underwriting review*~](/orgs/1/datasets/2) was updated",
+      "tokens": [
+        {
+          "text": "["
+        },
+        {
+          "value": "Q3 2026 bordereau final revised after underwriting review"
+        },
+        {
+          "text": "](/orgs/1/datasets/2) was updated"
+        }
+      ]
+    },
+    {
+      "name": "delimiter-shaped marker in link text",
+      "message": "[~*a](b) \\*~ c*~](/orgs/1/alerts/2)",
+      "tokens": [
+        {
+          "text": "["
+        },
+        {
+          "value": "a](b) *~ c"
+        },
+        {
+          "text": "](/orgs/1/alerts/2)"
+        }
+      ]
+    },
+    {
+      "name": "tooltip link is prose",
+      "message": "CI is [**3.8%**](## \"3.5%–4.1%\") for \"~*claims over the reserve limit*~\"",
+      "tokens": [
+        {
+          "text": "CI is [**3.8%**](## \"3.5%–4.1%\") for \""
+        },
+        {
+          "value": "claims over the reserve limit"
+        },
+        {
+          "text": "\""
+        }
+      ]
+    },
+    {
+      "name": "existing bold red is prose",
+      "message": "Column ~|email|~ is **required**",
+      "tokens": [
+        {
+          "text": "Column ~|email|~ is **required**"
+        }
+      ]
+    },
+    {
+      "name": "removed combined marker is a plain value with pipes",
+      "message": "~*|value|*~ is plain",
+      "tokens": [
+        {
+          "value": "|value|"
+        },
+        {
+          "text": " is plain"
+        }
+      ]
+    },
+    {
+      "name": "bold-red delimiters inside payload",
+      "message": "~|\"~*a|~ ~|b*~\"|~ ok",
+      "tokens": [
+        {
+          "text": "~|\""
+        },
+        {
+          "value": "a|~ ~|b"
+        },
+        {
+          "text": "\"|~ ok"
+        }
+      ]
+    },
+    {
+      "name": "multiline payload",
+      "message": "Value ~|\"~*line 1\nline 2*~\"|~ has a newline",
+      "tokens": [
+        {
+          "text": "Value ~|\""
+        },
+        {
+          "value": "line 1\nline 2"
+        },
+        {
+          "text": "\"|~ has a newline"
+        }
+      ]
+    },
+    {
+      "name": "unicode payload",
+      "message": "Stadt **\"~*Zürich 東京*~\"** ✓",
+      "tokens": [
+        {
+          "text": "Stadt **\""
+        },
+        {
+          "value": "Zürich 東京"
+        },
+        {
+          "text": "\"** ✓"
+        }
+      ]
+    },
+    {
+      "name": "delimiter-shaped payloads",
+      "message": "~*~\\*x\\*~*~ then ~*\\*~*~",
+      "tokens": [
+        {
+          "value": "~*x*~"
+        },
+        {
+          "text": " then "
+        },
+        {
+          "value": "*~"
+        }
+      ]
+    },
+    {
+      "name": "markers do not nest",
+      "message": "~*a ~*b*~",
+      "tokens": [
+        {
+          "value": "a ~*b"
+        }
+      ]
+    },
+    {
+      "name": "escaped payload backslashes",
+      "message": "Path ~*C:\\\\temp\\\\*~ ok",
+      "tokens": [
+        {
+          "text": "Path "
+        },
+        {
+          "value": "C:\\temp\\"
+        },
+        {
+          "text": " ok"
+        }
+      ]
+    },
+    {
+      "name": "decoder accepts any escaped character",
+      "message": "~*\\a\\~\\|\\\n*~",
+      "tokens": [
+        {
+          "value": "a~|\n"
+        }
+      ]
+    },
+    {
+      "name": "markdown escape before opener",
+      "message": "\\~*not a marker*~",
+      "tokens": [
+        {
+          "text": "\\~*not a marker*~"
+        }
+      ]
+    },
+    {
+      "name": "escaped backslash before opener",
+      "message": "\\\\~*v*~",
+      "tokens": [
+        {
+          "text": "\\\\"
+        },
+        {
+          "value": "v"
+        }
+      ]
+    },
+    {
+      "name": "backslash before letter is not an escape",
+      "message": "\\n~*v*~",
+      "tokens": [
+        {
+          "text": "\\n"
+        },
+        {
+          "value": "v"
+        }
+      ]
+    },
+    {
+      "name": "unterminated",
+      "message": "Broken ~*oops",
+      "tokens": [
+        {
+          "text": "Broken ~*oops"
+        }
+      ]
+    },
+    {
+      "name": "unterminated after a marker",
+      "message": "~*a*~ ~*b",
+      "tokens": [
+        {
+          "value": "a"
+        },
+        {
+          "text": " ~*b"
+        }
+      ]
+    },
+    {
+      "name": "escaped terminator never closes",
+      "message": "~*a\\*~",
+      "tokens": [
+        {
+          "text": "~*a\\*~"
+        }
+      ]
+    },
+    {
+      "name": "trailing backslash",
+      "message": "~*abc\\",
+      "tokens": [
+        {
+          "text": "~*abc\\"
+        }
+      ]
+    },
+    {
+      "name": "stray terminators",
+      "message": "a *~ b |*~ c",
+      "tokens": [
+        {
+          "text": "a *~ b |*~ c"
+        }
+      ]
+    },
+    {
+      "name": "empty payload",
+      "message": "x \"~**~\" y",
+      "tokens": [
+        {
+          "text": "x \""
+        },
+        {
+          "value": ""
+        },
+        {
+          "text": "\" y"
+        }
+      ]
+    },
+    {
+      "name": "first terminator wins",
+      "message": "~*a*~b*~",
+      "tokens": [
+        {
+          "value": "a"
+        },
+        {
+          "text": "b*~"
+        }
+      ]
+    },
+    {
+      "name": "star run before terminator",
+      "message": "~*a**~",
+      "tokens": [
+        {
+          "value": "a*"
+        }
+      ]
+    },
+    {
+      "name": "tilde run before opener",
+      "message": "~~*a*~",
+      "tokens": [
+        {
+          "text": "~"
+        },
+        {
+          "value": "a"
+        }
+      ]
+    },
+    {
+      "name": "pii wrapper in prose",
+      "message": "Value ~{abc}~ is bad",
+      "tokens": [
+        {
+          "text": "Value "
+        },
+        {
+          "text": "abc",
+          "pii": true
+        },
+        {
+          "text": " is bad"
+        }
+      ]
+    },
+    {
+      "name": "field-name wrapper in prose",
+      "message": "Column ~[Model Year]~ is required",
+      "tokens": [
+        {
+          "text": "Column "
+        },
+        {
+          "text": "Model Year",
+          "field_name": true
+        },
+        {
+          "text": " is required"
+        }
+      ]
+    },
+    {
+      "name": "both wrappers in one message",
+      "message": "**~[Model Year]~** is ~|\"~{~*Hyundai Sonata Hybrid Limited*~}~\"|~",
+      "tokens": [
+        {
+          "text": "**"
+        },
+        {
+          "text": "Model Year",
+          "field_name": true
+        },
+        {
+          "text": "** is ~|\""
+        },
+        {
+          "value": "Hyundai Sonata Hybrid Limited",
+          "pii": true
+        },
+        {
+          "text": "\"|~"
+        }
+      ]
+    },
+    {
+      "name": "wrapper content runs",
+      "message": "~{a~*b*~c}~",
+      "tokens": [
+        {
+          "text": "a",
+          "pii": true
+        },
+        {
+          "value": "b",
+          "pii": true
+        },
+        {
+          "text": "c",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "escaped pii opener in prose",
+      "message": "\\~{abc}~",
+      "tokens": [
+        {
+          "text": "\\~{abc}~"
+        }
+      ]
+    },
+    {
+      "name": "escaped field-name opener in prose",
+      "message": "\\~[abc]~",
+      "tokens": [
+        {
+          "text": "\\~[abc]~"
+        }
+      ]
+    },
+    {
+      "name": "escaped backslash before pii opener",
+      "message": "\\\\~{abc}~",
+      "tokens": [
+        {
+          "text": "\\\\"
+        },
+        {
+          "text": "abc",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "unterminated pii wrapper",
+      "message": "~{abc",
+      "tokens": [
+        {
+          "text": "~{abc"
+        }
+      ]
+    },
+    {
+      "name": "unterminated field-name wrapper",
+      "message": "~[abc",
+      "tokens": [
+        {
+          "text": "~[abc"
+        }
+      ]
+    },
+    {
+      "name": "unterminated wrapper before a value marker",
+      "message": "~{a ~*b*~",
+      "tokens": [
+        {
+          "text": "~{a "
+        },
+        {
+          "value": "b"
+        }
+      ]
+    },
+    {
+      "name": "unterminated value marker inside a wrapper",
+      "message": "~{~*a}~",
+      "tokens": [
+        {
+          "text": "~*a",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "empty pii wrapper",
+      "message": "~{}~",
+      "tokens": [
+        {
+          "text": "",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "empty field-name wrapper",
+      "message": "a~[]~b",
+      "tokens": [
+        {
+          "text": "a"
+        },
+        {
+          "text": "",
+          "field_name": true
+        },
+        {
+          "text": "b"
+        }
+      ]
+    },
+    {
+      "name": "escaped closer in pii wrapper",
+      "message": "~{a\\}~}~",
+      "tokens": [
+        {
+          "text": "a}~",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "escaped closer in field-name wrapper",
+      "message": "~[a\\]~]~",
+      "tokens": [
+        {
+          "text": "a]~",
+          "field_name": true
+        }
+      ]
+    },
+    {
+      "name": "pii closer inside value marker inside wrapper",
+      "message": "~{~*a}~b*~}~",
+      "tokens": [
+        {
+          "value": "a}~b",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "field-name closer inside value marker inside wrapper",
+      "message": "~[~*a]~b*~]~",
+      "tokens": [
+        {
+          "value": "a]~b",
+          "field_name": true
+        }
+      ]
+    },
+    {
+      "name": "pii opener inside value payload",
+      "message": "~*~{a}~*~",
+      "tokens": [
+        {
+          "value": "~{a}~"
+        }
+      ]
+    },
+    {
+      "name": "field-name opener inside value payload",
+      "message": "~*~[a]~*~",
+      "tokens": [
+        {
+          "value": "~[a]~"
+        }
+      ]
+    },
+    {
+      "name": "field-name opener inside pii wrapper",
+      "message": "~{a~[b]~}~",
+      "tokens": [
+        {
+          "text": "a~[b]~",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "pii opener inside field-name wrapper",
+      "message": "~[a~{b}~]~",
+      "tokens": [
+        {
+          "text": "a~{b}~",
+          "field_name": true
+        }
+      ]
+    },
+    {
+      "name": "wrappers inside bold red",
+      "message": "~|~[Model Year]~ is ~{abc}~|~",
+      "tokens": [
+        {
+          "text": "~|"
+        },
+        {
+          "text": "Model Year",
+          "field_name": true
+        },
+        {
+          "text": " is "
+        },
+        {
+          "text": "abc",
+          "pii": true
+        },
+        {
+          "text": "|~"
+        }
+      ]
+    },
+    {
+      "name": "bold-red closer tilde opens a value marker",
+      "message": "~|\"a\"|~**\"b\"**~|\"c\"|~",
+      "tokens": [
+        {
+          "text": "~|\"a\"|"
+        },
+        {
+          "value": "*\"b\"*"
+        },
+        {
+          "text": "|\"c\"|~"
+        }
+      ]
+    },
+    {
+      "name": "bold-red closer tilde opens a pii wrapper",
+      "message": "~||~{a}~",
+      "tokens": [
+        {
+          "text": "~||"
+        },
+        {
+          "text": "a",
+          "pii": true
+        }
+      ]
+    },
+    {
+      "name": "bold-red closer tilde opens a field-name wrapper",
+      "message": "~||~[a]~",
+      "tokens": [
+        {
+          "text": "~||"
+        },
+        {
+          "text": "a",
+          "field_name": true
+        }
+      ]
+    }
+  ],
+  "reader_cases": [
+    {
+      "name": "short pii bad value",
+      "message": "~|\"~{abc}~\"|~",
+      "masked": "~|\"~*•••••*~\"|~",
+      "unmarked": "~|\"abc\"|~",
+      "flattened": "~|\"•••••\"|~"
+    },
+    {
+      "name": "pii of 8 characters",
+      "message": "~|\"~{abcdefgh}~\"|~",
+      "masked": "~|\"~*•••••*~\"|~",
+      "unmarked": "~|\"abcdefgh\"|~",
+      "flattened": "~|\"•••••\"|~"
+    },
+    {
+      "name": "pii of 9 characters",
+      "message": "~|\"~{abcdefghi}~\"|~",
+      "masked": "~|\"~*•••••fghi*~\"|~",
+      "unmarked": "~|\"abcdefghi\"|~",
+      "flattened": "~|\"•••••fghi\"|~"
+    },
+    {
+      "name": "long pii in bold",
+      "message": "**\"~{~*Hyundai Sonata Hybrid Limited*~}~\"**",
+      "masked": "**\"~*•••••ited*~\"**",
+      "unmarked": "**\"~*Hyundai Sonata Hybrid Limited*~\"**",
+      "flattened": "**\"•••••ited\"**"
+    },
+    {
+      "name": "long pii bad value",
+      "message": "~|\"~{~*GB29NWBK60161331926819*~}~\"|~",
+      "masked": "~|\"~*•••••6819*~\"|~",
+      "unmarked": "~|\"~*GB29NWBK60161331926819*~\"|~",
+      "flattened": "~|\"•••••6819\"|~"
+    },
+    {
+      "name": "pii with escapes and markdown in the last four",
+      "message": "\"~{path\\~to\\\\file*_*}~\"",
+      "masked": "\"~*•••••e\\*_\\**~\"",
+      "unmarked": "\"path~to\\file*_*\"",
+      "flattened": "\"•••••e*_*\""
+    },
+    {
+      "name": "pii in a cut message",
+      "message": "~|\"~{abcdefghijk}~\"|~ is not a val…",
+      "masked": "~|\"~*•••••hijk*~\"|~ is not a val…",
+      "unmarked": "~|\"abcdefghijk\"|~ is not a val…",
+      "flattened": "~|\"•••••hijk\"|~ is not a val…"
+    },
+    {
+      "name": "short field name",
+      "message": "**~[Model Year]~** is required.",
+      "masked": "**~[Model Year]~** is required.",
+      "unmarked": "**Model Year** is required.",
+      "flattened": "**Model Year** is required."
+    },
+    {
+      "name": "long field name",
+      "message": "**~[~*Policy Effective Date (UTC)*~]~**",
+      "masked": "**~[~*Policy Effective Date (UTC)*~]~**",
+      "unmarked": "**~*Policy Effective Date (UTC)*~**",
+      "flattened": "**Policy Effective Date (UTC)**"
+    },
+    {
+      "name": "field name with an escaped tilde",
+      "message": "**~[a\\~b]~**",
+      "masked": "**~[a\\~b]~**",
+      "unmarked": "**a~b**",
+      "flattened": "**a~b**"
+    },
+    {
+      "name": "field name and pii",
+      "message": "**~[Policy Number]~** ~|\"~{~*GB29NWBK60161331926819*~}~\"|~ is a duplicate.",
+      "masked": "**~[Policy Number]~** ~|\"~*•••••6819*~\"|~ is a duplicate.",
+      "unmarked": "**Policy Number** ~|\"~*GB29NWBK60161331926819*~\"|~ is a duplicate.",
+      "flattened": "**Policy Number** ~|\"•••••6819\"|~ is a duplicate."
+    },
+    {
+      "name": "value marker outside a wrapper",
+      "message": "~*a\\*b*~ and ~{abc}~",
+      "masked": "~*a\\*b*~ and ~*•••••*~",
+      "unmarked": "~*a\\*b*~ and abc",
+      "flattened": "a*b and •••••"
+    },
+    {
+      "name": "pii opener inside a value marker payload",
+      "message": "~*x ~{abc}~ y*~",
+      "masked": "~*x ~{abc}~ y*~",
+      "unmarked": "~*x ~{abc}~ y*~",
+      "flattened": "x ~{abc}~ y"
+    },
+    {
+      "name": "escaped pii opener in prose",
+      "message": "\\~{abc}~",
+      "masked": "\\~{abc}~",
+      "unmarked": "\\~{abc}~",
+      "flattened": "\\~{abc}~"
+    },
+    {
+      "name": "escaped backslash before a pii marker",
+      "message": "\\\\~{abc}~",
+      "masked": "\\\\~*•••••*~",
+      "unmarked": "\\\\abc",
+      "flattened": "\\\\•••••"
+    },
+    {
+      "name": "unterminated pii opener",
+      "message": "~|\"~{abc",
+      "masked": "~|\"~{abc",
+      "unmarked": "~|\"~{abc",
+      "flattened": "~|\"~{abc"
+    },
+    {
+      "name": "no marker",
+      "message": "Row 3 is missing a value.",
+      "masked": "Row 3 is missing a value.",
+      "unmarked": "Row 3 is missing a value.",
+      "flattened": "Row 3 is missing a value."
+    }
+  ]
+}

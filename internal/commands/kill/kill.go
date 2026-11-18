@@ -1,0 +1,24 @@
+package kill
+
+import (
+	"github.com/qlustered/qctl/internal/catalog"
+	"github.com/qlustered/qctl/internal/cmdutil"
+	"github.com/spf13/cobra"
+)
+
+// NewCommand creates the kill command
+func NewCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:         "kill",
+		Short:       "Kill resources",
+		Long:        `Commands for killing/stopping resources such as ingestion jobs and profiling jobs.`,
+		Annotations: catalog.Parent(),
+		RunE:        cmdutil.SubcommandRequired,
+	}
+
+	// Add subcommands
+	cmd.AddCommand(NewIngestionJobCommand())
+	cmd.AddCommand(NewProfilingJobCommand())
+
+	return cmd
+}
