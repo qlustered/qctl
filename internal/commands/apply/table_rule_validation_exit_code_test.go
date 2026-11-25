@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/qlustered/qctl/internal/api"
 	qerrors "github.com/qlustered/qctl/internal/errors"
 	"github.com/qlustered/qctl/internal/testutil"
 	"golang.org/x/term"
@@ -77,6 +78,7 @@ func TestTableRuleColumnMappingRejectionsExitTwo(t *testing.T) {
 	cases := []struct {
 		name         string
 		inputColumns []string
+		candidates   []api.RuleFieldColumnCandidatesSchema
 		spec         string
 		want         string
 	}{
@@ -93,10 +95,11 @@ func TestTableRuleColumnMappingRejectionsExitTwo(t *testing.T) {
 			want:         "spec.column needs a rule with exactly one required field",
 		},
 		{
-			name:         "column_mapping missing a required input",
+			name:         "column_mapping leaves out a required input the server cannot bind",
 			inputColumns: []string{"left", "right"},
+			candidates:   []api.RuleFieldColumnCandidatesSchema{unboundCandidate("left", true), unboundCandidate("right", true)},
 			spec:         "  column_mapping:\n    left: a\n",
-			want:         "column_mapping must bind each required input or validates/corrects/enriches field without a produced_fields declaration or unique standard field match",
+			want:         "no column of table 1 matches a required rule field the manifest leaves out of column_mapping",
 		},
 		{
 			name:         "column_mapping with an unknown key",
@@ -114,6 +117,9 @@ func TestTableRuleColumnMappingRejectionsExitTwo(t *testing.T) {
 
 			revDetail := sampleRuleRevisionFull(nil)
 			revDetail.InputColumns = tc.inputColumns
+			if tc.candidates != nil {
+				revDetail.FieldColumnCandidates = &tc.candidates
+			}
 			mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/details",
 				func(w http.ResponseWriter, r *http.Request) {
 					testutil.RespondJSON(w, http.StatusOK, revDetail)

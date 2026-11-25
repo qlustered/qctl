@@ -114,7 +114,7 @@ Clean rows cannot be deleted. Send them to quarantine first, then delete them
 by signature:
 
   qctl rows send-to-quarantine <table-id-or-name> --row-id <id>%s
-  qctl rows delete-quarantined <table-id-or-name> --signature <hex> --reason <reason>%s
+  qctl rows delete-quarantined <table-id-or-name> --signature <hex> --exclude-from-future-uploads=<true|false> --reason <reason>%s
 
   qctl rows --help                   # the full set of row verbs
 

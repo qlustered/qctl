@@ -10,10 +10,10 @@ import (
 // name fails here instead of leaving every caller's value refused.
 func TestEnumValuesIsKeyedByTheGoTypeName(t *testing.T) {
 	want := []string{
-		string(Draft),
-		string(InReview),
-		string(Enabled),
-		string(Disabled),
+		string(RuleStateDraft),
+		string(RuleStateInReview),
+		string(RuleStateEnabled),
+		string(RuleStateDisabled),
 	}
 	if got := EnumValues[RuleState](); !slices.Equal(got, want) {
 		t.Errorf("EnumValues[RuleState]() = %v, want %v", got, want)

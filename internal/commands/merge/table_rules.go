@@ -1,7 +1,6 @@
 package merge
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 	"time"
@@ -526,39 +525,10 @@ func mergeRuleResolver(ctx *cmdutil.CommandContext, rules []dataset_rules.Datase
 	}
 }
 
-// waitForRuleMerge polls merge mergeID with rule_merges.Wait, printing
-// progress to stderr, inside a cmdutil.StartWait whose banner names describe.
-// It returns the merge it settled at with the body of the last successful
-// poll (nil when none succeeded), and what Waiter.Ended makes of the wait's
-// error.
+// waitForRuleMerge is rule_merges.Client.WaitForApply for merge mergeID into
+// targetID, its banner and errors naming describe.
 func waitForRuleMerge(cmd *cobra.Command, client *rule_merges.Client, token string,
 	targetID, mergeID int, timeout time.Duration, describe string,
 ) (*rule_merges.RuleMerge, []byte, error) {
-	var lastBody []byte
-	poll := func(ctx context.Context) (*rule_merges.RuleMerge, error) {
-		m, body, err := client.GetContext(ctx, token, targetID, mergeID)
-		if err != nil {
-			return nil, err
-		}
-		if ctx.Err() != nil {
-			return nil, context.Cause(ctx)
-		}
-		lastBody = body
-		return m, nil
-	}
-	ctx, w := cmdutil.StartWait(cmd, cmdutil.WaitSpec{
-		Kind:      cmdutil.WaitUntilDone,
-		Budget:    timeout,
-		SelfTimed: true,
-		Doing:     fmt.Sprintf("waiting for rule merge %d to finish applying", mergeID),
-		Next:      describe,
-		NextVerb:  "check with",
-	})
-	defer w.Stop()
-	final, err := rule_merges.Wait(ctx, poll, mergeID, rule_merges.WaitOptions{
-		Timeout:  timeout,
-		Progress: func(m *rule_merges.RuleMerge) { rule_merges.WriteProgress(cmd.ErrOrStderr(), m) },
-		Describe: describe,
-	})
-	return final, lastBody, w.Ended(err)
+	return client.WaitForApply(cmd, token, targetID, mergeID, rule_merges.ApplyWait{Timeout: timeout, Describe: describe})
 }

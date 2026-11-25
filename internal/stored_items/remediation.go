@@ -27,18 +27,22 @@ func (c *Client) newAPIClient(accessToken string) (*client.Client, error) {
 
 // DeleteRows deletes live quarantine rows by hex initial_signature_ through
 // one uploaded file's route, recording comment as the reason.
+// excludeFromFutureUploads is sent as exclude_from_future_uploads, null when
+// nil.
 //
-// delete_data_rows (quarantine.py) matches the signatures across the table,
-// not only among rows linked to this file, and adds each deleted row's
-// source-scoped identity entries to the file's excluded_row_signatures,
-// withholding an entry a live clean row linked to this file also has.
-// UnmatchedSignatures are the requested signatures with no live quarantine
-// row; NotExcludedSignatures are those deleted with an entry withheld.
+// delete_data_rows (quarantine.py) matches only quarantine rows linked to this
+// file and adds each deleted row's source-scoped identity entries to the
+// file's excluded_row_signatures, and with excludeFromFutureUploads true to
+// the excluded_row_signatures_override of the file's source as well, or to the
+// table's excluded_row_signatures for a table-series source, withholding an
+// entry that would drop a live clean row. UnmatchedSignatures are the
+// requested signatures with no live quarantine row linked to this file;
+// NotExcludedSignatures are those deleted with an entry withheld.
 //
 // A non-nil datasetID is sent as dataset_id, the table the file must belong
 // to. There is no status parameter: DeleteRowsInStoredItemParams has none,
 // which is what makes --status unsupported at file scope.
-func (c *Client) DeleteRows(accessToken string, storedItemID int, signatures []string, isBadData bool, datasetID *int, comment string) (*DeleteResult, error) {
+func (c *Client) DeleteRows(accessToken string, storedItemID int, signatures []string, isBadData bool, datasetID *int, excludeFromFutureUploads *bool, comment string) (*DeleteResult, error) {
 	apiClient, err := c.newAPIClient(accessToken)
 	if err != nil {
 		return nil, err
@@ -48,7 +52,7 @@ func (c *Client) DeleteRows(accessToken string, storedItemID int, signatures []s
 	if signatures == nil {
 		signatures = []string{}
 	}
-	body := api.DeleteRowsRequestSchema{Signatures: &signatures, Comment: comment}
+	body := api.DeleteRowsRequestSchema{Signatures: &signatures, ExcludeFromFutureUploads: excludeFromFutureUploads, Comment: comment}
 	var resp *api.DeleteRowsInStoredItemResponse
 	if c.thirdParty {
 		rawResponse, requestErr := apiClient.API.DeleteThirdPartyRowsInStoredItem(

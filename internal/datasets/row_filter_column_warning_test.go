@@ -155,8 +155,9 @@ func TestFormatRowFilterColumnWarning(t *testing.T) {
 			"    The rule is not enabled, so the stale-column retirement pass leaves it alone.\n",
 		"`qctl describe table-rule <rule-id> --table-id 7`",
 		"Staged suggestions may change their filters or states",
-		"produced-field activation may enable a pending_validation rule after the retirement pass",
-		"Enabling it does not re-check its saved filter; fix or clear the filter first",
+		"produced-field activation moves a pending_validation rule whose filter reads a deleted\n" +
+			"  column to validation_failed instead of enabling it",
+		"an enable that leaves row_filter out is refused (422); fix or\n    clear the filter first",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("the warning is missing %q; got:\n%s", want, out)
@@ -221,7 +222,7 @@ func TestFormatRowFilterTypeWarning(t *testing.T) {
 		"may invalidate an operator or literal, or change a predicate's inputs",
 		"does not retire rules for a type change",
 		"validation_problem blocker on every row",
-		"Enabling a rule does not re-check its saved filter",
+		"An enable that leaves row_filter out is refused (422) while the saved filter",
 		"qctl table-rule test-filter <rule-id> --table-id 7",
 	} {
 		if !strings.Contains(out, want) {

@@ -395,7 +395,7 @@ func TestDeleteRedirectsConfirmationSuffix(t *testing.T) {
 			{"table", "qctl undelete table <id-or-name>" + suffix + "   #"},
 			{"rows", "qctl rows delete-quarantined <table-id-or-name> --status failed_validation --reason <reason>" + suffix + "\n"},
 			{"rows", "qctl rows send-to-quarantine <table-id-or-name> --row-id <id>" + suffix + "\n"},
-			{"rows", "qctl rows delete-quarantined <table-id-or-name> --signature <hex> --reason <reason>" + suffix + "\n"},
+			{"rows", "qctl rows delete-quarantined <table-id-or-name> --signature <hex> --exclude-from-future-uploads=<true|false> --reason <reason>" + suffix + "\n"},
 		} {
 			out, err := underRootCapturing(t, tc.arg, "--help")
 			if err != nil || !strings.Contains(out, tc.command) {

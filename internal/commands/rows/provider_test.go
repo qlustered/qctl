@@ -19,7 +19,7 @@ func TestThirdPartyRowRoutes(t *testing.T) {
 		verb, path, response, bodyPart, query string
 		flags                                 []string
 	}{
-		{"delete-quarantined", "datasets/42/delete-rows", `{"affected_rows":1}`, testSignatureBody, "is_bad_data=true", []string{"--signature", "deadbeef", "--reason", testReason}},
+		{"delete-quarantined", "datasets/42/delete-rows", `{"affected_rows":1}`, testSignatureBody, "is_bad_data=true", []string{"--signature", "deadbeef", "--exclude-from-future-uploads", "--reason", testReason}},
 		{"delete-quarantined", "datasets/42/delete-rows", `{"affected_rows":1}`, testStatusBody, "is_bad_data=true&quarantine_status=on_hold", []string{"--status", "on_hold", "--reason", testReason}},
 		{"delete-quarantined", "datasets/42/delete-all-bad-rows", `{"affected_rows":1}`, testCommentBody, "", []string{"--all", "--reason", testReason}},
 		{"send-to-quarantine", "datasets/42/move-rows-to-quarantine", `{"moved":1}`, `"quarantine_hold":"hold"`, "", []string{"--row-id", "7"}},
@@ -34,7 +34,7 @@ func TestThirdPartyRowRoutes(t *testing.T) {
 		{"search-replace", "datasets/42/search-and-replace", `{"matched_rows":1,"replaced_rows":1}`, `"dry_run":false`, "", []string{"--search", "old", "--replace", "new"}},
 		{"set-cell", "datasets/42/modify-clean-cell", `{"result":"ok"}`, `"new_value":"CA"`, "", []string{"--row-id", "7", "--field", "state", "--value", "CA"}},
 		{"check-unique", "datasets/42/check-column-uniqueness", `{"is_unique":true,"reason":null}`, `"columns":["order_id"]`, "", []string{"--column", "order_id"}},
-		{"delete-quarantined", "data-sources/7/delete-rows", `{"result":"ok"}`, testSignatureBody, "dataset_id=42&is_bad_data=true", []string{"--cloud-source-id", "7", "--signature", "deadbeef", "--reason", testReason}},
+		{"delete-quarantined", "data-sources/7/delete-rows", `{"result":"ok"}`, testSignatureBody, "dataset_id=42&is_bad_data=true", []string{"--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads", "--reason", testReason}},
 		{"delete-quarantined", "data-sources/7/delete-all-bad-rows", `{"affected_rows":1}`, testCommentBody, "dataset_id=42", []string{"--cloud-source-id", "7", "--all", "--reason", testReason}},
 		{"reprocess-quarantined", "data-sources/7/reprocess-all-bad-rows", `{"affected_rows":1}`, "", "dataset_id=42", []string{"--cloud-source-id", "7", "--all"}},
 		{"hold", "data-sources/7/update-keep-in-quarantine", `{"affected_rows":1}`, `"quarantine_hold":"hold"`, "dataset_id=42", []string{"--cloud-source-id", "7", "--all"}},

@@ -46,6 +46,26 @@ during a wait ends the whole apply (exit 130) without applying the documents
 after it. A patch, a staged create, and a create that starts enabled or with
 no validation queued wait for nothing; --wait says so on stderr.
 
+A TableRuleTemplate must be the only document in its file and applies to the
+table --table <name> or --table-id <id> names; --table, --table-id and
+--resolutions are refused for any other kind. The apply previews the template
+as 'qctl diff -f' does. When no entry is created or replaced and no conflict
+waits, or --resolutions declines every one that is and none of them pairs
+with a table rule, it prints "Nothing to do" and exits 0. It then still
+applies the preview without asking, since that changes no rule, when a kept
+entry pairs with a table rule, so the merge records that entry's lineage;
+it skips that apply,
+with a note, while a kept entry was edited on the table, and a refused one is
+a note. A conflict with no resolution, or an apply blocker on the
+preview, exits 2 with nothing applied (a draft_migration blocker only while
+an entry the apply creates has produced fields): set the column_mapping keys
+it prints in the template, or pass a RuleMergeResolution document with
+--resolutions. Skipped entries print their
+next step and never block the rest. With --wait, applied exits 0 and
+partially_applied or failed 1; when all the merge still waits on is the review
+of a draft migration, the wait stops, names the needs_review_migration alert
+and exits 0. Applying a template records no approval.
+
 Examples:
   # Generic apply (infers kind from file)
   qctl apply -f table.yaml
@@ -63,6 +83,9 @@ Examples:
 
   # Create table rules and wait for each one's validation dry run
   qctl apply -f table-rule.yaml --yes --wait
+
+  # Attach or upgrade a rule template's rules on table 42 and wait
+  qctl apply -f rule-template.yaml --table-id 42 --yes --wait
 
 First time instantiating a rule on a table? Run:
   qctl guide instantiate-rule`, applyKindsLine())
@@ -90,7 +113,9 @@ First time instantiating a rule on a table? Run:
 	// -f file, and every -f file may hold several documents.
 	cmd.PersistentFlags().Bool("fail-fast", false, "Stop processing on first document failure")
 	cmd.Flags().Bool("validate-only", false, "Validate the manifest server-side without persisting (linked tables only; a file holding another kind is refused)")
-	cmdutil.AddWaitFlags(cmd, "a linked table's composite dry run, or the validation of a table rule the file creates, to settle")
+	cmdutil.AddWaitFlags(cmd, "a linked table's composite dry run, the validation of a table rule the file creates, or a rule template's rule merge, to settle")
+	cmdutil.AddTableFlags(cmd, "TableRuleTemplate target table")
+	cmd.Flags().String("resolutions", "", `RuleMergeResolution document resolving a TableRuleTemplate's conflicts ("-" reads stdin; kind TableRuleTemplate only)`)
 	cmd.PersistentFlags().BoolP("yes", "y", false, "Skip interactive confirmation prompts (for scripted/non-interactive use)")
 
 	// Add subcommands

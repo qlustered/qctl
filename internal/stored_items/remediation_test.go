@@ -68,7 +68,7 @@ func TestStoredItemDeleteRows_SendsCommentAndCarriesTheCount(t *testing.T) {
 	c, mock := newSIClient(t)
 	got := recordJSON(t, mock, http.StatusOK, `{"result":"ok","affected_rows":2,"unmatched_signatures":[],"not_excluded_signatures":[]}`)
 
-	res, err := c.DeleteRows("tok", 3, []string{"deadbeef", "cafe"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 3, []string{"deadbeef", "cafe"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -78,7 +78,7 @@ func TestStoredItemDeleteRows_SendsCommentAndCarriesTheCount(t *testing.T) {
 	if got.query != "is_bad_data=true" {
 		t.Errorf("query = %q, want %q", got.query, "is_bad_data=true")
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":["deadbeef","cafe"]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":true,"signatures":["deadbeef","cafe"]}` {
 		t.Errorf("body = %q, want the signature list and the comment", body)
 	}
 }
@@ -88,7 +88,7 @@ func TestStoredItemDeleteRows_NoCountStaysNil(t *testing.T) {
 	c, mock := newSIClient(t)
 	recordJSON(t, mock, http.StatusOK, `{"result":"ok"}`)
 
-	res, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -104,7 +104,7 @@ func TestStoredItemDeleteRows_CleanPopulationSendsIsBadDataFalse(t *testing.T) {
 	c, mock := newSIClient(t)
 	got := recordJSON(t, mock, http.StatusOK, `{"result":"ok"}`)
 
-	if _, err := c.DeleteRows("tok", 3, []string{"beef"}, false, nil, "dupes"); err != nil {
+	if _, err := c.DeleteRows("tok", 3, []string{"beef"}, false, nil, &excludeTrue, "dupes"); err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
 	if got.query != "is_bad_data=false" {
@@ -119,10 +119,10 @@ func TestStoredItemDeleteRows_NilSignaturesSendsEmptyListNotNull(t *testing.T) {
 	c, mock := newSIClient(t)
 	got := recordJSON(t, mock, http.StatusOK, `{"result":"ok"}`)
 
-	if _, err := c.DeleteRows("tok", 3, nil, true, nil, "dupes"); err != nil {
+	if _, err := c.DeleteRows("tok", 3, nil, true, nil, nil, "dupes"); err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":[]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":null,"signatures":[]}` {
 		t.Errorf("body = %q, want an empty signature list — a nil slice marshals to null and the backend rejects it", body)
 	}
 }
@@ -137,7 +137,7 @@ func TestStoredItemDeleteRows_ConflictExitsTwo(t *testing.T) {
 	recordJSON(t, mock, http.StatusConflict,
 		`{"detail":{"msg":"An ingestion is already running for this file.","error_code":"INGESTION_IN_PROGRESS"}}`)
 
-	_, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, "dupes")
+	_, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, &excludeTrue, "dupes")
 	if err == nil {
 		t.Fatal("expected an error")
 	}
@@ -168,7 +168,7 @@ func TestStoredItemDeleteRows_ValidationErrorKeepsCodeAndContext(t *testing.T) {
 	recordJSON(t, mock, http.StatusUnprocessableEntity,
 		`{"detail":{"msg":"This file has not been ingested.","error_code":"INVALID_ROW_STATE","context":{"reason":"file_not_ingested"}}}`)
 
-	_, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, "dupes")
+	_, err := c.DeleteRows("tok", 3, []string{"beef"}, true, nil, &excludeTrue, "dupes")
 	if err == nil {
 		t.Fatal("expected an error")
 	}
@@ -197,7 +197,7 @@ func TestStoredItemDeleteRows_CarriesUnmatchedAndNotExcluded(t *testing.T) {
 	recordJSON(t, mock, http.StatusOK,
 		`{"result":"ok","affected_rows":1,"unmatched_signatures":["cafe"],"not_excluded_signatures":["beef"]}`)
 
-	res, err := c.DeleteRows("tok", 3, []string{"beef", "cafe"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 3, []string{"beef", "cafe"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -208,3 +208,7 @@ func TestStoredItemDeleteRows_CarriesUnmatchedAndNotExcluded(t *testing.T) {
 		t.Errorf("NotExcludedSignatures = %v", res.NotExcludedSignatures)
 	}
 }
+
+// excludeTrue is the exclude_from_future_uploads value the signature deletes
+// above send.
+var excludeTrue = true

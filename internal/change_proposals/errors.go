@@ -3,6 +3,7 @@ package change_proposals //nolint:revive // Established package-path style in th
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/qlustered/qctl/internal/client"
@@ -61,7 +62,12 @@ func Explain(err error) error {
 		if len(ids) == 0 {
 			return err
 		}
-		b.WriteString("another live proposal holds the issue; withdraw it, or wait for its decision:")
+		if rows := contextInts(apiErr.Context["row_ids"]); len(rows) > 0 {
+			fmt.Fprintf(&b, "another live proposal holds the issue, or its rows %s; withdraw it, or wait for its decision:",
+				strings.Join(rows, ", "))
+		} else {
+			b.WriteString("another live proposal holds the issue; withdraw it, or wait for its decision:")
+		}
 		for _, id := range ids {
 			fmt.Fprintf(&b, "\n  qctl describe change-proposal %s", terminal.Sanitize(id))
 		}
@@ -103,6 +109,23 @@ func contextStrings(v interface{}) []string {
 	for _, item := range items {
 		if s, ok := item.(string); ok && s != "" {
 			out = append(out, s)
+		}
+	}
+	return out
+}
+
+// contextInts returns the whole numbers of a JSON array as decimal text.
+func contextInts(v interface{}) []string {
+	items, _ := v.([]interface{})
+	out := make([]string, 0, len(items))
+	for _, item := range items {
+		switch n := item.(type) {
+		case int64:
+			out = append(out, strconv.FormatInt(n, 10))
+		case float64:
+			if n == float64(int64(n)) {
+				out = append(out, strconv.FormatInt(int64(n), 10))
+			}
 		}
 	}
 	return out

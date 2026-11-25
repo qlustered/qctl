@@ -34,9 +34,10 @@ func TestGuideQuoteTableRuleMultiDocInstantiate(t *testing.T) {
 	generated := []struct {
 		name, id string
 		mapping  map[string]string
+		source   api.RuleFieldBindingSource
 	}{
-		{"Pickup Before Destination", "283e9b44-1835-4b69-8417-2be0386493cc", map[string]string{"actual_start": "actual_start", "actual_end": "actual_end"}},
-		{"Vehicle Not Ancient", "9c1f0e22-77a4-4c8e-9f31-6b2d4e7a1f05", map[string]string{"value": "vehicle_year"}},
+		{"Pickup Before Destination", "283e9b44-1835-4b69-8417-2be0386493cc", map[string]string{"actual_start": "actual_start", "actual_end": "actual_end"}, api.RuleFieldBindingSourceOriginalName},
+		{"Vehicle Not Ancient", "9c1f0e22-77a4-4c8e-9f31-6b2d4e7a1f05", map[string]string{"value": "vehicle_year"}, api.RuleFieldBindingSourceConcept},
 	}
 	posts := 0
 	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/instantiate", func(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +56,11 @@ func TestGuideQuoteTableRuleMultiDocInstantiate(t *testing.T) {
 		queued := api.ValidationEvidenceKindQueued
 		created.ValidationState = &queued
 		created.ColumnMappingDict = rule.mapping
+		bindings := []api.RuleFieldBindingSchema{}
+		for field, column := range rule.mapping {
+			bindings = append(bindings, api.RuleFieldBindingSchema{RuleFieldName: field, Required: true, Status: api.Bound, BoundTo: &column, Source: &rule.source})
+		}
+		created.FieldBindings = &bindings
 		testutil.RespondJSON(w, http.StatusCreated, created)
 	})
 

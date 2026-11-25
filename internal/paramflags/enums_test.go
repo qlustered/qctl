@@ -303,7 +303,7 @@ func TestEveryBadDataOnlyFlagRequiresIsBadData(t *testing.T) {
 		{"awaiting-processing", "false"},
 		{"dataset-rule-ids", "550e8400-e29b-41d4-a716-446655440000"},
 		{"include-dataset-rule-ids", "true"},
-		{"review-status", string(api.Accepted)},
+		{"review-status", string(api.ReviewStatusFilterAccepted)},
 		{"review-group-id", "550e8400-e29b-41d4-a716-446655440000"},
 		{"review-change-history-id", "17"},
 		{"held-for-approval", "false"}, // false selects every other row, and atlas refuses it too
@@ -350,7 +350,7 @@ func TestBadDataOnlyPairingAcceptsEveryFlagWithIsBadData(t *testing.T) {
 		"awaiting-processing":      "true",
 		"dataset-rule-ids":         "550e8400-e29b-41d4-a716-446655440000",
 		"include-dataset-rule-ids": "true",
-		"review-status":            string(api.AwaitingDecision),
+		"review-status":            string(api.ReviewStatusFilterAwaitingDecision),
 		"review-group-id":          "550e8400-e29b-41d4-a716-446655440000",
 		"review-change-history-id": "17",
 		"held-for-approval":        "true",

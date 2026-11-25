@@ -24,6 +24,9 @@ const WarningResolutionKind = "WarningResolution"
 var warningResolutionFieldDenylist = map[string]bool{
 	// action is the spec's own required key, handled outside the field map.
 	"action": true,
+	// comment_thread_id must name a thread whose target is this warning (any
+	// other is a 422), and no qctl command creates such a thread.
+	"comment_thread_id": true,
 }
 
 // WarningResolutionSpec mirrors api.WarningsResolveSchema. It is deliberately
@@ -126,9 +129,9 @@ func (s WarningResolutionSpec) ToRequest() api.WarningsResolveSchema {
 }
 
 // Skeleton renders the manifest for one action of one warning: an envelope, the
-// action, its required and one-of keys emitted BARE, its optional keys
-// commented out, and a comment block carrying everything the warning already
-// knows. It is the warning half of alerts.Skeleton — see that copy for why
+// action, its required and one-of keys emitted BARE, the optional keys a
+// manifest can set commented out, and a comment block carrying everything the
+// warning already knows. It is the warning half of alerts.Skeleton — see that copy for why
 // nothing is guessed, why the required keys are emitted bare, and why every
 // warning-derived string in the comment block goes through
 // pkgmanifest.CommentSafe while spec.action does not.
@@ -178,6 +181,9 @@ func skeleton(w *WarningFull, action, next string) string {
 		}
 	}
 	for _, name := range fields.Optional {
+		if warningResolutionFieldDenylist[name] {
+			continue
+		}
 		fmt.Fprintf(&b, "  # %s:\n", name)
 	}
 	if fields.Note != "" {

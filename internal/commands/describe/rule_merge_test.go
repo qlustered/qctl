@@ -236,6 +236,51 @@ func TestDescribeRuleMerge_FailedSourceTableLookupShowsItsID(t *testing.T) {
 	}
 }
 
+// rmDescribeTemplateFixture is a previewed rule template merge into table 42:
+// no source table, and an upgrade of the target's rule.
+const rmDescribeTemplateFixture = `{
+  "id": 5, "state": "previewed", "summary": null, "source_dataset_id": null,
+  "template_name": "monthly-orders", "target_dataset_id": 42, "created_at": "2026-09-25T10:00:00Z",
+  "apply_blockers": [{"code": "merge_applying", "message": "Another rule merge is applying."}],
+  "items": [
+    {"id": 21, "action": "replaced", "reason": null, "template_key": "Range Check",
+     "source_object_id": null, "target_object_id": "` + rmDescribeTargetRule + `", "conflict_choice": null, "note": null,
+     "rule_snapshot": {"rule_revision_id": "r2", "params": {}, "severity": "warning", "state": "enabled",
+       "column_mapping": {"value": "amount"}, "produced_fields": []},
+     "base_snapshot": null,
+     "target_snapshot": {"rule_revision_id": "r1", "params": {}, "severity": "warning", "state": "enabled",
+       "column_mapping": {"value": "amount"}, "produced_fields": []},
+     "source_changes": null, "target_changes": null, "candidate_object_ids": [], "added_field_names": [],
+     "field_bindings": [{"rule_field_name": "value", "required": true, "status": "bound", "bound_to": "amount",
+       "source": "inherited", "candidates": []}],
+     "effects": []}
+  ]
+}`
+
+// describe rule-merge renders a rule template merge as one: the template as
+// its source, its blockers, and its items' bindings.
+func TestDescribeRuleMerge_TemplateMerge(t *testing.T) {
+	mock, _ := newRuleMergeDescribeEnv(t)
+	mock.RegisterHandler("GET", rmDescribeMergePath(), func(w http.ResponseWriter, _ *http.Request) {
+		testutil.RespondJSON(w, http.StatusOK, json.RawMessage(rmDescribeTemplateFixture))
+	})
+	out, err := runRuleMergeDescribe(t, "5", "--table-id", "42")
+	if err != nil {
+		t.Fatalf("describe: %v\n%s", err, out)
+	}
+	for _, want := range []string{
+		"Rule merge 5: rule template monthly-orders -> orders (id 42)\n",
+		"\nAPPLY BLOCKERS\n  merge_applying: Another rule merge is applying.\n",
+		"\nItem 21: Range Check\n  Action:      replaced\n  Table rule:  range_check (" +
+			rule_versions.ShortID(rmDescribeTargetRule) + ")\n",
+		"    value -> amount (inherited)\n",
+	} {
+		if !strings.Contains(out, want) {
+			t.Errorf("output lacks %q\n%s", want, out)
+		}
+	}
+}
+
 func TestDescribeRuleMerge_BadUsageMakesNoRequest(t *testing.T) {
 	cases := map[string][]string{
 		"no table":        {"5"},

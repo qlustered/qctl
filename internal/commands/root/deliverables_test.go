@@ -24,7 +24,9 @@ const liveDeliverableRecord = `{
   "id":"c0ffee01-2222-4333-8444-555555555555",
   "organization_id":"550e8400-e29b-41d4-a716-446655440000",
   "name":"Monthly bordereau", "slug":"monthly-bordereau", "receiver_label":"Acme Re",
-  "filename_pattern":"bordereau-{period}.xlsx", "period_param":"period", "archived_at":null,
+  "filename_pattern":"bordereau-{period}.xlsx", "period_param":"period", "due_days":5,
+  "due_warnings":["Monthly bordereau is due 5 day(s) after the period ends, before the broker due date of Claims (10 day(s) after the period ends): the sender's file would arrive too late."],
+  "archived_at":null,
   "enabled_revision_id":"e1e1e1e1-2222-4333-8444-777777777777",
   "created_at":"2026-08-01T12:00:00Z", "updated_at":"2026-10-01T12:00:00Z"
 }`
@@ -33,7 +35,8 @@ const trashedDeliverableRecord = `{
   "id":"5ca1ab1e-2222-4333-8444-666666666666",
   "organization_id":"550e8400-e29b-41d4-a716-446655440000",
   "name":"Weekly claims", "slug":"weekly-claims", "receiver_label":"",
-  "filename_pattern":"claims.xlsx", "period_param":null, "archived_at":"2026-10-02T12:00:00Z",
+  "filename_pattern":"claims.xlsx", "period_param":null, "due_days":null, "due_warnings":[],
+  "archived_at":"2026-10-02T12:00:00Z",
   "enabled_revision_id":null,
   "created_at":"2026-07-01T12:00:00Z", "updated_at":"2026-10-02T12:00:00Z"
 }`
@@ -108,7 +111,7 @@ func newDeliverableTestServer(t *testing.T) *deliverableTestServer {
 	s := &deliverableTestServer{MockAPIServer: mock}
 	carrierPack := func(id, slug string, archivedAt any) map[string]any {
 		return map[string]any{"id": id, "name": "Carrier pack", "slug": slug, "receiver_label": "",
-			"filename_pattern": "pack.xlsx", "period_param": nil, "archived_at": archivedAt,
+			"filename_pattern": "pack.xlsx", "period_param": nil, "due_days": nil, "archived_at": archivedAt,
 			"enabled_revision_id": nil, "created_at": "2026-06-01T12:00:00Z",
 			"updated_at": "2026-06-01T12:00:00Z", "latest_run": nil}
 	}
@@ -174,7 +177,7 @@ func answerRevisionTree(t *testing.T, mock *testutil.MockAPIServer, id, tree str
 }
 
 // deliverableListItem is record as a ListDeliverables item: no
-// organization_id, and a latest_run summary.
+// organization_id or due_warnings, and a latest_run summary.
 func deliverableListItem(t *testing.T, record string, latestRun any) map[string]any {
 	t.Helper()
 	var item map[string]any
@@ -182,6 +185,7 @@ func deliverableListItem(t *testing.T, record string, latestRun any) map[string]
 		t.Fatal(err)
 	}
 	delete(item, "organization_id")
+	delete(item, "due_warnings")
 	item["latest_run"] = latestRun
 	return item
 }

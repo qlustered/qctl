@@ -281,8 +281,8 @@ func TestGetWarningsMarksACappedCount(t *testing.T) {
 	we := newWarningsEnv(t)
 	capped := true
 	results := []warnings.WarningTiny{
-		{ID: 1, DatasetID: "10", DatasetName: "orders", IssueType: api.Anomaly, Msg: "odd", Count: 1000, CountCapped: &capped},
-		{ID: 2, DatasetID: "10", DatasetName: "orders", IssueType: api.Anomaly, Msg: "odd", Count: 7},
+		{ID: 1, DatasetID: "10", DatasetName: "orders", IssueType: api.IssueTypeEnumAnomaly, Msg: "odd", Count: 1000, CountCapped: &capped},
+		{ID: 2, DatasetID: "10", DatasetName: "orders", IssueType: api.IssueTypeEnumAnomaly, Msg: "odd", Count: 7},
 	}
 	we.mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/warnings", func(w http.ResponseWriter, _ *http.Request) {
 		total, page := len(results), 1
@@ -434,9 +434,9 @@ func TestWarningIssueTypeCompletion(t *testing.T) {
 func TestGetWarningsImpactAndWhodunitColumns(t *testing.T) {
 	we := newWarningsEnv(t)
 	results := []warnings.WarningTiny{
-		{ID: 1, DatasetID: "10", DatasetName: "orders", IssueType: api.UserSubmitted, Msg: "check", Count: 1, ImpactScore: 1875.25,
+		{ID: 1, DatasetID: "10", DatasetName: "orders", IssueType: api.IssueTypeEnumUserSubmitted, Msg: "check", Count: 1, ImpactScore: 1875.25,
 			Whodunit: &api.UserInfoTinySchema{FirstName: "Dana", LastName: "Ray", Email: "dana@example.com"}},
-		{ID: 2, DatasetID: "10", DatasetName: "orders", IssueType: api.Anomaly, Msg: "odd", Count: 7, ImpactScore: 0},
+		{ID: 2, DatasetID: "10", DatasetName: "orders", IssueType: api.IssueTypeEnumAnomaly, Msg: "odd", Count: 7, ImpactScore: 0},
 	}
 	we.mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/warnings", func(w http.ResponseWriter, _ *http.Request) {
 		testutil.RespondJSON(w, http.StatusOK, warnings.WarningsListResponse{

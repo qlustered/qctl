@@ -2,6 +2,7 @@ package submissions
 
 import (
 	"bytes"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -74,7 +75,7 @@ func TestRowsTimes(t *testing.T) {
 // An on_hold or received_not_loaded row names its unloaded file; any other
 // row names its newest file, even when an unloaded one is attached.
 func TestRowsFile(t *testing.T) {
-	unloaded := &api.SubmissionNotLoadedFileSchema{StoredItemID: 2, FileName: "held.csv"}
+	unloaded := &api.SubmissionBoardNotLoadedFileSchema{StoredItemID: 2, FileName: "held.csv"}
 	latest := &api.SubmissionBoardFileSchema{StoredItemID: 1, FileName: "latest.csv"}
 	for _, tc := range []struct {
 		status api.SubmissionBoardStatus
@@ -91,6 +92,36 @@ func TestRowsFile(t *testing.T) {
 	}
 	if row := Rows([]Row{{BoardStatus: api.SubmissionBoardStatusExpected}})[0]; row.File != none || row.FileID != none {
 		t.Errorf("no file: File %q, FileID %q", row.File, row.FileID)
+	}
+}
+
+// A row on hold for a file waiting for its period names that file, its alert
+// and its hold reason, over any other file that has not loaded.
+func TestRowsWaitingFile(t *testing.T) {
+	alert, other := 77, 66
+	waiting := &api.SubmissionBoardNotLoadedFileSchema{StoredItemID: 3, FileName: "which-month.csv",
+		AlertItemID: &alert, IsOnHold: true, HoldReasons: []string{"waiting_for_period"}}
+	notLoaded := &api.SubmissionBoardNotLoadedFileSchema{StoredItemID: 2, FileName: "held.csv", AlertItemID: &other}
+	for _, tc := range []struct {
+		name string
+		row  Row
+	}{
+		{"expected", Row{BoardStatus: api.SubmissionBoardStatusOnHold, Status: api.SubmissionStatusExpected,
+			WaitingFile: waiting}},
+		{"received_not_loaded", Row{BoardStatus: api.SubmissionBoardStatusOnHold,
+			Status: api.SubmissionStatusReceivedNotLoaded, WaitingFile: waiting, NotLoadedFile: notLoaded}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			row := Rows([]Row{tc.row})[0]
+			got := []string{row.File, row.FileID, row.AlertID, row.HoldReasons}
+			want := []string{"which-month.csv", "3", "77", "waiting_for_period"}
+			if !reflect.DeepEqual(got, want) {
+				t.Errorf("file, id, alert, hold reasons = %v, want %v", got, want)
+			}
+			if ids := AlertIDs([]Row{tc.row}); !reflect.DeepEqual(ids, []int{77}) {
+				t.Errorf("AlertIDs = %v, want [77]", ids)
+			}
+		})
 	}
 }
 
@@ -125,6 +156,11 @@ func TestStatusLine(t *testing.T) {
 			Status:        api.SubmissionStatusReceivedNotLoaded,
 			NotLoadedFile: &api.SubmissionNotLoadedFileSchema{FileName: "bdx\x1b.csv"},
 		}, `cloud-source/42 period "2026-09" (2026-09-01 to 2026-09-30): received_not_loaded, file "bdx\\x1b.csv" not loaded, no table`},
+		{"waiting for its period", PeriodStatus{
+			DataSourceModelID: 42, PeriodKey: "2026-09", PeriodStart: start, PeriodEnd: end,
+			Status: api.SubmissionStatusExpected, DatasetID: &table,
+			WaitingFile: &api.SubmissionNotLoadedFileSchema{FileName: "which-month.csv"},
+		}, `cloud-source/42 period "2026-09" (2026-09-01 to 2026-09-30): expected, file "which-month.csv" waiting for its period, table 314`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := StatusLine(&tc.status); got != tc.want {

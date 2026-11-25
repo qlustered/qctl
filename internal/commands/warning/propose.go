@@ -33,9 +33,11 @@ field contract before sending anything, as resolve does.
   qctl warning propose -f fix.yaml --also-warning 56
 
 The proposal is submitted for review unless you pass --draft. A submitted
-proposal holds the warning and every --also-alert/--also-warning issue:
-another proposal naming one of them is refused with 409
-CHANGE_PROPOSAL_ACTIVE, and qctl names the holder. A file of several documents
+proposal holds the warning and every --also-alert/--also-warning issue, except
+that an ignore_rule_for_row, overwrite_value or overwrite_rule_outputs payload
+naming ids holds only those rows of the warning: another proposal naming a
+held issue or row is refused with 409 CHANGE_PROPOSAL_ACTIVE, and qctl names
+the holder. A file of several documents
 makes one proposal per document, so --also-alert and --also-warning need a
 file of one.
 

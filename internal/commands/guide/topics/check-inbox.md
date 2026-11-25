@@ -22,8 +22,9 @@ something: mentions, rule- and data-review requests and assignments, a file
 ready to download (an older server counts that one in `total_unread` only),
 and `email_undeliverable`, `series_escalation`, `support_request`,
 `change_proposal_submitted`, `pii_access_requested`,
-`series_rule_approval_stale` and `file_needs_decision` on servers that send
-them; a `file_needs_decision` counts only while its alert is unresolved.
+`series_rule_approval_stale`, `series_rule_approval_requested`,
+`deliverable_at_risk`, `issues_report_counts_changed` and
+`file_needs_decision` on servers that send them; a `file_needs_decision` counts only while its alert is unresolved.
 `corrections_not_carried`, `quarantined_rows`, `comment_reply`,
 `problem_on_our_side`, `period_summary`, `file_not_loaded`,
 `change_proposal_decided`, `change_proposal_execution_failed`,
@@ -45,8 +46,9 @@ add `review_assigned`, `data_review_requested`, `data_review_assigned`,
 `data_review_group_assigned`, `file_ready_to_download`,
 `email_undeliverable`, `series_escalation`, `support_request`,
 `change_proposal_submitted`, `pii_access_requested`,
-`series_rule_approval_stale` and `file_needs_decision` to the two above to
-cover the `needs_you` types.
+`series_rule_approval_stale`, `series_rule_approval_requested`,
+`deliverable_at_risk`, `issues_report_counts_changed` and
+`file_needs_decision` to the two above to cover the `needs_you` types.
 
 ## Act on it
 

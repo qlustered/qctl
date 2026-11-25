@@ -172,7 +172,7 @@ func TestFormatProducedColumnWarning(t *testing.T) {
 		`premium\x1b[31m (type, args): produced by rule enrich\x1b[31m (` + producerID + ")",
 		"flag (is_deleted): produced by rule " + secondProducerID + "\n",
 		"409",
-		"pending_validation",
+		"moves a pending_validation rule to validation_failed",
 		"does not read args",
 		"`qctl describe table-rule <rule-id> --table-id 7`",
 	} {

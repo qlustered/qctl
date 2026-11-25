@@ -750,10 +750,10 @@ func FormatProducedColumnWarning(edits []ProducedColumnEdit, ruleNames map[strin
 	}
 	b.WriteString("  A produced column left deleted, or retyped to a type the rule's declaration does not\n")
 	b.WriteString("  accept, fails the rule's enable check with a 409: enabling the rule is refused, applying\n")
-	b.WriteString("  this migration leaves a pending_validation rule unenabled, and an enabled rule has changes\n")
-	b.WriteString("  to its produced fields or column mapping refused. The check does not read args, so a\n")
-	fmt.Fprintf(&b, "  resize passes it. `qctl describe table-rule <rule-id> --table-id %d` shows what a rule\n", datasetID)
-	b.WriteString("  declares.\n\n")
+	b.WriteString("  this migration moves a pending_validation rule to validation_failed, and an enabled rule\n")
+	b.WriteString("  has changes to its produced fields or column mapping refused.\n")
+	b.WriteString("  The check does not read args, so a resize passes it.\n")
+	fmt.Fprintf(&b, "  `qctl describe table-rule <rule-id> --table-id %d` shows what a rule declares.\n\n", datasetID)
 	// Column and rule names are the server's, printed straight to a terminal.
 	return terminal.Sanitize(b.String())
 }
@@ -850,7 +850,8 @@ func FormatRowFilterColumnWarning(rules []FilterColumnRule, datasetID int) strin
 			"    alone; if this rule stays enabled with this filter, every row it meets gets a\n" +
 			"    validation_problem blocker.\n"
 		notEnabledFate = "    The rule is not enabled, so the stale-column retirement pass leaves it alone.\n" +
-			"    Enabling it does not re-check its saved filter; fix or clear the filter first.\n"
+			"    After the migration, an enable that leaves row_filter out is refused (422); fix or\n" +
+			"    clear the filter first.\n"
 	)
 	var b strings.Builder
 	b.WriteString("Warning: this migration deletes column(s) a row filter reads, and the schema route does not check that:\n")
@@ -874,7 +875,8 @@ func FormatRowFilterColumnWarning(rules []FilterColumnRule, datasetID int) strin
 		b.WriteString(fate)
 	}
 	b.WriteString("  This preview reads live rules. Staged suggestions may change their filters or states;\n" +
-		"  produced-field activation may enable a pending_validation rule after the retirement pass.\n")
+		"  produced-field activation moves a pending_validation rule whose filter reads a deleted\n" +
+		"  column to validation_failed instead of enabling it.\n")
 	fmt.Fprintf(&b, "  `qctl describe table-rule <rule-id> --table-id %d` shows a rule's row filter.\n\n", datasetID)
 	// Column and rule names are the server's, printed straight to a terminal.
 	return terminal.Sanitize(b.String())

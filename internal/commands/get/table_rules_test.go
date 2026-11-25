@@ -431,6 +431,10 @@ func TestGetTableRulesCommand_StructuredItemsAreRaw(t *testing.T) {
 	rule.ValidationState = &validation
 	rule.PendingMigrationModelID = &migrationID
 	rule.SchemaChangeBlocksEnable = false
+	rule.ValidationBlocksEnable = true
+	newest := "2.0.0"
+	rule.NewerReleaseAvailable = true
+	rule.NewestRelease = &newest
 	rule.CreatedByUser = &api.UserInfoTinyDictSchema{Email: "author@example.com"}
 	description, value := "  Completed bookings  ", "completed"
 	rule.RowFilter = &api.RowFilter{
@@ -448,8 +452,9 @@ func TestGetTableRulesCommand_StructuredItemsAreRaw(t *testing.T) {
 	}
 	wantKeys := []string{
 		"created_at", "created_by_user", "dataset_columns", "family_id", "family_name",
-		"has_multiple_releases", "id", "instance_name", "pending_migration_model_id", "position", "release",
-		"row_filter", "rule_revision_id", "schema_change_blocks_enable", "severity", "state", "updated_at", "validation_state",
+		"has_multiple_releases", "id", "instance_name", "newer_release_available", "newest_release", "newest_revision_id",
+		"pending_migration_model_id", "position", "release", "row_filter", "rule_revision_id", "schema_change_blocks_enable",
+		"severity", "state", "updated_at", "upgraded_from_id", "validation_blocks_enable", "validation_state",
 	}
 
 	for _, format := range []string{"json", "yaml"} {
@@ -491,6 +496,10 @@ func TestGetTableRulesCommand_StructuredItemsAreRaw(t *testing.T) {
 				"validation_state":            "passed",
 				"pending_migration_model_id":  float64(42),
 				"schema_change_blocks_enable": false,
+				"validation_blocks_enable":    true,
+				"newer_release_available":     true,
+				"newest_release":              "2.0.0",
+				"newest_revision_id":          nil,
 			} {
 				if item[key] != want {
 					t.Errorf("%s = %v, want %v", key, item[key], want)

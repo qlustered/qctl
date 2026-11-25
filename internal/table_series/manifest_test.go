@@ -216,3 +216,80 @@ func TestPrepareSwapParksOnAVacantKeyOfTheFrequency(t *testing.T) {
 		})
 	}
 }
+
+func TestPrepareRefusesWritesToALockedMember(t *testing.T) {
+	id, other := uuid.MustParse(testSeriesID), uuid.New()
+	locked := Member{SeriesID: id, DatasetID: 42, PeriodKey: "2026-01", IsLocked: true}
+	for _, tc := range []struct {
+		name    string
+		members []Member
+		spec    string
+	}{
+		{"swap listing the unlocked member first", []Member{locked, {SeriesID: id, DatasetID: 43, PeriodKey: "2026-02"}},
+			"  members:\n    - table: 43\n      period_key: 2026-01\n    - table: 42\n      period_key: 2026-02\n"},
+		{"re-key", []Member{locked}, "  members:\n    - table: 42\n      period_key: 2026-03\n"},
+		{"removal", []Member{locked, {SeriesID: id, DatasetID: 43, PeriodKey: "2026-02"}}, "  members:\n    - table: 43\n      period_key: 2026-02\n"},
+		{"removal of every member", []Member{locked}, "  members: []\n"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			series := []Series{{ID: id, Name: "Monthly", Members: tc.members}, {ID: other, Name: "Other", Members: []Member{}}}
+			err := prepareTestPlanError(t, series, tc.spec)
+			if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage {
+				t.Fatalf("exit = %d, error = %v", code, err)
+			}
+			if want := "table 42 is locked period \"2026-01\" of series \"Monthly\"; unlock it with `qctl table-series unlock " +
+				testSeriesID + " --period 2026-01`"; !strings.Contains(err.Error(), want) {
+				t.Fatalf("error = %v, want it to contain %q", err, want)
+			}
+		})
+	}
+	t.Run("move into another series", func(t *testing.T) {
+		series := []Series{{ID: other, Name: "Monthly", Members: []Member{}}, {ID: id, Name: "Quarterly", Members: []Member{locked}}}
+		err := prepareTestPlanError(t, series, "  members:\n    - table: 42\n      period_key: 2026-01\n")
+		if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage || !strings.Contains(err.Error(), `of series "Quarterly"`) {
+			t.Fatalf("exit = %d, error = %v", code, err)
+		}
+	})
+	t.Run("each locked member is named once", func(t *testing.T) {
+		members := []Member{locked, {SeriesID: id, DatasetID: 43, PeriodKey: "2026-02", IsLocked: true}}
+		err := prepareTestPlanError(t, []Series{{ID: id, Name: "Monthly", Members: members}},
+			"  members:\n    - table: 42\n      period_key: 2026-02\n    - table: 43\n      period_key: 2026-01\n")
+		if n42, n43 := strings.Count(err.Error(), "table 42 "), strings.Count(err.Error(), "table 43 "); n42 != 1 || n43 != 1 {
+			t.Fatalf("error = %v", err)
+		}
+	})
+}
+
+func TestPrepareLeavesAnUntouchedLockedMemberAlone(t *testing.T) {
+	id := uuid.MustParse(testSeriesID)
+	members := []Member{{SeriesID: id, DatasetID: 42, PeriodKey: "2026-01", IsLocked: true}, {SeriesID: id, DatasetID: 43, PeriodKey: "2026-02"}}
+	p := prepareTestPlan(t, []Series{{ID: id, Name: "Monthly", Members: members}},
+		"  members:\n    - table: 42\n      period_key: 2026-01\n    - table: 43\n      period_key: 2026-03\n    - table: 44\n      period_key: 2026-04\n")
+	for _, r := range p.Requests {
+		if r.DatasetID == 42 {
+			t.Fatalf("planned a write to the locked member: %#v", r)
+		}
+	}
+	if len(p.Requests) != 2 {
+		t.Fatalf("requests = %#v", p.Requests)
+	}
+}
+
+func prepareTestPlanError(t *testing.T, series []Series, spec string) error {
+	t.Helper()
+	m, err := ParseManifest([]byte(manifestHeader + spec))
+	if err != nil {
+		t.Fatal(err)
+	}
+	mock := testutil.NewMockAPIServer()
+	t.Cleanup(mock.Close)
+	mock.RegisterHandler("GET", testPath, func(w http.ResponseWriter, _ *http.Request) { testutil.RespondJSON(w, http.StatusOK, series) })
+	if _, err := NewClient(mock.URL(), testOrgID, 0).Prepare("token", m); err != nil {
+		if n := len(mock.Requests()); n != 1 {
+			t.Fatalf("%d requests before the refusal: %v", n, mock.Requests())
+		}
+		return err
+	}
+	t.Fatal("Prepare succeeded")
+	return nil
+}

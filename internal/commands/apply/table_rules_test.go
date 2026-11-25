@@ -651,69 +651,106 @@ func registerInstantiateMocks(t *testing.T, mock *testutil.MockAPIServer, revDet
 	registerInstantiateMocksFor(t, mock, testRuleRevID, revDetail, instantiateReq)
 }
 
-func TestApplyTableRuleInstantiate_OmittedColumnMappingDefaultsToIdentity(t *testing.T) {
-	env, mock := setupTableRuleApplyEnv(t)
-	defer env.Cleanup()
-	defer mock.Close()
-	confirmYes(t)
+// An omitted or empty column_mapping is not sent, so the server binds every
+// field; the outcome names each binding and its source.
+func TestApplyTableRuleInstantiate_OmittedColumnMappingIsLeftToTheServer(t *testing.T) {
+	for name, mapping := range map[string]string{"omitted": "", "empty": "  column_mapping: {}\n"} {
+		t.Run(name, func(t *testing.T) {
+			env, mock := setupTableRuleApplyEnv(t)
+			defer env.Cleanup()
+			defer mock.Close()
 
-	var instantiateReq api.InstantiateRuleRequestSchema
-	registerInstantiateMocks(t, mock, sampleRuleRevisionFull(nil), &instantiateReq)
+			revision := sampleRuleRevisionFull(nil)
+			revision.InputColumns = []string{"email", "name"}
+			revision.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{
+				boundCandidate("email", "email", api.RuleFieldBindingSourceOriginalName),
+				boundCandidate("name", "full_name", api.RuleFieldBindingSourceNormalized),
+			}
+			var request map[string]json.RawMessage
+			mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/details", func(w http.ResponseWriter, r *http.Request) {
+				testutil.RespondJSON(w, http.StatusOK, revision)
+			})
+			mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/instantiate", func(w http.ResponseWriter, r *http.Request) {
+				if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+					t.Fatal(err)
+				}
+				created := sampleDatasetRuleDetailForApply()
+				created.ColumnMappingDict = map[string]string{"email": "email", "name": "full_name"}
+				original, normalized := api.RuleFieldBindingSourceOriginalName, api.RuleFieldBindingSourceNormalized
+				email, fullName := "email", "full_name"
+				created.FieldBindings = &[]api.RuleFieldBindingSchema{
+					{RuleFieldName: "email", Required: true, Status: api.Bound, BoundTo: &email, Source: &original},
+					{RuleFieldName: "name", Required: true, Status: api.Bound, BoundTo: &fullName, Source: &normalized},
+				}
+				testutil.RespondJSON(w, http.StatusCreated, created)
+			})
 
-	manifest := `
+			manifest := `
 apiVersion: qluster.ai/v1
 kind: TableRule
 metadata: {}
 spec:
   rule_revision_id: ` + testRuleRevID + `
   dataset_id: 1
-`
-	manifestPath := env.CreateFile("table-rule-identity.yaml", manifest)
-	if _, err := execApply(t, manifestPath); err != nil {
-		t.Fatalf("expected no error, got: %v", err)
-	}
-	if got := (*instantiateReq.RuleColumnMapping)["email"]; got != "email" {
-		t.Errorf("expected identity mapping email -> email, got: %v", instantiateReq.RuleColumnMapping)
-	}
-}
-
-func TestApplyTableRuleInstantiate_EmptyColumnMappingDefaultsToIdentity(t *testing.T) {
-	env, mock := setupTableRuleApplyEnv(t)
-	defer env.Cleanup()
-	defer mock.Close()
-	confirmYes(t)
-
-	var instantiateReq api.InstantiateRuleRequestSchema
-	registerInstantiateMocks(t, mock, sampleRuleRevisionFull(nil), &instantiateReq)
-
-	manifest := `
-apiVersion: qluster.ai/v1
-kind: TableRule
-metadata: {}
-spec:
-  rule_revision_id: ` + testRuleRevID + `
-  dataset_id: 1
-  column_mapping: {}
-`
-	manifestPath := env.CreateFile("table-rule-empty-mapping.yaml", manifest)
-	if _, err := execApply(t, manifestPath); err != nil {
-		t.Fatalf("expected no error, got: %v", err)
-	}
-	if got := (*instantiateReq.RuleColumnMapping)["email"]; got != "email" {
-		t.Errorf("expected identity mapping email -> email, got: %v", instantiateReq.RuleColumnMapping)
+` + mapping
+			out, err := execApply(t, env.CreateFile("table-rule-no-mapping.yaml", manifest), "--yes")
+			if err != nil {
+				t.Fatalf("expected no error, got: %v", err)
+			}
+			if raw, sent := request["rule_column_mapping"]; sent && string(raw) != "null" {
+				t.Errorf("rule_column_mapping must be left to the server, sent %s", raw)
+			}
+			if want := "  bindings    : email -> email (original_name), name -> full_name (normalized)\n"; !strings.Contains(out, want) {
+				t.Errorf("output missing %q:\n%s", want, out)
+			}
+		})
 	}
 }
 
+// conceptCandidate is a required field's preview entry with the server's
+// verdict on columns carrying its concept: one binds, several are ambiguous,
+// none leave it unbound.
 func conceptCandidate(field, slug string, columns ...string) api.RuleFieldColumnCandidatesSchema {
 	candidate := api.RuleFieldColumnCandidatesSchema{
 		RuleFieldName:    field,
 		Concept:          &api.RuleRevisionConceptSchema{Slug: slug},
 		CandidateColumns: columns,
+		Required:         true,
+		Status:           api.Unbound,
 	}
-	if len(columns) == 1 {
+	switch len(columns) {
+	case 0:
+	case 1:
+		source := api.RuleFieldBindingSourceConcept
 		candidate.SuggestedColumn = &columns[0]
+		candidate.Status = api.Bound
+		candidate.BoundTo = &columns[0]
+		candidate.Source = &source
+	default:
+		candidate.Status = api.Ambiguous
+		for _, column := range columns {
+			candidate.Candidates = append(candidate.Candidates, api.RuleFieldColumnCandidateSchema{Column: column, Reason: "type ok; carries concept '" + slug + "'"})
+		}
 	}
 	return candidate
+}
+
+// boundCandidate is a preview entry binding field to column by source.
+func boundCandidate(field, column string, source api.RuleFieldBindingSource) api.RuleFieldColumnCandidatesSchema {
+	return api.RuleFieldColumnCandidatesSchema{
+		RuleFieldName: field, Required: true, Status: api.Bound, BoundTo: &column, Source: &source,
+	}
+}
+
+// unboundCandidate is a preview entry binding field to no column, offering
+// candidates as "column=reason" pairs.
+func unboundCandidate(field string, required bool, candidates ...string) api.RuleFieldColumnCandidatesSchema {
+	item := api.RuleFieldColumnCandidatesSchema{RuleFieldName: field, Required: required, Status: api.Unbound}
+	for _, pair := range candidates {
+		column, reason, _ := strings.Cut(pair, "=")
+		item.Candidates = append(item.Candidates, api.RuleFieldColumnCandidateSchema{Column: column, Reason: reason})
+	}
+	return item
 }
 
 func TestApplyTableRuleInstantiate_ConceptFillIsLeftToServerAndShown(t *testing.T) {
@@ -741,6 +778,12 @@ func TestApplyTableRuleInstantiate_ConceptFillIsLeftToServerAndShown(t *testing.
 		}
 		created := sampleDatasetRuleDetailForApply()
 		created.ColumnMappingDict = map[string]string{"email": "customer_email", "normalized_email": "email_clean"}
+		concept := api.RuleFieldBindingSourceConcept
+		customerEmail, emailClean := "customer_email", "email_clean"
+		created.FieldBindings = &[]api.RuleFieldBindingSchema{
+			{RuleFieldName: "email", Required: true, Status: api.Bound, BoundTo: &customerEmail, Source: &concept},
+			{RuleFieldName: "normalized_email", Required: true, Status: api.Bound, BoundTo: &emailClean, Source: &concept},
+		}
 		testutil.RespondJSON(w, http.StatusCreated, created)
 	})
 	path := env.CreateFile("concept-rule.yaml", tableRuleInstantiateDoc("email_check"))
@@ -752,9 +795,8 @@ func TestApplyTableRuleInstantiate_ConceptFillIsLeftToServerAndShown(t *testing.
 		t.Errorf("concept binding must be left to the server, request = %v", request)
 	}
 	for _, want := range []string{
-		"email -> customer_email (from standard field contact-email)",
-		"normalized_email -> email_clean (from standard field normalized-email)",
-		"mapping     : email -> customer_email, normalized_email -> email_clean",
+		"Column Mapping   : email -> customer_email (concept), normalized_email -> email_clean (concept)\n",
+		"  bindings    : email -> customer_email (concept), normalized_email -> email_clean (concept)\n",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("output missing %q: %s", want, out)
@@ -802,29 +844,129 @@ func TestApplyTableRuleInstantiate_ExplicitMappingMayOmitSuggestedInput(t *testi
 	if request.RuleColumnMapping == nil || len(*request.RuleColumnMapping) != 1 || (*request.RuleColumnMapping)["email"] != "customer_email" {
 		t.Errorf("request should contain only explicit binding: %v", request.RuleColumnMapping)
 	}
-	if !strings.Contains(out, "year -> model_year (from standard field vehicle-year)") {
-		t.Errorf("missing predicted fill: %s", out)
+	if want := "Column Mapping   : email -> customer_email (explicit), year -> model_year (concept)\n"; !strings.Contains(out, want) {
+		t.Errorf("confirmation missing %q: %s", want, out)
+	}
+	if want := "  bindings    : email -> customer_email (explicit)\n"; !strings.Contains(out, want) {
+		t.Errorf("outcome missing %q: %s", want, out)
 	}
 }
 
-func TestApplyTableRuleInstantiate_AmbiguousConceptDoesNotFillMissingInput(t *testing.T) {
+// unresolvedMappingBody is the server's 422 RULE_FIELD_MAPPING_UNRESOLVED
+// body carrying bindings.
+func unresolvedMappingBody(bindings ...map[string]interface{}) map[string]interface{} {
+	return map[string]interface{}{"detail": map[string]interface{}{
+		"msg":        "Could not map rule fields to table columns",
+		"error_code": "RULE_FIELD_MAPPING_UNRESOLVED",
+		"loc":        []string{"body", "rule_column_mapping"},
+		"context":    map[string]interface{}{"field_bindings": bindings},
+	}}
+}
+
+// An ambiguous field in the preview is left to the server, whose 422 names
+// the candidates and a column_mapping block to paste; the error exits 2.
+func TestApplyTableRuleInstantiate_AmbiguousFieldIsLeftToTheServer(t *testing.T) {
 	env, mock := setupTableRuleApplyEnv(t)
 	defer env.Cleanup()
 	defer mock.Close()
 	revision := sampleRuleRevisionFull(nil)
-	revision.InputColumns = []string{"email", "year"}
+	revision.InputColumns = []string{"email", "Purchase Time"}
 	revision.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{
-		conceptCandidate("year", "vehicle-year", "year_one", "year_two"),
+		conceptCandidate("Purchase Time", "timestamp", "created_at", "order_placed_at"),
 	}
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/details", func(w http.ResponseWriter, r *http.Request) {
+		testutil.RespondJSON(w, http.StatusOK, revision)
+	})
 	var request api.InstantiateRuleRequestSchema
-	registerInstantiateMocks(t, mock, revision, &request)
+	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/instantiate", func(w http.ResponseWriter, r *http.Request) {
+		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+			t.Fatal(err)
+		}
+		testutil.RespondJSON(w, http.StatusUnprocessableEntity, unresolvedMappingBody(
+			map[string]interface{}{
+				"rule_field_name": "Purchase Time", "required": true, "status": "ambiguous", "bound_to": nil, "source": nil,
+				"candidates": []map[string]string{
+					{"column": "order_placed_at", "reason": "type ok; carries concept 'timestamp'"},
+					{"column": "created_at", "reason": "type ok; carries concept 'timestamp'"},
+				},
+			},
+			map[string]interface{}{"rule_field_name": "note", "required": false, "status": "unbound", "bound_to": nil, "source": nil, "candidates": []interface{}{}},
+		))
+	})
 	manifest := tableRuleInstantiateDoc("email_check") + "  column_mapping:\n    email: customer_email\n"
-	_, err := execApply(t, env.CreateFile("ambiguous-concept-rule.yaml", manifest))
-	if err == nil || !strings.Contains(err.Error(), "missing: [year]") || qerrors.GetExitCode(err) != qerrors.ExitBadUsage {
-		t.Fatalf("ambiguous concept should leave the old exit-2 missing-input error, got %v", err)
+	_, err := execApply(t, env.CreateFile("ambiguous-concept-rule.yaml", manifest), "--yes")
+	if err == nil {
+		t.Fatal("expected the server's refusal")
+	}
+	if request.DatasetID != 1 {
+		t.Fatal("an ambiguous preview field must still reach the server")
+	}
+	if got := qerrors.GetExitCode(err); got != qerrors.ExitBadUsage {
+		t.Errorf("exit code = %d, want %d", got, qerrors.ExitBadUsage)
+	}
+	want := `Unresolved rule fields:
+  Purchase Time (required): ambiguous
+
+Add each to spec.column_mapping with a column of the table; the comments are the candidate columns, best first:
+
+  column_mapping:
+    Purchase Time:  # order_placed_at  (type ok; carries concept 'timestamp')
+                    # created_at       (type ok; carries concept 'timestamp')`
+	if !strings.Contains(err.Error(), want) {
+		t.Errorf("error missing the unresolved block\nwant:\n%s\ngot:\n%v", want, err)
+	}
+	if strings.Contains(err.Error(), "note (") {
+		t.Errorf("an optional unbound field is not unresolved: %v", err)
 	}
 }
 
+// The paste-ready block is valid YAML once each key gets a column.
+func TestRenderUnresolvedBindingsIsPasteReadyYAML(t *testing.T) {
+	block := renderUnresolvedBindings([]api.RuleFieldBindingSchema{
+		{RuleFieldName: "yes", Required: true, Status: api.Unbound, Candidates: []api.RuleFieldColumnCandidateSchema{{Column: "flag", Reason: "type ok"}}},
+		{RuleFieldName: "a: b # c", Required: true, Status: api.Unbound},
+	})
+	_, snippet, ok := strings.Cut(block, "\n\n  column_mapping:\n")
+	if !ok {
+		t.Fatalf("no column_mapping block in:\n%s", block)
+	}
+	var lines []string
+	for _, line := range strings.Split(snippet, "\n") {
+		if key, comment, found := strings.Cut(line, "  #"); found && strings.TrimSpace(key) != "" {
+			line = strings.TrimRight(key, " ") + " filled  #" + comment
+		}
+		lines = append(lines, line)
+	}
+	var doc struct {
+		ColumnMapping map[string]string `yaml:"column_mapping"`
+	}
+	if err := yaml.Unmarshal([]byte("column_mapping:\n"+strings.Join(lines, "\n")), &doc); err != nil {
+		t.Fatalf("filled block does not parse: %v\n%s", err, strings.Join(lines, "\n"))
+	}
+	if doc.ColumnMapping["yes"] != "filled" || doc.ColumnMapping["a: b # c"] != "filled" || len(doc.ColumnMapping) != 2 {
+		t.Errorf("keys did not round-trip: %v", doc.ColumnMapping)
+	}
+}
+
+// Field names, candidate columns and reasons are server text.
+func TestRenderUnresolvedBindingsSanitizesServerText(t *testing.T) {
+	block := renderUnresolvedBindings([]api.RuleFieldBindingSchema{{
+		RuleFieldName: "field" + escSeq, Required: true, Status: api.Ambiguous,
+		Candidates: []api.RuleFieldColumnCandidateSchema{{Column: "col" + escSeq, Reason: "type ok" + escSeq + "\nnext"}},
+	}})
+	if strings.Contains(block, "\x1b") {
+		t.Errorf("a raw ESC reached the terminal: %q", block)
+	}
+	if n := strings.Count(block, `\x1b[31m`); n < 4 {
+		t.Errorf("want the field (twice), column and reason escaped, got %d in %q", n, block)
+	}
+	if strings.Contains(block, "\nnext") {
+		t.Errorf("a line break in a reason escaped its comment: %q", block)
+	}
+}
+
+// A required field the preview binds to no column is refused before the
+// request, with its candidates and a block to paste.
 func TestApplyTableRuleInstantiate_IncompleteColumnMappingFails(t *testing.T) {
 	env, mock := setupTableRuleApplyEnv(t)
 	defer env.Cleanup()
@@ -832,6 +974,10 @@ func TestApplyTableRuleInstantiate_IncompleteColumnMappingFails(t *testing.T) {
 
 	revDetail := sampleRuleRevisionFull(nil)
 	revDetail.InputColumns = []string{"email", "year"}
+	revDetail.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{
+		boundCandidate("email", "email", api.RuleFieldBindingSourceOriginalName),
+		unboundCandidate("year", true, "model_year=type ok; shares 'year' with 'year'", "built=type ok"),
+	}
 	var instantiateReq api.InstantiateRuleRequestSchema
 	registerInstantiateMocks(t, mock, revDetail, &instantiateReq)
 
@@ -845,13 +991,25 @@ spec:
   column_mapping:
     email: email_col
 `
-	manifestPath := env.CreateFile("table-rule-incomplete-mapping.yaml", manifest)
-	_, err := execApply(t, manifestPath)
+	_, err := execApply(t, env.CreateFile("table-rule-incomplete-mapping.yaml", manifest), "--yes")
 	if err == nil {
 		t.Fatal("expected error for incomplete column_mapping")
 	}
-	if !strings.Contains(err.Error(), "missing: [year]") {
-		t.Errorf("expected error naming the missing column, got: %v", err)
+	if got := qerrors.GetExitCode(err); got != qerrors.ExitBadUsage {
+		t.Errorf("exit code = %d, want %d", got, qerrors.ExitBadUsage)
+	}
+	if instantiateReq.DatasetID != 0 {
+		t.Error("a refused manifest must not send an instantiate request")
+	}
+	want := `  year (required): unbound
+
+Add each to spec.column_mapping with a column of the table; the comments are the candidate columns, best first:
+
+  column_mapping:
+    year:  # model_year  (type ok; shares 'year' with 'year')
+           # built       (type ok)`
+	if !strings.Contains(err.Error(), want) {
+		t.Errorf("expected the unresolved block\nwant:\n%s\ngot:\n%v", want, err)
 	}
 }
 
@@ -924,17 +1082,17 @@ spec:
 	}
 }
 
-// TestApplyTableRuleInstantiate_MissingTakesPrecedenceOverUnknown verifies that
-// when column_mapping both omits a required input column and includes an
-// unrecognized key, the missing-input-column error is returned (not the
-// unknown-key error).
-func TestApplyTableRuleInstantiate_MissingTakesPrecedenceOverUnknown(t *testing.T) {
+// TestApplyTableRuleInstantiate_UnknownKeyIsRefusedBeforeThePreviewCheck: a
+// column_mapping key the rule does not declare is refused whatever the preview
+// says about the fields the manifest leaves out.
+func TestApplyTableRuleInstantiate_UnknownKeyIsRefusedBeforeThePreviewCheck(t *testing.T) {
 	env, mock := setupTableRuleApplyEnv(t)
 	defer env.Cleanup()
 	defer mock.Close()
 
 	revDetail := sampleRuleRevisionFull(nil)
 	revDetail.InputColumns = []string{"email", "year"}
+	revDetail.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{unboundCandidate("email", true), unboundCandidate("year", true)}
 
 	var instantiateReq api.InstantiateRuleRequestSchema
 	registerInstantiateMocks(t, mock, revDetail, &instantiateReq)
@@ -953,10 +1111,13 @@ spec:
 	manifestPath := env.CreateFile("table-rule-missing-and-unknown.yaml", manifest)
 	_, err := execApply(t, manifestPath)
 	if err == nil {
-		t.Fatal("expected error for missing input column")
+		t.Fatal("expected error for the unknown key")
 	}
-	if !strings.Contains(err.Error(), "missing: [year]") {
-		t.Errorf("expected error naming the missing column (precedence over unknown), got: %v", err)
+	if !strings.Contains(err.Error(), "column_mapping contains keys that are not input columns") || !strings.Contains(err.Error(), "[bogus]") {
+		t.Errorf("expected error naming the unknown key, got: %v", err)
+	}
+	if got := qerrors.GetExitCode(err); got != qerrors.ExitBadUsage {
+		t.Errorf("exit code = %d, want %d", got, qerrors.ExitBadUsage)
 	}
 }
 
@@ -1427,6 +1588,23 @@ func TestApplyTableRuleInstantiateStaged(t *testing.T) {
 	suggestion.Action = api.SuggestionActionCreate
 	suggestion.RuleColumnMapping = map[string]string{"email": "customer_email"}
 	registerInstantiate202Mocks(mock, suggestion)
+	// The 202 carries the server's bindings beside the suggestion.
+	mock.RegisterHandler("POST", "/api/orgs/"+testOrgID+"/rule-revisions/"+testRuleRevID+"/instantiate",
+		func(w http.ResponseWriter, r *http.Request) {
+			raw, err := json.Marshal(suggestion)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var body map[string]interface{}
+			if err := json.Unmarshal(raw, &body); err != nil {
+				t.Fatal(err)
+			}
+			body["field_bindings"] = []map[string]interface{}{{
+				"rule_field_name": "email", "required": true, "status": "bound",
+				"bound_to": "customer_email", "source": "concept", "candidates": []interface{}{},
+			}}
+			testutil.RespondJSON(w, http.StatusAccepted, body)
+		})
 
 	manifestPath := env.CreateFile("table-rule-instantiate-202.yaml", instantiate202Manifest)
 	out, err := execApply(t, manifestPath)
@@ -1437,7 +1615,7 @@ func TestApplyTableRuleInstantiateStaged(t *testing.T) {
 	for _, want := range []string{
 		`tablerule "email_check" staged for review`,
 		"staged : the whole instantiation (suggestion " + testSuggestionID,
-		"mapping : email -> customer_email",
+		"bindings : email -> customer_email (concept)",
 		"qctl suggestion accept " + testSuggestionID + " --table-id 1",
 	} {
 		if !strings.Contains(out, want) {
@@ -1569,7 +1747,7 @@ spec:
 	if got := (*instantiateReq.RuleColumnMapping)["first_name"]; got != "customer_first" {
 		t.Errorf("produced binding = %q, want customer_first", got)
 	}
-	if instantiateReq.ProducedFields == nil || len(*instantiateReq.ProducedFields) != 1 || (*instantiateReq.ProducedFields)[0].DatasetFieldName != "customer_first" {
+	if instantiateReq.ProducedFields == nil || len(*instantiateReq.ProducedFields) != 1 || (*instantiateReq.ProducedFields)[0].DatasetFieldName == nil || *(*instantiateReq.ProducedFields)[0].DatasetFieldName != "customer_first" {
 		t.Errorf("produced fields = %v, want customer_first", instantiateReq.ProducedFields)
 	}
 }
@@ -1717,7 +1895,7 @@ func TestApplyTableRuleInstantiate_UpgradeOutcomeDoesNotOverstateRetirement(t *t
 	out.Reset()
 	suggestion := sampleSuggestion(api.SuggestionStatePending)
 	suggestion.Action = api.SuggestionActionCreate
-	renderStagedInstantiateOutcome(&out, &suggestion, 1, &predecessorID)
+	renderStagedInstantiateOutcome(&out, asInstantiateSuggestion(&suggestion), 1, nil, &predecessorID)
 	if got := out.String(); !strings.Contains(got, "remains active until the suggestion is accepted and the replacement is enabled") || strings.Contains(got, "disable it") {
 		t.Errorf("staged output overstates retirement: %q", got)
 	}
@@ -1769,7 +1947,7 @@ func TestRenderStagedInstantiateContent(t *testing.T) {
 	var buf bytes.Buffer
 	s := sampleSuggestion(api.SuggestionStatePending)
 	s.Action = api.SuggestionActionCreate
-	renderStagedInstantiate(&buf, &s, 1)
+	renderStagedInstantiate(&buf, asInstantiateSuggestion(&s), 1)
 
 	out := buf.String()
 	for _, want := range []string{
@@ -1799,7 +1977,7 @@ func TestRenderStagedInstantiateAlignsComments(t *testing.T) {
 	columns := map[int]int{}
 	for _, datasetID := range []int{1, 12345} {
 		var buf bytes.Buffer
-		renderStagedInstantiate(&buf, &s, datasetID)
+		renderStagedInstantiate(&buf, asInstantiateSuggestion(&s), datasetID)
 
 		lines := breadcrumbLines(t, buf.String())
 		if len(lines) != 3 {
@@ -1868,16 +2046,22 @@ spec:
 }
 
 // TestApplyTableRuleInstantiate_MissingRequiredNamesOnlyRequired: the check
-// still fires for a genuinely required slot, and the error must not list
-// optional slots as missing -- naming them is what sent users chasing bindings
-// the rule does not need.
+// still fires for a genuinely required slot the preview cannot bind, and the
+// error must not list optional slots -- naming them is what sent users chasing
+// bindings the rule does not need.
 func TestApplyTableRuleInstantiate_MissingRequiredNamesOnlyRequired(t *testing.T) {
 	env, mock := setupTableRuleApplyEnv(t)
 	defer env.Cleanup()
 	defer mock.Close()
 
+	revision := betweenRevision()
+	revision.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{
+		unboundCandidate("field", true, "amount=type ok"),
+		unboundCandidate("max_field", false),
+		unboundCandidate("min_field", false),
+	}
 	var instantiateReq api.InstantiateRuleRequestSchema
-	registerInstantiateMocks(t, mock, betweenRevision(), &instantiateReq)
+	registerInstantiateMocks(t, mock, revision, &instantiateReq)
 
 	manifest := `
 apiVersion: qluster.ai/v1
@@ -1894,10 +2078,11 @@ spec:
 	if err == nil {
 		t.Fatal("expected error for a missing required input column")
 	}
-	// The closing bracket is load-bearing: today's message reads
-	// "missing: [field, max_field]", which would satisfy a looser check.
-	if !strings.Contains(err.Error(), "missing: [field]") {
-		t.Errorf("expected error naming only the required column, got: %v", err)
+	if qerrors.GetExitCode(err) != qerrors.ExitBadUsage {
+		t.Errorf("exit code = %d, want %d", qerrors.GetExitCode(err), qerrors.ExitBadUsage)
+	}
+	if !strings.Contains(err.Error(), "  field (required): unbound\n") {
+		t.Errorf("expected error naming the required column, got: %v", err)
 	}
 	if strings.Contains(err.Error(), "max_field") {
 		t.Errorf("an optional column was reported as missing: %v", err)
@@ -1938,19 +2123,23 @@ spec:
 	}
 }
 
-// TestApplyTableRuleInstantiate_IdentityDefaultStillCoversOptionalColumns pins
-// a deliberate non-change: an omitted column_mapping still identity-maps every
-// input column, optional ones included. Narrowing the default to required
-// inputs would silently drop a working binding for a custom rule whose optional
-// inputs are named after real table columns.
-func TestApplyTableRuleInstantiate_IdentityDefaultStillCoversOptionalColumns(t *testing.T) {
+// TestApplyTableRuleInstantiate_OptionalUnboundIsNotRefused: an optional
+// field the preview binds to no column stays unbound on the server, so an
+// omitted column_mapping is sent as is.
+func TestApplyTableRuleInstantiate_OptionalUnboundIsNotRefused(t *testing.T) {
 	env, mock := setupTableRuleApplyEnv(t)
 	defer env.Cleanup()
 	defer mock.Close()
 	confirmYes(t)
 
+	revision := betweenRevision()
+	revision.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{
+		boundCandidate("field", "field", api.RuleFieldBindingSourceOriginalName),
+		unboundCandidate("max_field", false),
+		unboundCandidate("min_field", false),
+	}
 	var instantiateReq api.InstantiateRuleRequestSchema
-	registerInstantiateMocks(t, mock, betweenRevision(), &instantiateReq)
+	registerInstantiateMocks(t, mock, revision, &instantiateReq)
 
 	manifest := `
 apiVersion: qluster.ai/v1
@@ -1960,17 +2149,15 @@ spec:
   rule_revision_id: ` + testRuleRevID + `
   dataset_id: 1
 `
-	manifestPath := env.CreateFile("table-rule-identity-with-optional.yaml", manifest)
-	if _, err := execApply(t, manifestPath); err != nil {
+	out, err := execApply(t, env.CreateFile("table-rule-optional-unbound-preview.yaml", manifest))
+	if err != nil {
 		t.Fatalf("expected no error, got: %v", err)
 	}
-	if len(*instantiateReq.RuleColumnMapping) != 3 {
-		t.Errorf("expected all three input columns identity-mapped, got: %v", instantiateReq.RuleColumnMapping)
+	if instantiateReq.DatasetID != 1 || instantiateReq.RuleColumnMapping != nil {
+		t.Errorf("want a request with no mapping, got: %+v", instantiateReq)
 	}
-	for _, col := range []string{"field", "min_field", "max_field"} {
-		if (*instantiateReq.RuleColumnMapping)[col] != col {
-			t.Errorf("expected identity mapping for %s, got: %v", col, instantiateReq.RuleColumnMapping)
-		}
+	if want := "Column Mapping   : field -> field (original_name), max_field (unbound), min_field (unbound)\n"; !strings.Contains(out, want) {
+		t.Errorf("confirmation missing %q:\n%s", want, out)
 	}
 }
 
@@ -3086,7 +3273,7 @@ func TestApplyTableRuleInstantiate_SendsProducedFields(t *testing.T) {
 	if len(got) != 1 {
 		t.Fatalf("expected one declaration, got %d: %+v", len(got), got)
 	}
-	if got[0].RuleFieldName != "first_name" || got[0].DatasetFieldName != "customer_first" {
+	if got[0].RuleFieldName != "first_name" || got[0].DatasetFieldName == nil || *got[0].DatasetFieldName != "customer_first" {
 		t.Errorf("declaration = %+v, want first_name -> customer_first", got[0])
 	}
 	if got[0].FieldSchema["type"] != "String" {
@@ -3326,7 +3513,7 @@ func TestRenderCreatedOutcomeStatesEveryCreate(t *testing.T) {
 			created.ProducedFields = tt.produced
 
 			var buf bytes.Buffer
-			renderCreatedOutcome(&buf, &created, nil)
+			renderCreatedOutcome(&buf, &created, nil, nil)
 			out := buf.String()
 			for _, want := range tt.want {
 				if !strings.Contains(out, want) {
@@ -3370,7 +3557,7 @@ func TestRenderCreatedOutcomeNotesAnUpgradesQuarantineReprocess(t *testing.T) {
 			created.State = tt.state
 
 			var buf bytes.Buffer
-			renderCreatedOutcome(&buf, &created, &predecessor)
+			renderCreatedOutcome(&buf, &created, nil, &predecessor)
 			if !strings.Contains(buf.String(), tt.want) {
 				t.Errorf("output missing %q\n---\n%s", tt.want, buf.String())
 			}
@@ -3387,7 +3574,7 @@ func TestRenderCreatedOutcomeSanitizesTheValidationState(t *testing.T) {
 	created.ValidationState = &hostile
 
 	var buf bytes.Buffer
-	renderCreatedOutcome(&buf, &created, nil)
+	renderCreatedOutcome(&buf, &created, nil, nil)
 	if strings.Contains(buf.String(), "\x1b") {
 		t.Errorf("validation_state reached the terminal unsanitized: %q", buf.String())
 	}
@@ -4244,7 +4431,7 @@ func TestApplyTableRuleInstantiate_PreflightOmitsTypesWhenUndeclared(t *testing.
 	if err != nil {
 		t.Fatalf("expected success, got: %v", err)
 	}
-	if !strings.Contains(out, "Column Mapping   : email -> email_col\n") {
+	if !strings.Contains(out, "Column Mapping   : email -> email_col (explicit)\n") {
 		t.Errorf("expected the unannotated mapping line, got:\n%s", out)
 	}
 	for _, invented := range []string{"[any]", "[unknown]", "[]"} {

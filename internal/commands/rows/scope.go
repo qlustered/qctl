@@ -188,17 +188,18 @@ func (s scope) getDataLine(isBadData bool) string {
 }
 
 // deletedRowsLine is the `get deleted-rows` command line for the scope's
-// table, narrowed to its cloud source at cloud-source scope. File scope is not
-// narrowed: the file route deletes matching quarantine rows of every source
-// (atlas-9po84.5), so a --file-id listing would hide some of them. A shared
-// table has none: the listing has no third-party route.
+// table, narrowed to its cloud source at cloud-source scope and to its file at
+// file scope. A shared table has none: the listing has no third-party route.
 func (s scope) deletedRowsLine() string {
 	if s.thirdParty {
 		return ""
 	}
 	line := "qctl get deleted-rows " + s.tableArgument()
-	if s.kind == scopeCloudSource {
+	switch s.kind {
+	case scopeCloudSource:
 		line += " --cloud-source-id " + idRef(s.cloudSourceID, "", "<cloud-source-id>")
+	case scopeFile:
+		line += fmt.Sprintf(" --file-id %d", s.fileID)
 	}
 	return line
 }

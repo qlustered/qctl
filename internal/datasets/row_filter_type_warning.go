@@ -41,7 +41,8 @@ func FormatRowFilterTypeWarning(rules []FilterColumnRule, datasetID int) string 
 	b.WriteString("  A changed type may invalidate an operator or literal, or change a predicate's inputs.\n" +
 		"  The stale-column retirement pass does not retire rules for a type change. An enabled\n" +
 		"  rule whose filter no longer compiles raises a validation_problem blocker on every row\n" +
-		"  it meets. Enabling a rule does not re-check its saved filter.\n")
+		"  it meets. An enable that leaves row_filter out is refused (422) while the saved filter\n" +
+		"  no longer compiles.\n")
 	fmt.Fprintf(&b, "  Inspect with `qctl describe table-rule <rule-id> --table-id %d`; fix or clear the filter\n"+
 		"  with a TableRule manifest before enabling the rule. Test it after the migration with\n"+
 		"  `qctl table-rule test-filter <rule-id> --table-id %d`.\n\n", datasetID, datasetID)

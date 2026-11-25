@@ -4,7 +4,7 @@ aliases: []
 kind: BackupSettings
 schema: openapi:BackupSettingsSchemaFull
 guide:
-signature: 3a63a7e
+signature: cdadb16
 ---
 
 ## USAGE

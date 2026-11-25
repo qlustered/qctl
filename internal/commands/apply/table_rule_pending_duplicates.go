@@ -15,8 +15,8 @@ import (
 )
 
 // checkPendingTableRuleCreates compares a create with pending create suggestions.
-func checkPendingTableRuleCreates(warnOut io.Writer, client *rule_suggestions.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revision *rule_versions.RuleRevisionFull, mapping map[string]string, fills map[string]conceptFill) error {
-	predicted, predictable := predictInstance(manifest, revision, mapping, fills)
+func checkPendingTableRuleCreates(warnOut io.Writer, client *rule_suggestions.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revision *rule_versions.RuleRevisionFull, mapping, auto map[string]string) error {
+	predicted, predictable := predictInstance(manifest, revision, mapping, auto)
 	name, named := explicitInstanceName(manifest)
 	opts := rule_suggestions.ListOptions{States: []string{string(api.SuggestionStatePending)}, Limit: 1000}
 	for opts.Page = 1; ; opts.Page++ {

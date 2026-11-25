@@ -20,9 +20,10 @@ func newSubmitCommand() *cobra.Command {
 		"Send a draft or a proposal with changes requested to review",
 		`Send a draft, or a proposal an approver sent back for changes, to review.
 
-The proposal moves to pending_review and holds its target and addressed
-issues: while it does, another proposal that names one of them is refused
-with 409 CHANGE_PROPOSAL_ACTIVE, which names the holder. Submitting re-checks
+The proposal moves to pending_review and holds its target, or only the rows
+of it a row-scoped payload names, and its addressed issues: while it does,
+another proposal that names one of them is refused with 409
+CHANGE_PROPOSAL_ACTIVE, which names the holder. Submitting re-checks
 that you may propose the payload.`,
 		(*change_proposals.Client).Submit)
 }

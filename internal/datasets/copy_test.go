@@ -168,7 +168,7 @@ func TestCopy_SendsTheRequestAndDecodesTheCopyRecord(t *testing.T) {
 	}
 	record := res.DatasetCopy
 	if record.ID != 5 || record.Kind != api.NewDataset || record.State != api.DatasetCopyStateApplied ||
-		record.SourceDatasetID != 42 || record.TargetDatasetID != 99 {
+		record.SourceDatasetID == nil || *record.SourceDatasetID != 42 || record.TargetDatasetID != 99 {
 		t.Errorf("dataset_copy = %+v", record)
 	}
 	if want := []any{"rules", "settings"}; !reflect.DeepEqual(record.Options["include"], want) {

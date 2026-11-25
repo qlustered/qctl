@@ -219,7 +219,7 @@ func TestActionFieldsUnsatisfiedOneOf(t *testing.T) {
 
 func TestActionFieldsAllNames(t *testing.T) {
 	got := AlertActionFields["overwrite_value"].AllNames()
-	want := []string{"new_value (required)", "ids|initial_signatures (one of)", "another_field_new_value", "field_name_to_value"}
+	want := []string{"new_value (required)", "ids|initial_signatures (one of)", "another_field_new_value", "field_name_to_value", "comment_thread_id"}
 	if strings.Join(got, ", ") != strings.Join(want, ", ") {
 		t.Errorf("AllNames = %v, want %v", got, want)
 	}

@@ -44,6 +44,9 @@ type WaitOptions struct {
 	// Describe, when set, is the command the timeout error names on its Next:
 	// line.
 	Describe string
+	// Until, when set, also ends the wait at the first merge it reports true
+	// for.
+	Until func(*api.RuleMergeSchema) bool
 }
 
 // Settled reports whether m's state is applied, partially_applied or failed.
@@ -55,17 +58,21 @@ func Settled(m *api.RuleMergeSchema) bool {
 	return false
 }
 
-// Wait calls poll until the merge it returns is Settled and returns that
-// merge. A poll that fails with a permanent error (qerrors.IsPermanent) ends
+// Wait calls poll until the merge it returns is Settled, or one opts.Until
+// reports true for, and returns that merge. A poll that fails with a permanent error (qerrors.IsPermanent) ends
 // the wait with that error, wrapped; any other failed poll is retried. A
 // cancelled ctx ends it with pollwait.ErrStopped. mergeID names the merge
 // in the timeout and poll errors.
 func Wait(ctx context.Context, poll func(context.Context) (*api.RuleMergeSchema, error), mergeID int, opts WaitOptions) (*api.RuleMergeSchema, error) {
+	settled := Settled
+	if opts.Until != nil {
+		settled = func(m *api.RuleMergeSchema) bool { return Settled(m) || opts.Until(m) }
+	}
 	m, expired, err := pollwait.Run(ctx, poll, pollwait.Options[*api.RuleMergeSchema]{
 		Timeout:  opts.Timeout,
 		Now:      waitNow,
 		Sleep:    waitSleep,
-		Settled:  Settled,
+		Settled:  settled,
 		Changed:  waitProgressChanged,
 		Progress: opts.Progress,
 	})

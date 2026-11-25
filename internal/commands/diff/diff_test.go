@@ -308,7 +308,7 @@ spec:
 	// TableRule qualifier only -- TableSchema has no instantiate mode to be
 	// distinguished from. Pinned so the suffix cannot silently re-generalise
 	// over a kind it is not true of.
-	if !strings.Contains(err.Error(), "(supported: Deliverable, LinkedTable, StandardField, Table, TableKind, TableRule, TableSchema, TableSeries; TableRule in patch mode only)") {
+	if !strings.Contains(err.Error(), "(supported: Deliverable, LinkedTable, StandardField, Table, TableKind, TableRule, TableRuleTemplate, TableSchema, TableSeries; TableRule in patch mode only)") {
 		t.Errorf("wrong supported-kinds suffix: %v", err)
 	}
 	if got := qerrors.GetExitCode(err); got != 2 {

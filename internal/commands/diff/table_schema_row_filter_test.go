@@ -78,7 +78,7 @@ func TestDiffTableSchema_RowFilterColumnWarning(t *testing.T) {
 			"Warning: this migration changes the type of column(s) a row filter reads",
 			"caf_check (" + builtinID + "): enabled rule; its row filter reads amount",
 			"paused_check (" + disabledID + "): disabled rule; its row filter reads amount",
-			"Enabling a rule does not re-check its saved filter",
+			"An enable that leaves row_filter out is refused (422) while the saved filter",
 		}},
 		{"a retype list failure still previews the request", diffRetypeAmount, http.StatusInternalServerError, 1, 0, []string{
 			"Warning: this migration changes column types, and qctl could not list the table's rules",

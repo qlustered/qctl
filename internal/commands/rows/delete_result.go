@@ -46,15 +46,26 @@ type statusDeleteDocument struct {
 }
 
 // deleteConsequences are the lines the confirmation prompt prints for a
-// delete with selector sel at scope sc.
-func deleteConsequences(verb string, sel selector, sc scope) ([]string, error) {
+// delete with selector sel at scope sc; exclude is the
+// --exclude-from-future-uploads value, which a --signature delete always has.
+func deleteConsequences(verb string, sel selector, sc scope, exclude *bool) ([]string, error) {
 	switch sel.kind {
 	case selSignatures:
-		return []string{
-			fmt.Sprintf("--signature writes an exclusion entry for each deleted line to %s, scoped to the line's "+
-				"source and identity, so future ingests from that source drop a line with the same identity.", exclusionListOwner(sc)),
-			"A line whose identity a live clean row of the same source shares is deleted but not excluded, and the result lists it.",
-		}, nil
+		if exclude == nil {
+			return nil, unroutableSelector(verb, sel, sc)
+		}
+		lines := []string{
+			"--signature writes an exclusion entry for each deleted line, scoped to the line's source and identity, to " +
+				filesInView(sc) + ", so a reprocess of those files does not bring the line back.",
+		}
+		if *exclude {
+			lines = append(lines, fmt.Sprintf("--exclude-from-future-uploads also writes them to %s, so a new upload "+
+				"drops a line with the same identity.", futureUploadsList(sc)))
+		} else {
+			lines = append(lines, "--exclude-from-future-uploads=false: a new upload of these lines loads them again.")
+		}
+		return append(lines,
+			"A line whose entry would drop a live clean row is deleted but not excluded, and the result lists it."), nil
 	case selStatus, selAll:
 		return []string{
 			fmt.Sprintf("%s excludes nothing: the rows are deleted with your reason and load again through the rules "+
@@ -66,16 +77,25 @@ func deleteConsequences(verb string, sel selector, sc scope) ([]string, error) {
 	}
 }
 
-// exclusionListOwner names the exclusion list a --signature delete at sc
-// writes to.
-func exclusionListOwner(sc scope) string {
+// filesInView names the files whose exclusion lists a --signature delete at
+// sc writes.
+func filesInView(sc scope) string {
+	if sc.kind == scopeFile {
+		return "the file's exclusion list"
+	}
+	return "the exclusion list of each file a deleted row came from"
+}
+
+// futureUploadsList names the exclusion list a --signature delete at sc
+// writes with --exclude-from-future-uploads.
+func futureUploadsList(sc scope) string {
 	switch sc.kind {
 	case scopeTable:
 		return "the table's exclusion list"
 	case scopeCloudSource:
 		return "the cloud source's exclusion list (the table's, for a table-series source)"
 	case scopeFile:
-		return "the file's exclusion list"
+		return "the exclusion list of the file's cloud source (the table's, for a table-series source)"
 	default:
 		return fmt.Sprintf("the %s's exclusion list", sc.kindName())
 	}
@@ -300,6 +320,6 @@ func repeatedKeyRecipe(sc scope, groups []api.RepeatedKeyCopiesSchema) string {
 	if len(clean) > 0 {
 		fmt.Fprintf(&b, "  qctl rows %s %s %s\n", sendToQuarantineVerb, table.tableCommandRef(), strings.Join(clean, " "))
 	}
-	fmt.Fprintf(&b, "  qctl rows delete-quarantined %s %s --reason <reason>\n", table.tableCommandRef(), strings.Join(sigs, " "))
+	fmt.Fprintf(&b, "  qctl rows delete-quarantined %s %s --exclude-from-future-uploads=<true|false> --reason <reason>\n", table.tableCommandRef(), strings.Join(sigs, " "))
 	return b.String()
 }

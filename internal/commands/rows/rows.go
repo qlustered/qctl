@@ -72,7 +72,7 @@ listing; 'check-unique' reads the CLEAN rows and nothing else.
 Only quarantined rows can be deleted; clean rows are immutable. To delete a
 clean row, send it to quarantine first (it keeps its id), then delete it:
   qctl rows send-to-quarantine <table> --row-id 1042
-  qctl rows delete-quarantined <table> --signature <hex> --reason <reason>
+  qctl rows delete-quarantined <table> --signature <hex> --exclude-from-future-uploads=<true|false> --reason <reason>
 
 'delete-quarantined' takes SIGNATURES, not row ids: the route identifies rows by
 signature, and an id can be turned into a signature only one row at a time.
@@ -84,7 +84,8 @@ Read them from the initial_signature_ column of the quarantine listing:
 --cloud-source-id is required, because an ignore of a rule on a row belongs to
 one source and there is no table-wide form.
 
-A --signature delete also keeps each deleted line from loading again: it
+A --signature delete keeps each deleted line out of a reprocess of the files
+it came from, and with --exclude-from-future-uploads out of new uploads too: it
 writes an exclusion entry scoped to the line's source. --status and --all
 exclude nothing, so those rows load again if the sender re-sends them.
 
@@ -133,7 +134,7 @@ quarantine first (each keeps its id), then delete them by signature:
 
   qctl rows send-to-quarantine <table-id-or-name> --row-id <id>
   qctl get data <table-id-or-name> --is-bad-data --filter-by-field-name id --filter-by-field-value <id> -o json
-  qctl rows delete-quarantined <table-id-or-name> --signature <hex> --reason <reason>`
+  qctl rows delete-quarantined <table-id-or-name> --signature <hex> --exclude-from-future-uploads=<true|false> --reason <reason>`
 
 // namesDeleteClean reports whether args, the group's positionals, start with
 // the removed verb.

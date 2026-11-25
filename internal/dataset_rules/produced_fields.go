@@ -465,15 +465,16 @@ func ProducedFieldsFromResponse(fields *[]api.ProducedFieldResponseSchema) []Pro
 // pointer stays nil and the wire carries `produced_fields: null`, which the
 // backend reads as "this rule adds no columns" -- the request every
 // validation-rule instantiate has always sent.
-func ProducedFieldRequests(entries *[]ProducedFieldEntry) *[]api.ProducedFieldRequestSchema {
+func ProducedFieldRequests(entries *[]ProducedFieldEntry) *[]api.InstantiateProducedFieldRequestSchema {
 	if entries == nil {
 		return nil
 	}
-	out := make([]api.ProducedFieldRequestSchema, 0, len(*entries))
+	out := make([]api.InstantiateProducedFieldRequestSchema, 0, len(*entries))
 	for _, e := range *entries {
-		out = append(out, api.ProducedFieldRequestSchema{
+		datasetFieldName := e.DatasetFieldName
+		out = append(out, api.InstantiateProducedFieldRequestSchema{
 			RuleFieldName:    e.RuleFieldName,
-			DatasetFieldName: e.DatasetFieldName,
+			DatasetFieldName: &datasetFieldName,
 			FieldSchema:      e.FieldSchema,
 		})
 	}

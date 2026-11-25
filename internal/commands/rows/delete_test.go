@@ -17,8 +17,8 @@ import (
 // routes must receive for it.
 const (
 	testReason        = "duplicate upload"
-	testSignatureBody = `{"comment":"` + testReason + `","signatures":["deadbeef"]}`
-	testStatusBody    = `{"comment":"` + testReason + `","signatures":[]}`
+	testSignatureBody = `{"comment":"` + testReason + `","exclude_from_future_uploads":true,"signatures":["deadbeef"]}`
+	testStatusBody    = `{"comment":"` + testReason + `","exclude_from_future_uploads":null,"signatures":[]}`
 	testCommentBody   = `{"comment":"` + testReason + `"}`
 )
 
@@ -28,12 +28,12 @@ func TestDeleteQuarantined_CompositeRefusalKeepsHintAcrossScopes(t *testing.T) {
 			name, route string
 			flags       []string
 		}{
-			{"table signatures", "/datasets/42/delete-rows", []string{"--signature", "deadbeef"}},
+			{"table signatures", "/datasets/42/delete-rows", []string{"--signature", "deadbeef", "--exclude-from-future-uploads"}},
 			{"table status", "/datasets/42/delete-rows", []string{"--status", "failed_validation"}},
 			{"table all", "/datasets/42/delete-all-bad-rows", []string{"--all"}},
-			{"cloud signatures", "/data-sources/7/delete-rows", []string{"--cloud-source-id", "7", "--signature", "deadbeef"}},
+			{"cloud signatures", "/data-sources/7/delete-rows", []string{"--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads"}},
 			{"cloud all", "/data-sources/7/delete-all-bad-rows", []string{"--cloud-source-id", "7", "--all"}},
-			{"file signatures", "/stored-items/3/delete-rows", []string{"--file-id", "3", "--signature", "deadbeef"}},
+			{"file signatures", "/stored-items/3/delete-rows", []string{"--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"}},
 		} {
 			t.Run(fmt.Sprintf("%s/shared=%t", tc.name, shared), func(t *testing.T) {
 				mock := newRowsTestEnv(t)
@@ -55,7 +55,7 @@ func TestDeleteQuarantined_CompositeRefusalKeepsHintAcrossScopes(t *testing.T) {
 					t.Fatalf("error = %v, want exit 2", err)
 				}
 				for _, want := range []string{"Rows of a composite table cannot be deleted.", "COMPOSITE_ROW_DELETE_REFUSED", "req-composite",
-					"Hint:", "qctl get linked-table <table> -o yaml", "--row-id <upstream-row-id>", "--signature <upstream-signature> --reason <reason>"} {
+					"Hint:", "qctl get linked-table <table> -o yaml", "--row-id <upstream-row-id>", "--signature <upstream-signature> --exclude-from-future-uploads=<true|false> --reason <reason>"} {
 					if !strings.Contains(err.Error(), want) {
 						t.Errorf("error = %v, want %q", err, want)
 					}
@@ -110,7 +110,7 @@ func TestDeleteQuarantined_FollowUpLineNamesTheQuarantinePopulation(t *testing.T
 	record(mock, "POST", "/api/orgs/"+testOrgID+"/datasets/42/delete-rows",
 		`{"result":"ok","affected_rows":1}`)
 
-	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--yes")
+	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -126,7 +126,7 @@ func TestDeleteQuarantined_FileScopeUsesStoredItemRoute(t *testing.T) {
 	got := record(mock, "POST", "/api/orgs/"+testOrgID+"/stored-items/3/delete-rows", `{"result":"ok"}`)
 
 	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders",
-		"--file-id", "3", "--signature", "deadbeef", "--yes")
+		"--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -164,7 +164,7 @@ func TestDeleteQuarantined_CloudSourceScopeUsesDataSourceRoute(t *testing.T) {
 	got := record(mock, "POST", "/api/orgs/"+testOrgID+"/data-sources/7/delete-rows", `{"result":"ok"}`)
 
 	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders",
-		"--cloud-source-id", "7", "--signature", "deadbeef", "--yes")
+		"--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -278,7 +278,7 @@ func TestDeleteQuarantined_YesStillNamesTheExclusionList(t *testing.T) {
 	mock := newRowsTestEnv(t)
 	record(mock, "POST", "/api/orgs/"+testOrgID+"/datasets/42/delete-rows", `{"result":"ok","affected_rows":1}`)
 
-	_, stderr, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--yes")
+	_, stderr, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -315,7 +315,7 @@ func TestDeleteQuarantined_ServerErrorIsReported(t *testing.T) {
 			testutil.RespondJSON(w, http.StatusNotFound, json.RawMessage(`{"detail":"dataset not found"}`))
 		})
 
-	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--yes")
+	stdout, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if err == nil {
 		t.Fatal("expected the 404 to surface as an error")
 	}
@@ -470,7 +470,7 @@ func TestDeleteRows_AllIsRefusedForACleanPopulation(t *testing.T) {
 				Credential:     &auth.Credential{AccessToken: "test-token"},
 			}
 
-			_, err := deleteRows(ctx, tc.sc, selector{kind: selAll}, false, "delete-quarantined", testReason)
+			_, err := deleteRows(ctx, tc.sc, selector{kind: selAll}, false, nil, "delete-quarantined", testReason)
 			if err == nil {
 				t.Fatal("--all on a clean-population verb reached a delete-all-BAD-rows route")
 			}
@@ -481,7 +481,7 @@ func TestDeleteRows_AllIsRefusedForACleanPopulation(t *testing.T) {
 			// And the quarantined verb, which the route DOES belong to, is
 			// untouched by the guard — otherwise this would "pass" by refusing
 			// everything.
-			if _, err := deleteRows(ctx, tc.sc, selector{kind: selAll}, true, "delete-quarantined", testReason); err != nil {
+			if _, err := deleteRows(ctx, tc.sc, selector{kind: selAll}, true, nil, "delete-quarantined", testReason); err != nil {
 				t.Fatalf("delete-quarantined --all was refused too: %v", err)
 			}
 			if got.hits != 1 {
@@ -556,32 +556,32 @@ func TestDeleteRoutesSendTheReasonAsComment(t *testing.T) {
 		setup            func(*testutil.MockAPIServer)
 	}{
 		{"dataset signatures", org + "/datasets/42/delete-rows", testSignatureBody,
-			[]string{"delete-quarantined", "orders", "--signature", "deadbeef"}, nil},
+			[]string{"delete-quarantined", "orders", "--signature", "deadbeef", "--exclude-from-future-uploads"}, nil},
 		{"dataset status", org + "/datasets/42/delete-rows", testStatusBody,
 			[]string{"delete-quarantined", "orders", "--status", "failed_validation"}, nil},
 		{"dataset all", org + "/datasets/42/delete-all-bad-rows", testCommentBody,
 			[]string{"delete-quarantined", "orders", "--all"}, nil},
 		{"cloud source signatures", org + "/data-sources/7/delete-rows", testSignatureBody,
-			[]string{"delete-quarantined", "orders", "--cloud-source-id", "7", "--signature", "deadbeef"}, registerCloudSourceResolve},
+			[]string{"delete-quarantined", "orders", "--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads"}, registerCloudSourceResolve},
 		{"cloud source all", org + "/data-sources/7/delete-all-bad-rows", testCommentBody,
 			[]string{"delete-quarantined", "orders", "--cloud-source-id", "7", "--all"}, registerCloudSourceResolve},
 		{"file signatures", org + "/stored-items/3/delete-rows", testSignatureBody,
-			[]string{"delete-quarantined", "orders", "--file-id", "3", "--signature", "deadbeef"},
+			[]string{"delete-quarantined", "orders", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"},
 			func(mock *testutil.MockAPIServer) {
 				record(mock, "GET", org+"/stored-items/3", `{"id":3,"dataset_id":42}`)
 			}},
 		{"shared dataset signatures", org + "/third-party/datasets/42/delete-rows", testSignatureBody,
-			[]string{"delete-quarantined", "42", "--shared", "--signature", "deadbeef"}, nil},
+			[]string{"delete-quarantined", "42", "--shared", "--signature", "deadbeef", "--exclude-from-future-uploads"}, nil},
 		{"shared dataset status", org + "/third-party/datasets/42/delete-rows", testStatusBody,
 			[]string{"delete-quarantined", "42", "--shared", "--status", "failed_validation"}, nil},
 		{"shared dataset all", org + "/third-party/datasets/42/delete-all-bad-rows", testCommentBody,
 			[]string{"delete-quarantined", "42", "--shared", "--all"}, nil},
 		{"shared cloud source signatures", org + "/third-party/data-sources/7/delete-rows", testSignatureBody,
-			[]string{"delete-quarantined", "42", "--shared", "--cloud-source-id", "7", "--signature", "deadbeef"}, nil},
+			[]string{"delete-quarantined", "42", "--shared", "--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads"}, nil},
 		{"shared cloud source all", org + "/third-party/data-sources/7/delete-all-bad-rows", testCommentBody,
 			[]string{"delete-quarantined", "42", "--shared", "--cloud-source-id", "7", "--all"}, nil},
 		{"shared file signatures", sharedFileDeletePath, testSignatureBody,
-			[]string{"delete-quarantined", "42", "--shared", "--file-id", "3", "--signature", "deadbeef"},
+			[]string{"delete-quarantined", "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"},
 			func(mock *testutil.MockAPIServer) {
 				record(mock, "GET", sharedFileReadPath, `{"id":3,"dataset_id":42,"file_name":"a.csv","data_source_model_id":7,"created_at":"2026-11-01T00:00:00Z"}`)
 			}},
@@ -611,12 +611,12 @@ func TestDeleteRoutesSendTheReasonAsComment(t *testing.T) {
 // at every scope and selector.
 func TestDeleteReasonRefusedBeforeAnyRequest(t *testing.T) {
 	selectors := [][]string{
-		{"delete-quarantined", "orders", "--signature", "deadbeef"},
+		{"delete-quarantined", "orders", "--signature", "deadbeef", "--exclude-from-future-uploads"},
 		{"delete-quarantined", "orders", "--status", "failed_validation"},
 		{"delete-quarantined", "orders", "--all"},
 		{"delete-quarantined", "orders", "--cloud-source-id", "7", "--all"},
-		{"delete-quarantined", "orders", "--cloud-source-id", "7", "--signature", "deadbeef"},
-		{"delete-quarantined", "orders", "--file-id", "3", "--signature", "deadbeef"},
+		{"delete-quarantined", "orders", "--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads"},
+		{"delete-quarantined", "orders", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"},
 	}
 	reasons := []struct {
 		name string
@@ -702,4 +702,73 @@ func TestDeleteClean_IsRemovedWithARedirect(t *testing.T) {
 			t.Errorf("stdout = %q, want the redirect", stdout)
 		}
 	})
+}
+
+// --exclude-from-future-uploads is required with --signature and refused with
+// any other selector, at exit 2 before any request.
+func TestDeleteExcludeFlagRefusedBeforeAnyRequest(t *testing.T) {
+	for _, tc := range []struct {
+		name, want string
+		args       []string
+	}{
+		{"signature without it", "--signature needs --exclude-from-future-uploads=true or =false",
+			[]string{"orders", "--signature", "deadbeef"}},
+		{"cloud-source signature without it", "--signature needs --exclude-from-future-uploads",
+			[]string{"orders", "--cloud-source-id", "7", "--signature", "deadbeef"}},
+		{"file signature without it", "--signature needs --exclude-from-future-uploads",
+			[]string{"orders", "--file-id", "3", "--signature", "deadbeef"}},
+		{"status with it", "--exclude-from-future-uploads applies only to a --signature delete",
+			[]string{"orders", "--status", "failed_validation", "--exclude-from-future-uploads"}},
+		{"all with it false", "--exclude-from-future-uploads applies only to a --signature delete",
+			[]string{"orders", "--all", "--exclude-from-future-uploads=false"}},
+		{"cloud-source all with it", "--exclude-from-future-uploads applies only to a --signature delete",
+			[]string{"orders", "--cloud-source-id", "7", "--all", "--exclude-from-future-uploads"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			mock := newRowsTestEnv(t)
+			args := append([]string{"rows", "delete-quarantined", "--reason", testReason, "--yes"}, tc.args...)
+			_, _, err := runRows(t, args...)
+			if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage {
+				t.Fatalf("GetExitCode = %d (%v), want %d", code, err, qerrors.ExitBadUsage)
+			}
+			if !strings.Contains(err.Error(), tc.want) {
+				t.Errorf("error = %v, want %q", err, tc.want)
+			}
+			if reqs := mock.Requests(); len(reqs) != 0 {
+				t.Errorf("requests = %v, want none", reqs)
+			}
+		})
+	}
+}
+
+// --exclude-from-future-uploads=false reaches the body as false on every
+// signature route.
+func TestDeleteExcludeFalseIsSentAsFalse(t *testing.T) {
+	const want = `{"comment":"` + testReason + `","exclude_from_future_uploads":false,"signatures":["deadbeef"]}`
+	for _, tc := range []struct {
+		name, route string
+		flags       []string
+	}{
+		{"table", "/datasets/42/delete-rows", nil},
+		{"cloud source", "/data-sources/7/delete-rows", []string{"--cloud-source-id", "7"}},
+		{"file", "/stored-items/3/delete-rows", []string{"--file-id", "3"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			mock := newRowsTestEnv(t)
+			registerCloudSourceResolve(mock)
+			record(mock, "GET", "/api/orgs/"+testOrgID+"/stored-items/3", `{"id":3,"dataset_id":42}`)
+			got := record(mock, "POST", "/api/orgs/"+testOrgID+tc.route, `{"result":"ok","affected_rows":1}`)
+			args := append([]string{"rows", "delete-quarantined", "orders", "--reason", testReason, "--yes",
+				"--signature", "deadbeef", "--exclude-from-future-uploads=false"}, tc.flags...)
+			if _, _, err := runRows(t, args...); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got.hits != 1 {
+				t.Fatalf("hits = %d, want 1", got.hits)
+			}
+			if got.body != want {
+				t.Errorf("body = %s, want %s", got.body, want)
+			}
+		})
+	}
 }

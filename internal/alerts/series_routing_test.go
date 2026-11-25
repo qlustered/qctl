@@ -62,7 +62,7 @@ func TestFooterOffersAssignReportingPeriodAsAGeneratorAndTryAgainAsIs(t *testing
 func TestRoutingReasonAndPeriodKeyAreShownAtDefaultVerbosity(t *testing.T) {
 	a := routingAlertFull()
 	var reason api.AlertBodySchema_Reason
-	if err := reason.FromSeriesFileRoutingReason(api.PeriodLocked); err != nil {
+	if err := reason.FromSeriesFileRoutingReason(api.SeriesFileRoutingReasonPeriodLocked); err != nil {
 		t.Fatal(err)
 	}
 	period := "2026-06"
@@ -92,7 +92,7 @@ func TestRoutingReasonAndPeriodKeyAreShownAtDefaultVerbosity(t *testing.T) {
 func TestRoutingQuestionIsShownAtDefaultVerbosity(t *testing.T) {
 	a := routingAlertFull()
 	var reason api.AlertBodySchema_Reason
-	if err := reason.FromSeriesFileRoutingReason(api.NoMatchingPeriod); err != nil {
+	if err := reason.FromSeriesFileRoutingReason(api.SeriesFileRoutingReasonNoMatchingPeriod); err != nil {
 		t.Fatal(err)
 	}
 	asked := uuid.MustParse("6f1c2a4e-0d1b-4c8e-9a51-3b7d2e8f4a10")
@@ -107,7 +107,7 @@ func TestRoutingQuestionIsShownAtDefaultVerbosity(t *testing.T) {
 		}
 	}
 
-	notAsked := api.OutboundEmailSkipReasonNotAMember
+	notAsked := api.NotAMember
 	empty := []string{}
 	a.Body = &api.AlertBodySchema{Reason: &reason, NotAskedReason: &notAsked, OfferedPeriodKeys: &empty}
 	body := APIResponseToManifest(&a, nil, 0).Spec.Body

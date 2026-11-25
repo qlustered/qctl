@@ -33,7 +33,7 @@ func heldAlertFull() AlertFull {
 			NonBlankRowCount: alertPtr(40),
 		},
 	}
-	reason := api.OutboundEmailSkipReasonNotAMember
+	reason := api.NotAMember
 	a.Body = &api.AlertBodySchema{Findings: &findings, NotAskedReason: &reason, FileName: alertPtr("june.csv")}
 	return a
 }

@@ -83,20 +83,24 @@ func runDescribeRuleMerge(cmd *cobra.Command, args []string) error {
 	return rule_merges.RenderMerge(cmd.OutOrStdout(), merge, ruleMergeNames(ctx, merge))
 }
 
-// ruleMergeNames looks up the names of merge's two tables and of each table's
+// ruleMergeNames looks up the names of merge's tables and of each table's
 // rules. A lookup that fails leaves its names unknown.
 func ruleMergeNames(ctx *cmdutil.CommandContext, merge *rule_merges.RuleMerge) rule_merges.RenderNames {
 	token := ctx.Credential.AccessToken
 	tables := datasets.NewClient(ctx.ServerURL, ctx.OrganizationID, ctx.Verbosity)
 	names := rule_merges.RenderNames{
-		SourceTable: ruleMergeTableName(tables, token, merge.SourceDatasetID),
 		TargetTable: ruleMergeTableName(tables, token, merge.TargetDatasetID),
+	}
+	if merge.SourceDatasetID != nil {
+		names.SourceTable = ruleMergeTableName(tables, token, *merge.SourceDatasetID)
 	}
 	rules, err := dataset_rules.NewClient(ctx.ServerURL, ctx.OrganizationID, ctx.Verbosity)
 	if err != nil {
 		return names
 	}
-	names.SourceRule = ruleMergeRuleNames(rules, token, merge.SourceDatasetID)
+	if merge.SourceDatasetID != nil {
+		names.SourceRule = ruleMergeRuleNames(rules, token, *merge.SourceDatasetID)
+	}
 	names.TargetRule = ruleMergeRuleNames(rules, token, merge.TargetDatasetID)
 	return names
 }

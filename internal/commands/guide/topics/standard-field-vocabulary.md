@@ -123,9 +123,9 @@ metadata = RuleMetadata(
 ```
 
 The complete class and submit workflow are in `qctl guide submit-rules`.
-Submit the file, then inspect the binding. The example below assumes your
-class is named `OrderIdCheckRule`; use the slug printed by submit if yours is
-different:
+Submit the file (`ops` role only; any other role gets a 403), then inspect
+the binding. The example below assumes your class is named
+`OrderIdCheckRule`; use the slug printed by submit if yours is different:
 
 ```bash
 qctl submit rules -f rules.py --yes
@@ -170,9 +170,9 @@ spec:
 qctl apply -f table-rule.yaml --yes
 ```
 
-When the rule field's standard field points to exactly one live column, instantiation
-prefills that field's column mapping. An explicit `spec.column_mapping` entry
-wins; two columns with the same standard field need an explicit choice. See
+When exactly one live column of a type the rule field accepts carries its
+standard field, instantiation binds the field to that column. An explicit
+`spec.column_mapping` entry wins; two such columns need an explicit choice. See
 `qctl guide instantiate-rule` for mapping, parameters, and staged results.
 
 ## Permissions and cleanup

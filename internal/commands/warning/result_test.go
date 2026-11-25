@@ -143,7 +143,7 @@ const stagedSuggestionID = "33333333-3333-3333-3333-333333333333"
 // keywordWarning is an open invalid_keyword warning 55 on table 42 offering
 // the plain keyword action and one compound keyword action.
 func keywordWarning() warnings.WarningFull {
-	return prefixWarning(api.InvalidKeyword, api.ValidationAddANewKeyword, api.ValidationAddANewKeywordMapValue)
+	return prefixWarning(api.IssueTypeEnumInvalidKeyword, api.ValidationAddANewKeyword, api.ValidationAddANewKeywordMapValue)
 }
 
 // registerStagingWarningResolve answers the resolve POST for id with 200 and

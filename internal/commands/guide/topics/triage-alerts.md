@@ -281,9 +281,11 @@ action's name with `not open to you` where you may do neither.
   `CHANGE_REVIEW_POLICY_DENIED` (both exit 4).
 - `propose` takes the same `--action`, `-f` and `--dry-run` inputs as
   `resolve`, never prompts and has no `--yes`.
-- While a live change proposal holds the issue, `describe` names it under
-  HELD BY CHANGE PROPOSAL and submitting another proposal for it is refused
-  with 409 `CHANGE_PROPOSAL_ACTIVE`; follow that proposal instead.
+- While a live change proposal holds the whole issue, `describe` names it
+  under HELD BY CHANGE PROPOSAL. A proposal holding only some of its rows is
+  listed in the `row_change_proposals` field of `-o json` instead. Another
+  proposal for a held issue or row is refused with 409
+  `CHANGE_PROPOSAL_ACTIVE`; follow that proposal instead.
 - An action that is not open to you is a decision for someone else: say so
   and name the action rather than looking for another way to run it.
 

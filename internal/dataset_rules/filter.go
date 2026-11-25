@@ -1,5 +1,7 @@
 package dataset_rules //nolint:revive // Public package name matches the established resource domain.
 
+import "context"
+
 // GetDatasetRulesByState filters every matching page before applying pagination.
 func (c *Client) GetDatasetRulesByState(
 	accessToken string, datasetID int, params GetDatasetRulesParams, state DatasetRuleState,
@@ -12,7 +14,7 @@ func (c *Client) GetDatasetRulesByState(
 	}
 	allParams := params
 	allParams.Limit = 1000
-	rules, err := c.getAllDatasetRules(accessToken, datasetID, allParams)
+	rules, err := c.getAllDatasetRules(context.Background(), accessToken, datasetID, allParams)
 	if err != nil {
 		return nil, err
 	}

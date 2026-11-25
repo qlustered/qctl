@@ -73,16 +73,10 @@ func optionalColumnsOf(rev *rule_versions.RuleRevisionFull) []string {
 	return *rev.OptionalColumns
 }
 
-// resolveInstantiateColumnMapping defaults and validates instantiate bindings.
-func resolveInstantiateColumnMapping(provided map[string]string, rev *rule_versions.RuleRevisionFull, produced map[string]bool, suggested map[string]string) (map[string]string, bool, error) {
+// validateColumnMappingKeys rejects a column_mapping key that names no input
+// or validates/corrects/enriches field of rev.
+func validateColumnMappingKeys(provided map[string]string, rev *rule_versions.RuleRevisionFull) error {
 	columns := ruleMappedColumns(rev)
-	required := requiredRuleColumns(columns, optionalColumnsOf(rev))
-	if len(provided) == 0 {
-		return defaultInstantiateColumnMapping(rev.InputColumns, required, produced, suggested), true, nil
-	}
-
-	missing := missingInstantiateColumns(required, provided, produced, suggested)
-
 	allowed := make(map[string]bool, len(columns))
 	for _, col := range columns {
 		allowed[col] = true
@@ -93,57 +87,12 @@ func resolveInstantiateColumnMapping(provided map[string]string, rev *rule_versi
 			unknown = append(unknown, key)
 		}
 	}
+	if len(unknown) == 0 {
+		return nil
+	}
 	sort.Strings(unknown)
-
-	if len(missing) > 0 {
-		identityNote := "the identity default (used when column_mapping is omitted entirely and no unique standard field column exists) only helps if your table's columns share the rule's field names"
-		hint := identityNote
-		if len(required) == 1 {
-			hint = fmt.Sprintf("use spec.column instead of column_mapping for a one-column rule; %s", identityNote)
-		}
-		return nil, false, qerrors.NewBadUsagef("column_mapping must bind each required input or validates/corrects/enriches field without a produced_fields declaration or unique standard field match; missing: [%s] (%s)",
-			strings.Join(missing, ", "), hint)
-	}
-	if len(unknown) > 0 {
-		allowedList := make([]string, 0, len(allowed))
-		for col := range allowed {
-			allowedList = append(allowedList, col)
-		}
-		sort.Strings(allowedList)
-		return nil, false, qerrors.NewBadUsagef("column_mapping contains keys that are not input columns or validates/corrects/enriches columns of this rule revision: [%s] (allowed keys: [%s])",
-			strings.Join(unknown, ", "), strings.Join(allowedList, ", "))
-	}
-	return provided, false, nil
-}
-
-// defaultInstantiateColumnMapping identity-maps inputs and unproduced required fields.
-func defaultInstantiateColumnMapping(inputs, required []string, produced map[string]bool, suggested map[string]string) map[string]string {
-	mapping := make(map[string]string, len(inputs)+len(required))
-	// Keep the existing default for optional inputs too.
-	for _, col := range inputs {
-		if _, ok := suggested[col]; !ok && col != "*" {
-			mapping[col] = col
-		}
-	}
-	for _, col := range required {
-		if _, willFill := suggested[col]; !willFill && !produced[col] {
-			mapping[col] = col
-		}
-	}
-	return mapping
-}
-
-// missingInstantiateColumns names required fields with no binding or declaration.
-func missingInstantiateColumns(required []string, provided map[string]string, produced map[string]bool, suggested map[string]string) []string {
-	var missing []string
-	for _, col := range required {
-		_, mapped := provided[col]
-		_, willFill := suggested[col]
-		if !mapped && !willFill && !produced[col] {
-			missing = append(missing, col)
-		}
-	}
-	return missing
+	return qerrors.NewBadUsagef("column_mapping contains keys that are not input columns or validates/corrects/enriches columns of this rule revision: [%s] (allowed keys: [%s])",
+		strings.Join(unknown, ", "), strings.Join(sortedKeys(allowed), ", "))
 }
 
 // joinOrNone renders a column list, or "none" for an empty list.
@@ -169,28 +118,12 @@ func resolveShorthandColumn(column string, provided map[string]string, rev *rule
 
 // formatColumnMapping renders sorted "input -> column" pairs.
 func formatColumnMapping(mapping map[string]string) string {
-	return formatColumnMappingWithConcepts(mapping, nil, nil)
-}
-
-func formatColumnMappingWithConcepts(mapping map[string]string, accepted, concepts map[string]string) string {
 	if len(mapping) == 0 {
 		return "(none)"
 	}
-	keys := make([]string, 0, len(mapping))
-	for k := range mapping {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	pairs := make([]string, 0, len(keys))
-	for _, k := range keys {
-		pair := fmt.Sprintf("%s -> %s", k, mapping[k])
-		if types := accepted[k]; types != "" {
-			pair += fmt.Sprintf(" [%s]", types)
-		}
-		if slug := concepts[k]; slug != "" {
-			pair += fmt.Sprintf(" (from standard field %s)", slug)
-		}
-		pairs = append(pairs, pair)
+	pairs := make([]string, 0, len(mapping))
+	for _, k := range sortedKeys(mapping) {
+		pairs = append(pairs, fmt.Sprintf("%s -> %s", k, mapping[k]))
 	}
 	return strings.Join(pairs, ", ")
 }
@@ -250,6 +183,8 @@ func applyTableRuleYAML(cmd *cobra.Command, doc manifestDoc) (*applyResult, erro
 	case *dataset_rules.DatasetRuleDetail:
 		return namedApplyResult(item, "table-rule", item.ID), err
 	case *dataset_rules.Suggestion:
+		return namedApplyResult(item, "rule-suggestion", item.ID), err
+	case *dataset_rules.InstantiateSuggestion:
 		return namedApplyResult(item, "rule-suggestion", item.ID), err
 	case nil:
 		return nil, err
@@ -535,21 +470,17 @@ func pendingMigrationNextStep(rule *dataset_rules.DatasetRuleDetail) string {
 	}
 }
 
-type conceptFill struct{ column, slug string }
-
 // renderInstantiateConfirmation prints the pre-flight summary for a table
 // rule instantiate — organization, rule revision, dataset, the resolved
-// instance name and column mapping (noting when the mapping was defaulted),
-// and the source file — ahead of the confirmation prompt. resolvedFrom is the
-// identifier the manifest actually wrote when spec.rule_revision_id was not
-// already a full UUID, so the prompt shows both what the user typed and what
-// it resolved to; "" when nothing was resolved.
+// instance name, each rule field's binding, and the source file — ahead of the
+// confirmation prompt. resolvedFrom is the identifier the manifest actually
+// wrote when spec.rule_revision_id was not already a full UUID, so the prompt
+// shows both what the user typed and what it resolved to; "" when nothing was
+// resolved.
 //
-// revDetail is the revision the instantiate resolved to; the accepted field
-// types it declares annotate the mapping so the reader can spot a wrong
-// binding before answering the prompt. It is never used to reject one -- see
-// formatColumnMapping.
-func renderInstantiateConfirmation(out io.Writer, orgID, orgName string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, colMapping map[string]string, defaulted bool, resolvedFrom string, conceptFills ...map[string]conceptFill) {
+// Each bound column carries the accepted field types revDetail declares for
+// its field.
+func renderInstantiateConfirmation(out io.Writer, orgID, orgName string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, bindings *instantiateBindings, resolvedFrom string) {
 	fmt.Fprintf(out, "Organization     : %s (%s)\n", terminal.Sanitize(orgName), orgID)
 	revision := manifest.Spec.RuleRevisionID
 	if resolvedFrom != "" {
@@ -562,25 +493,8 @@ func renderInstantiateConfirmation(out io.Writer, orgID, orgName string, doc man
 		instanceName = *manifest.Spec.InstanceName
 	}
 	fmt.Fprintf(out, "Instance Name    : %s\n", terminal.Sanitize(instanceName))
-	mappingNote := ""
-	if defaulted && len(colMapping) > 0 {
-		mappingNote = " (unmatched fields defaulted to the same-named table column)"
-	}
-	preview := make(map[string]string, len(colMapping))
-	for field, column := range colMapping {
-		preview[field] = column
-	}
-	conceptLabels := map[string]string{}
-	if len(conceptFills) > 0 {
-		for field, fill := range conceptFills[0] {
-			preview[field] = fill.column
-			conceptLabels[field] = fill.slug
-		}
-	}
-	// The mapping and the produced columns are column names -- the manifest's
-	// on one side, the revision's accepted types on the other.
-	fmt.Fprintf(out, "Column Mapping   : %s%s\n",
-		terminal.Sanitize(formatColumnMappingWithConcepts(preview, rule_versions.AcceptedColumnTypeText(revDetail), conceptLabels)), mappingNote)
+	fmt.Fprintf(out, "Column Mapping   : %s\n",
+		terminal.Sanitize(formatBindingEntries(bindings.confirmationEntries(revDetail), rule_versions.AcceptedColumnTypeText(revDetail))))
 	// Only for a rule that declares any: the line would read "(none)" on every
 	// validation rule, which is most of them.
 	if manifest.Spec.RowFilter != nil {
@@ -643,18 +557,17 @@ func resolveUpgradeSource(serverURL string, client *dataset_rules.Client, token 
 	return &predecessorID, nil
 }
 
-// prepareInstantiateRule resolves and reads the new revision, then validates
-// the optional predecessor against that same revision. Keeping those related
-// reads together gives the rest of the instantiate flow one prepared pair.
+// prepareInstantiateRule resolves and reads the new revision with its binding
+// preview for the table, then validates the optional predecessor against that
+// revision. With a predecessor, the revision is read again with a preview that
+// inherits the predecessor's bindings.
 func prepareInstantiateRule(client *dataset_rules.Client, rvClient *rule_versions.Client, token, serverURL string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest) (string, *rule_versions.RuleRevisionFull, *uuid.UUID, error) {
 	resolvedFrom, err := dataset_rules.ResolveManifestRule(rvClient, token, manifest, doc.Source)
 	if err != nil {
 		return "", nil, nil, err
 	}
 
-	// Fetch the rule revision once: input_columns drives column-mapping
-	// defaulting/validation, param_schema drives params validation.
-	revDetail, err := rvClient.GetRuleRevisionDetails(token, manifest.Spec.RuleRevisionID, manifest.Spec.DatasetID)
+	revDetail, err := rvClient.GetRuleRevisionBindingPreview(token, manifest.Spec.RuleRevisionID, manifest.Spec.DatasetID, nil)
 	if err != nil {
 		return "", nil, nil, fmt.Errorf("failed to fetch rule revision %s: %w", manifest.Spec.RuleRevisionID, err)
 	}
@@ -662,6 +575,12 @@ func prepareInstantiateRule(client *dataset_rules.Client, rvClient *rule_version
 	upgradedFromID, err := resolveUpgradeSource(serverURL, client, token, doc, manifest, revDetail)
 	if err != nil {
 		return "", nil, nil, err
+	}
+	if upgradedFromID != nil {
+		revDetail, err = rvClient.GetRuleRevisionBindingPreview(token, manifest.Spec.RuleRevisionID, manifest.Spec.DatasetID, upgradedFromID)
+		if err != nil {
+			return "", nil, nil, fmt.Errorf("failed to fetch rule revision %s with the bindings of %s: %w", manifest.Spec.RuleRevisionID, upgradedFromID, err)
+		}
 	}
 	return resolvedFrom, revDetail, upgradedFromID, nil
 }
@@ -694,8 +613,12 @@ func applyTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.C
 		return nil, err
 	}
 
-	colMapping, conceptFills, defaulted, err := instantiateColumnMapping(manifest, revDetail, doc)
+	colMapping, err := instantiateColumnMapping(manifest, revDetail, doc)
 	if err != nil {
+		return nil, err
+	}
+	bindings := newInstantiateBindings(manifest, revDetail, colMapping)
+	if err := bindings.refuseUnbound(doc, manifest.Spec.DatasetID); err != nil {
 		return nil, err
 	}
 
@@ -704,7 +627,7 @@ func applyTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.C
 	}
 
 	// Before the prompt, so --yes cannot skip it.
-	forcedRuleID, err := checkTableRuleDuplicates(promptOut, client, opts.suggestions, token, doc, manifest, revDetail, colMapping, conceptFills, upgradedFromID)
+	forcedRuleID, err := checkTableRuleDuplicates(promptOut, client, opts.suggestions, token, doc, manifest, revDetail, colMapping, bindings.auto(), upgradedFromID)
 	if err != nil {
 		return nil, err
 	}
@@ -734,7 +657,7 @@ func applyTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.C
 	// there is no question, and every value in it is something the caller just
 	// wrote in the manifest.
 	if !yes {
-		renderInstantiateConfirmation(out, orgID, orgName, doc, manifest, revDetail, colMapping, defaulted, resolvedFrom, conceptFills)
+		renderInstantiateConfirmation(out, orgID, orgName, doc, manifest, revDetail, bindings, resolvedFrom)
 
 		if !cmdutil.CanPrompt() {
 			return nil, qerrors.NewBadUsagef("confirmation required for %s: re-run with --yes (-y) to apply without prompting", doc.Source)
@@ -757,37 +680,40 @@ func applyTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.C
 		return client.InstantiateRule(token, manifest.Spec.RuleRevisionID, req)
 	})
 	if err != nil {
+		if unresolved, ok := unresolvedBindingsOf(err); ok {
+			return nil, fmt.Errorf("rule instantiation failed for %s: %w\n\n%s", doc.Source, err, renderUnresolvedBindings(unresolved))
+		}
 		return nil, fmt.Errorf("rule instantiation failed for %s: %w", doc.Source, err)
 	}
 
-	return finishTableRuleInstantiate(out, promptOut, client, token, outcome, manifest.Spec.DatasetID, forcedRuleID, upgradedFromID, opts.wait)
+	return finishTableRuleInstantiate(out, promptOut, client, token, outcome, manifest.Spec.DatasetID, colMapping, forcedRuleID, upgradedFromID, opts.wait)
 }
 
-// finishTableRuleInstantiate renders the response and waits for a new rule's validation.
-func finishTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.Client, token string, outcome *dataset_rules.InstantiateOutcome, datasetID int, forcedRuleID, upgradedFromID *uuid.UUID, wait *tableRuleWait) (any, error) {
+// finishTableRuleInstantiate renders the response and waits for a new rule's
+// validation. sent is the rule_column_mapping the request carried.
+func finishTableRuleInstantiate(out, promptOut io.Writer, client *dataset_rules.Client, token string, outcome *dataset_rules.InstantiateOutcome, datasetID int, sent map[string]string, forcedRuleID, upgradedFromID *uuid.UUID, wait *tableRuleWait) (any, error) {
 	if outcome.Staged != nil {
-		renderStagedInstantiateOutcome(out, outcome.Staged, datasetID, upgradedFromID)
+		renderStagedInstantiateOutcome(out, outcome.Staged, datasetID, sent, upgradedFromID)
 		writeStagedNothingToWaitFor(promptOut, outcome.Staged, wait)
 		return outcome.Staged, nil
 	}
 
 	if forcedRuleID != nil && outcome.Created.ID == *forcedRuleID {
-		renderForcedUpdateOutcome(out, outcome.Created, upgradedFromID)
+		renderForcedUpdateOutcome(out, outcome.Created, sent, upgradedFromID)
 		if wait != nil {
 			writeNothingToWaitFor(promptOut, "spec.force updated the existing rule in place without a validation dry run")
 		}
 		return outcome.Created, nil
 	}
-	renderCreatedOutcome(out, outcome.Created, upgradedFromID)
+	renderCreatedOutcome(out, outcome.Created, sent, upgradedFromID)
 	return waitForCreatedTableRule(out, promptOut, client, token, outcome.Created, wait)
 }
 
-// renderForcedUpdateOutcome prints a forced update's rule, state and readback.
-func renderForcedUpdateOutcome(out io.Writer, rule *dataset_rules.DatasetRuleDetail, upgradedFromID *uuid.UUID) {
+// renderForcedUpdateOutcome prints a forced update's rule, bindings, state and
+// readback. sent is the rule_column_mapping the request carried.
+func renderForcedUpdateOutcome(out io.Writer, rule *dataset_rules.DatasetRuleDetail, sent map[string]string, upgradedFromID *uuid.UUID) {
 	fmt.Fprintf(out, "Table rule updated: %s (%s)\n", terminal.Sanitize(rule.InstanceName), rule.ID)
-	if len(rule.ColumnMappingDict) > 0 {
-		fmt.Fprintf(out, "  mapping     : %s\n", terminal.Sanitize(formatColumnMapping(rule.ColumnMappingDict)))
-	}
+	renderBindingsLine(out, "  bindings    : ", appliedBindingEntries(sent, rule.FieldBindings, rule.ColumnMappingDict, producedFieldNames(rule.ProducedFields)))
 	renderCreatedUpgradeFollowUp(out, upgradedFromID, rule)
 	if produced := dataset_rules.ProducedFieldsFromResponse(rule.ProducedFields); len(produced) > 0 {
 		fmt.Fprintf(out, "  produced    : %s\n", terminal.Sanitize(dataset_rules.FormatProducedFields(produced)))
@@ -800,13 +726,12 @@ func renderForcedUpdateOutcome(out io.Writer, rule *dataset_rules.DatasetRuleDet
 	fmt.Fprintln(out)
 }
 
-// renderCreatedOutcome prints a 201: the created rule, where it stands, and
-// how to read it back.
-func renderCreatedOutcome(out io.Writer, created *dataset_rules.DatasetRuleDetail, upgradedFromID *uuid.UUID) {
+// renderCreatedOutcome prints a 201: the created rule, its bindings, where it
+// stands, and how to read it back. sent is the rule_column_mapping the request
+// carried.
+func renderCreatedOutcome(out io.Writer, created *dataset_rules.DatasetRuleDetail, sent map[string]string, upgradedFromID *uuid.UUID) {
 	fmt.Fprintf(out, "Table rule created: %s (%s)\n", terminal.Sanitize(created.InstanceName), created.ID.String())
-	if len(created.ColumnMappingDict) > 0 {
-		fmt.Fprintf(out, "  mapping     : %s\n", terminal.Sanitize(formatColumnMapping(created.ColumnMappingDict)))
-	}
+	renderBindingsLine(out, "  bindings    : ", appliedBindingEntries(sent, created.FieldBindings, created.ColumnMappingDict, producedFieldNames(created.ProducedFields)))
 	renderCreatedUpgradeFollowUp(out, upgradedFromID, created)
 	renderCreatedState(out, created, upgradedFromID != nil)
 	fmt.Fprintln(out)
@@ -827,57 +752,33 @@ func renderCreatedUpgradeFollowUp(out io.Writer, upgradedFromID *uuid.UUID, crea
 	}
 }
 
-// instantiateColumnMapping resolves an instantiate's bindings and concept fills.
-func instantiateColumnMapping(manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, doc manifestDoc) (map[string]string, map[string]conceptFill, bool, error) {
+// instantiateColumnMapping is the rule_column_mapping a create sends:
+// spec.column expanded, or spec.column_mapping, nil when empty. A key naming
+// no field of revDetail is an exit-2 error.
+func instantiateColumnMapping(manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, doc manifestDoc) (map[string]string, error) {
 	specMapping := manifest.Spec.ColumnMapping
 	if manifest.Spec.Column != "" {
 		expanded, err := resolveShorthandColumn(manifest.Spec.Column, manifest.Spec.ColumnMapping, revDetail)
 		if err != nil {
-			return nil, nil, false, fmt.Errorf("%s: %w", doc.Source, err)
+			return nil, fmt.Errorf("%s: %w", doc.Source, err)
 		}
 		specMapping = expanded
 	}
-	produced := producedRuleFields(manifest)
-	suggested, fills := conceptSuggestions(produced, revDetail, specMapping)
-	colMapping, defaulted, err := resolveInstantiateColumnMapping(specMapping, revDetail, produced, suggested)
-	if err != nil {
-		return nil, nil, false, fmt.Errorf("%s: %w", doc.Source, err)
+	if len(specMapping) == 0 {
+		return nil, nil
 	}
-	return colMapping, fills, defaulted, nil
+	if err := validateColumnMappingKeys(specMapping, revDetail); err != nil {
+		return nil, fmt.Errorf("%s: %w", doc.Source, err)
+	}
+	return specMapping, nil
 }
 
-// producedRuleFields returns the fields declared in spec.produced_fields.
-func producedRuleFields(manifest *dataset_rules.TableRuleApplyManifest) map[string]bool {
-	produced := map[string]bool{}
-	if manifest.Spec.ProducedFields != nil {
-		for _, field := range *manifest.Spec.ProducedFields {
-			produced[field.RuleFieldName] = true
-		}
+// renderBindingsLine prints entries after label, or nothing for no entries.
+func renderBindingsLine(out io.Writer, label string, entries []bindingEntry) {
+	if len(entries) == 0 {
+		return
 	}
-	return produced
-}
-
-// conceptSuggestions identifies bindings the server can fill for this table.
-func conceptSuggestions(produced map[string]bool, revDetail *rule_versions.RuleRevisionFull, specMapping map[string]string) (map[string]string, map[string]conceptFill) {
-	mustBind := map[string]bool{}
-	for _, field := range requiredRuleColumns(ruleMappedColumns(revDetail), optionalColumnsOf(revDetail)) {
-		mustBind[field] = true
-	}
-	suggested := map[string]string{}
-	fills := map[string]conceptFill{}
-	if revDetail.FieldColumnCandidates != nil {
-		for _, candidate := range *revDetail.FieldColumnCandidates {
-			field := candidate.RuleFieldName
-			if !mustBind[field] || produced[field] || candidate.SuggestedColumn == nil {
-				continue
-			}
-			suggested[field] = *candidate.SuggestedColumn
-			if _, explicit := specMapping[field]; !explicit && candidate.Concept != nil {
-				fills[field] = conceptFill{column: *candidate.SuggestedColumn, slug: candidate.Concept.Slug}
-			}
-		}
-	}
-	return suggested, fills
+	fmt.Fprintf(out, "%s%s\n", label, terminal.Sanitize(formatBindingEntries(entries, nil)))
 }
 
 // renderCreatedState prints a created rule's produced columns, state,
@@ -1050,16 +951,25 @@ func renderBreadcrumbs(out io.Writer, breadcrumbs []breadcrumb) {
 // migration is open and this rule would touch the schema. Nothing was created,
 // so unlike renderStagedOutcome there is no "applied now" line. Reported as a
 // success, with the resolution commands (kubectl-style breadcrumbs).
-func renderStagedInstantiate(out io.Writer, s *dataset_rules.Suggestion, datasetID int) {
-	renderStagedInstantiateOutcome(out, s, datasetID, nil)
+func renderStagedInstantiate(out io.Writer, s *dataset_rules.InstantiateSuggestion, datasetID int) {
+	renderStagedInstantiateOutcome(out, s, datasetID, nil, nil)
 }
 
-func renderStagedInstantiateOutcome(out io.Writer, s *dataset_rules.Suggestion, datasetID int, upgradedFromID *uuid.UUID) {
+// renderStagedInstantiateOutcome is renderStagedInstantiate with the bindings
+// of the staged create, sent being the rule_column_mapping the request
+// carried, and the predecessor's fate.
+func renderStagedInstantiateOutcome(out io.Writer, s *dataset_rules.InstantiateSuggestion, datasetID int, sent map[string]string, upgradedFromID *uuid.UUID) {
 	fmt.Fprintf(out, "tablerule %q staged for review\n", s.InstanceName)
 	fmt.Fprintf(out, "  staged : the whole instantiation (suggestion %s, state: %s)\n", s.ID, terminal.Sanitize(string(s.State)))
-	if len(s.RuleColumnMapping) > 0 {
-		fmt.Fprintf(out, "  mapping : %s\n", terminal.Sanitize(formatColumnMapping(s.RuleColumnMapping)))
+	produced := map[string]bool{}
+	if s.ProducedFields != nil {
+		for _, field := range *s.ProducedFields {
+			if name, ok := field["rule_field_name"].(string); ok {
+				produced[name] = true
+			}
+		}
 	}
+	renderBindingsLine(out, "  bindings : ", appliedBindingEntries(sent, s.FieldBindings, s.RuleColumnMapping, produced))
 	if upgradedFromID != nil {
 		fmt.Fprintf(out, "  predecessor : %s remains active until the suggestion is accepted and the replacement is enabled\n", upgradedFromID)
 	}

@@ -285,9 +285,9 @@ func heldIssueColumns(defaults string, has *bool, states []api.ChangeProposalSta
 // listing of noun ("alerts" or "warnings").
 func addChangeProposalFilterFlags(cmd *cobra.Command, noun string) {
 	cmd.Flags().Bool("has-change-proposal", false,
-		"Only "+noun+" a change proposal holds; --has-change-proposal=false for those none holds")
+		"Only "+noun+" a change proposal holds whole or by a row; --has-change-proposal=false for those none holds")
 	cmd.Flags().StringArray("change-proposal-state", nil,
-		"Only "+noun+" held by a change proposal in this state (repeatable; only pending_review, changes_requested and executing hold): "+
+		"Only "+noun+" held by a change proposal in this state (repeatable; pending_review, changes_requested and executing hold, and executed while a rule suggestion it staged is pending): "+
 			strings.Join(change_proposals.StateNames(), ", "))
 	if err := cmd.RegisterFlagCompletionFunc("change-proposal-state", completeChangeProposalState); err != nil {
 		panic(err) // a completion function that is not registered is a programming error

@@ -56,7 +56,7 @@ func TestDeleteQuarantined_SignatureFormReportsUnmatchedAndNotExcluded(t *testin
 		`{"result":"ok","affected_rows":2,"unmatched_signatures":["cafe"],"not_excluded_signatures":["beef"]}`)
 
 	args := []string{"rows", "delete-quarantined", "--reason", testReason, "orders",
-		"--signature", "deadbeef", "--signature", "beef", "--signature", "cafe", "--yes"}
+		"--signature", "deadbeef", "--exclude-from-future-uploads", "--signature", "beef", "--signature", "cafe", "--yes"}
 	stdout, stderr, err := runRows(t, args...)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -98,7 +98,7 @@ func TestDeleteQuarantined_SignatureDocumentAlwaysCarriesBothLists(t *testing.T)
 	record(mock, "POST", orgPath+"/datasets/42/delete-rows", `{"result":"ok","affected_rows":1}`)
 
 	stdout, stderr, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders",
-		"--signature", "deadbeef", "--yes", "-o", "json")
+		"--signature", "deadbeef", "--exclude-from-future-uploads", "--yes", "-o", "json")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -125,7 +125,7 @@ func TestDeleteQuarantined_EverySignatureUnmatchedExitsNotFound(t *testing.T) {
 			record(mock, "POST", sc.path,
 				`{"result":"ok","affected_rows":0,"unmatched_signatures":["deadbeef","cafe"],"not_excluded_signatures":[]}`)
 			args := append([]string{"rows", "delete-quarantined", "--reason", testReason, "orders"}, sc.flags...)
-			stdout, _, err := runRows(t, append(args, "--signature", "deadbeef", "--signature", "cafe", "--yes")...)
+			stdout, _, err := runRows(t, append(args, "--signature", "deadbeef", "--exclude-from-future-uploads", "--signature", "cafe", "--yes")...)
 			if code := qerrors.GetExitCode(err); code != qerrors.ExitNotFound {
 				t.Fatalf("GetExitCode = %d (%v), want %d", code, err, qerrors.ExitNotFound)
 			}
@@ -146,7 +146,7 @@ func TestDeleteQuarantined_SomeSignaturesUnmatchedExitsZero(t *testing.T) {
 		`{"result":"ok","affected_rows":1,"unmatched_signatures":["cafe"],"not_excluded_signatures":[]}`)
 
 	_, stderr, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders",
-		"--signature", "deadbeef", "--signature", "cafe", "--yes")
+		"--signature", "deadbeef", "--exclude-from-future-uploads", "--signature", "cafe", "--yes")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -177,7 +177,7 @@ func TestDeleteQuarantined_StatusFormReportsSkippedRepeatedKeys(t *testing.T) {
 		"    quarantine 9f2a  row 17\n",
 		"    clean      1b7c  row 18\n",
 		"  qctl rows send-to-quarantine orders --row-id 18\n",
-		"  qctl rows delete-quarantined orders --signature 9f2a --signature 1b7c --reason <reason>\n",
+		"  qctl rows delete-quarantined orders --signature 9f2a --signature 1b7c --exclude-from-future-uploads=<true|false> --reason <reason>\n",
 	} {
 		if !strings.Contains(stderr, want) {
 			t.Errorf("stderr missing %q:\n%s", want, stderr)
@@ -275,8 +275,13 @@ func TestNonDeleteVerbs_DocumentIsAffectedRowsAlone(t *testing.T) {
 }
 
 // The prompt's consequence lines follow the selector: --signature names the
-// list its scope writes to, --status and --all exclude nothing.
+// files' lists it always writes and, per --exclude-from-future-uploads, the
+// list a new upload reads; --status and --all exclude nothing.
 func TestDeleteQuarantined_ConsequenceLinesFollowTheSelector(t *testing.T) {
+	fileSetup := func(mock *testutil.MockAPIServer) {
+		record(mock, "GET", orgPath+"/stored-items/3", `{"id":3,"dataset_id":42}`)
+	}
+	const reprocess = "--signature writes an exclusion entry for each deleted line, scoped to the line's source and identity, to "
 	for _, tc := range []struct {
 		name, path string
 		args       []string
@@ -285,20 +290,30 @@ func TestDeleteQuarantined_ConsequenceLinesFollowTheSelector(t *testing.T) {
 		absent     string
 	}{
 		{"signature at table scope", orgPath + "/datasets/42/delete-rows",
-			[]string{"--signature", "deadbeef"}, nil,
+			[]string{"--signature", "deadbeef", "--exclude-from-future-uploads"}, nil,
 			[]string{
-				"--signature writes an exclusion entry for each deleted line to the table's exclusion list, scoped to the line's source and identity, so future ingests from that source drop a line with the same identity.\n",
-				"A line whose identity a live clean row of the same source shares is deleted but not excluded, and the result lists it.\n",
+				reprocess + "the exclusion list of each file a deleted row came from, so a reprocess of those files does not bring the line back.\n",
+				"--exclude-from-future-uploads also writes them to the table's exclusion list, so a new upload drops a line with the same identity.\n",
+				"A line whose entry would drop a live clean row is deleted but not excluded, and the result lists it.\n",
 			}, "excludes nothing"},
+		{"signature at table scope, false", orgPath + "/datasets/42/delete-rows",
+			[]string{"--signature", "deadbeef", "--exclude-from-future-uploads=false"}, nil,
+			[]string{
+				reprocess + "the exclusion list of each file a deleted row came from",
+				"--exclude-from-future-uploads=false: a new upload of these lines loads them again.\n",
+			}, "also writes them"},
 		{"signature at cloud-source scope", orgPath + "/data-sources/7/delete-rows",
-			[]string{"--cloud-source-id", "7", "--signature", "deadbeef"}, registerCloudSourceResolve,
-			[]string{"to the cloud source's exclusion list (the table's, for a table-series source), scoped"}, "excludes nothing"},
+			[]string{"--cloud-source-id", "7", "--signature", "deadbeef", "--exclude-from-future-uploads"}, registerCloudSourceResolve,
+			[]string{"also writes them to the cloud source's exclusion list (the table's, for a table-series source), so"}, "excludes nothing"},
 		{"signature at file scope", orgPath + "/stored-items/3/delete-rows",
-			[]string{"--file-id", "3", "--signature", "deadbeef"},
-			func(mock *testutil.MockAPIServer) {
-				record(mock, "GET", orgPath+"/stored-items/3", `{"id":3,"dataset_id":42}`)
-			},
-			[]string{"to the file's exclusion list, scoped"}, "excludes nothing"},
+			[]string{"--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"}, fileSetup,
+			[]string{
+				reprocess + "the file's exclusion list, so",
+				"also writes them to the exclusion list of the file's cloud source (the table's, for a table-series source), so",
+			}, "excludes nothing"},
+		{"signature at file scope, false", orgPath + "/stored-items/3/delete-rows",
+			[]string{"--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads=false"}, fileSetup,
+			[]string{reprocess + "the file's exclusion list, so", "a new upload of these lines loads them again"}, "also writes them"},
 		{"status", orgPath + "/datasets/42/delete-rows",
 			[]string{"--status", "failed_validation"}, nil,
 			[]string{
@@ -354,7 +369,7 @@ func TestDeleteQuarantined_RepeatedKeyPartialDeleteHint(t *testing.T) {
 				testutil.RespondJSON(w, http.StatusConflict, json.RawMessage(body))
 			})
 			args := append([]string{"rows", "delete-quarantined", "--reason", testReason, "orders"}, sc.flags...)
-			stdout, _, err := runRows(t, append(args, "--signature", "9f2a", "--yes")...)
+			stdout, _, err := runRows(t, append(args, "--signature", "9f2a", "--exclude-from-future-uploads", "--yes")...)
 			if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage {
 				t.Fatalf("GetExitCode = %d (%v), want %d, the 409's", code, err, qerrors.ExitBadUsage)
 			}
@@ -368,7 +383,7 @@ func TestDeleteQuarantined_RepeatedKeyPartialDeleteHint(t *testing.T) {
 				"    clean      1b7c  row 18\n",
 				"Send the clean copies to quarantine, then delete every copy in one command:\n",
 				"  qctl rows send-to-quarantine orders --row-id 18\n",
-				"  qctl rows delete-quarantined orders --signature 9f2a --signature 1b7c --reason <reason>",
+				"  qctl rows delete-quarantined orders --signature 9f2a --signature 1b7c --exclude-from-future-uploads=<true|false> --reason <reason>",
 			} {
 				if !strings.Contains(err.Error(), want) {
 					t.Errorf("error missing %q:\n%v", want, err)
@@ -388,7 +403,7 @@ func TestDeleteQuarantined_OtherConflictsGetNoRepeatedKeyHint(t *testing.T) {
 		testutil.RespondJSON(w, http.StatusConflict, json.RawMessage(
 			`{"detail":{"msg":"Period is locked","error_code":"PERIOD_LOCKED"}}`))
 	})
-	_, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "9f2a", "--yes")
+	_, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "orders", "--signature", "9f2a", "--exclude-from-future-uploads", "--yes")
 	if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage {
 		t.Fatalf("GetExitCode = %d (%v)", code, err)
 	}
@@ -398,14 +413,12 @@ func TestDeleteQuarantined_OtherConflictsGetNoRepeatedKeyHint(t *testing.T) {
 }
 
 // A delete that removed rows names the listing that shows who deleted them,
-// narrowed to the cloud source at that scope. The file scope lists the whole
-// table, because the file route also deletes rows of other sources'
-// files (atlas-9po84.5).
+// narrowed to the cloud source or file it acted on.
 func TestDeleteQuarantined_DeletedRowsFollowUpNarrowsToTheScope(t *testing.T) {
 	want := map[string]string{
 		"table":        "  qctl get deleted-rows orders\n",
 		"cloud source": "  qctl get deleted-rows orders --cloud-source-id 7\n",
-		"file":         "  qctl get deleted-rows orders\n",
+		"file":         "  qctl get deleted-rows orders --file-id 3\n",
 	}
 	for _, sc := range deleteScopes {
 		t.Run(sc.name, func(t *testing.T) {
@@ -416,7 +429,7 @@ func TestDeleteQuarantined_DeletedRowsFollowUpNarrowsToTheScope(t *testing.T) {
 			record(mock, "POST", sc.path, `{"result":"ok","affected_rows":2}`)
 
 			args := append([]string{"rows", "delete-quarantined", "--reason", testReason, "orders",
-				"--signature", "deadbeef", "--yes"}, sc.flags...)
+				"--signature", "deadbeef", "--exclude-from-future-uploads", "--yes"}, sc.flags...)
 			stdout, _, err := runRows(t, args...)
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)

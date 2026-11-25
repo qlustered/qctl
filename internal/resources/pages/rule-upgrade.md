@@ -40,7 +40,7 @@ signature: dfe0a07
 - the listing is scoped to YOU, not to the org: you see rules you created or last edited, plus rules on tables you hold access to if you are an editor or admin, so two people can legitimately get different answers for the same rule. [backend]
 - only ENABLED rule instances are listed, so an instance sitting in error, disabled or pending_validation on the old revision does not appear even though it is outdated. [backend]
 - the read is gated on the ALERT_LIST permission, not RULE_LIST, so a 403 here is about your alert access rather than your rule access — today every role that can list rules also holds ALERT_LIST, so the two only come apart if that map changes. [backend]
-- upgrading is not done from here — instantiate the new revision with a TableRule manifest whose `spec.upgradedFrom` is the old instance's `id`, rather than disabling the old instance yourself; `qctl explain table-rule.spec.upgradedFrom` says when the old one is retired.
+- upgrading is not done from here, and never by disabling the old instance yourself. For a table whose rules come from a `TableRuleTemplate`, bump the entry's `release` and run `qctl diff -f` and `qctl apply -f` with the table (`qctl explain table-rule-template`); otherwise instantiate the new revision with a TableRule manifest whose `spec.upgradedFrom` is the old instance's `id`. `qctl explain table-rule.spec.upgradedFrom` says when the old one is retired.
 - the positional argument is a rule NAME, a rule-revision short ID or a rule-revision UUID — the same vocabulary `enable rule` takes — and a rule FAMILY uuid, such as the `family_id` that `get rules -o json` carries, is not accepted.
 - upgrade_to repeats the family's new default release on every row on purpose, so a single row is self-describing and a --columns slice keeps it.
 - `notify` addresses a FAMILY, so naming one of its non-default revisions by id lands on the default anyway and says so on stderr — while `--release` naming that same non-default release exits 2, because there the release is what you asked for rather than how you found the family.
@@ -56,6 +56,7 @@ signature: dfe0a07
 ## SEE ALSO
 
 - `qctl explain table-rule`
+- `qctl explain table-rule-template`
 - `qctl explain rule-revision`
 - `qctl explain notification`
 - `qctl guide rule-lifecycle`

@@ -308,11 +308,11 @@ const compositeRowDeleteRefusedHint = "For an organization-owned linked table, i
 	"`qctl get linked-table <table> -o yaml`. In the upstream table that supplies the row, " +
 	"move it to quarantine first if it is clean with " +
 	"`qctl rows send-to-quarantine <upstream-table> --row-id <upstream-row-id>`, then delete it with " +
-	"`qctl rows delete-quarantined <upstream-table> --signature <upstream-signature> --reason <reason>`."
+	"`qctl rows delete-quarantined <upstream-table> --signature <upstream-signature> --exclude-from-future-uploads=<true|false> --reason <reason>`."
 
 const cleanRowsImmutableHint = "Send the rows to quarantine with " +
 	"`qctl rows send-to-quarantine <table> --row-id <id>`, then delete them with " +
-	"`qctl rows delete-quarantined <table> --signature <signature> --reason <reason>`."
+	"`qctl rows delete-quarantined <table> --signature <signature> --exclude-from-future-uploads=<true|false> --reason <reason>`."
 
 const piiAccessRequiredHint = "Request temporary PII access with " +
 	"`qctl pii-access-request request --table-id <table-id> --reason <reason>`. " +

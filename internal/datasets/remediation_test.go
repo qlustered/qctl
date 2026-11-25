@@ -53,14 +53,14 @@ func TestDeleteRows_CleanPopulationSendsSignaturesAndIsBadDataFalse(t *testing.T
 	got := recordJSON(t, mock, "POST", "/api/orgs/"+testOrgID+"/datasets/42/delete-rows",
 		http.StatusOK, `{"result":"ok","affected_rows":3}`)
 
-	res, err := c.DeleteRows("tok", 42, []string{"deadbeef", "cafe"}, false, nil, "dupes")
+	res, err := c.DeleteRows("tok", 42, []string{"deadbeef", "cafe"}, false, nil, boolPtr(false), "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
 	if got.query != "is_bad_data=false" {
 		t.Errorf("query = %q, want %q", got.query, "is_bad_data=false")
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":["deadbeef","cafe"]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":false,"signatures":["deadbeef","cafe"]}` {
 		t.Errorf("body = %q, want the signature list and the comment", body)
 	}
 	if res.AffectedRows == nil || *res.AffectedRows != 3 {
@@ -78,14 +78,14 @@ func TestDeleteRows_BadPopulationBySignatureSendsBothIsBadDataAndTheList(t *test
 	got := recordJSON(t, mock, "POST", "/api/orgs/"+testOrgID+"/datasets/42/delete-rows",
 		http.StatusOK, `{"result":"ok","affected_rows":1}`)
 
-	res, err := c.DeleteRows("tok", 42, []string{"beef"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 42, []string{"beef"}, true, nil, boolPtr(true), "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
 	if got.query != "is_bad_data=true" {
 		t.Errorf("query = %q, want %q", got.query, "is_bad_data=true")
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":["beef"]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":true,"signatures":["beef"]}` {
 		t.Errorf("body = %q", body)
 	}
 	if res.AffectedRows == nil || *res.AffectedRows != 1 {
@@ -103,10 +103,10 @@ func TestDeleteRows_StatusSendsEmptyListNotNull(t *testing.T) {
 		http.StatusOK, `{"result":"ok","affected_rows":9}`)
 
 	st := api.QuarantineStatusFailedValidation
-	if _, err := c.DeleteRows("tok", 42, nil, true, &st, "dupes"); err != nil {
+	if _, err := c.DeleteRows("tok", 42, nil, true, &st, nil, "dupes"); err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":[]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":null,"signatures":[]}` {
 		t.Errorf("body = %q, want an empty signature list — a nil slice marshals to null and the backend rejects it", body)
 	}
 	if got.query != "is_bad_data=true&quarantine_status=failed_validation" {
@@ -566,7 +566,7 @@ func TestDeleteRows_SignatureFormCarriesUnmatchedAndNotExcluded(t *testing.T) {
 	recordJSON(t, mock, "POST", "/api/orgs/"+testOrgID+"/datasets/42/delete-rows", http.StatusOK,
 		`{"result":"ok","affected_rows":1,"unmatched_signatures":["cafe"],"not_excluded_signatures":["beef"]}`)
 
-	res, err := c.DeleteRows("tok", 42, []string{"beef", "cafe"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 42, []string{"beef", "cafe"}, true, nil, boolPtr(true), "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -589,7 +589,7 @@ func TestDeleteRows_StatusFormsCarrySkippedRepeatedKeys(t *testing.T) {
 		`{"result":"ok","affected_rows":4,"skipped_repeated_keys":[`+skippedGroup+`]}`)
 
 	st := api.QuarantineStatusFailedValidation
-	byStatus, err := c.DeleteRows("tok", 42, nil, true, &st, "dupes")
+	byStatus, err := c.DeleteRows("tok", 42, nil, true, &st, nil, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}

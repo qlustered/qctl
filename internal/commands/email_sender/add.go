@@ -53,8 +53,10 @@ sends nothing. It prints the subject and the text body; -o json and -o yaml
 print the subject, html and text, and -o name is refused (exit 2). The names
 are still required, so removing --dry-run gives the real command. The preview
 does not check that the address can be added: an operations user's address
-previews fine and the add is refused (409). On an inactive cloud source the
-preview is refused (409), while the add succeeds and sends no welcome email.
+previews fine and the add is refused (409), and so does an address a dev or
+sandbox server's MAIL_DEV_ALLOWED_RECIPIENTS refuses (422). On an inactive
+cloud source the preview is refused (409), while an add that passes those
+checks succeeds and sends no welcome email.
 
 Examples:
   qctl email-sender add carol@example.com --first-name Carol --last-name Smith --cloud-source-id 42 --dry-run

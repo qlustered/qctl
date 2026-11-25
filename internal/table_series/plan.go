@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/qlustered/qctl/internal/api"
@@ -82,12 +83,7 @@ func (c *Client) Prepare(token string, m *Manifest) (*Plan, error) {
 			break
 		}
 	}
-	current := map[int]Member{}
-	for _, series := range items {
-		for _, member := range series.Members {
-			current[member.DatasetID] = member
-		}
-	}
+	current, locked := indexMembers(items)
 	dc := datasets.NewClient(c.baseURL, c.orgID.String(), c.verbosity)
 	wanted := make([]Member, 0, len(m.Spec.Members))
 	seen := map[int]bool{}
@@ -112,6 +108,9 @@ func (c *Client) Prepare(token string, m *Manifest) (*Plan, error) {
 		series = nil
 	}
 	p.planMembers(wanted, current, series)
+	if err := refuseLockedMembers(p.Requests, locked); err != nil {
+		return nil, err
+	}
 	p.planRenamedByName(m, wanted)
 	p.planPeriodColumn(m)
 	if err := c.planDeadlineSchedule(token, p, m); err != nil {
@@ -201,6 +200,40 @@ func refuseKeptMembers(current *Series, wanted map[int]bool) error {
 	}
 	return qerrors.NewBadUsagef("spec.frequency: a series' frequency changes only while it has no tables, and the manifest keeps table IDs %v; "+
 		"apply the new frequency, and a spec.first_period_key of it or null, with those members removed, then add them back under the new frequency's period keys", kept)
+}
+
+// indexMembers returns every member of items by table ID, and the locked period of each locked one.
+func indexMembers(items []Series) (map[int]Member, map[int]*datasets.LockedPeriod) {
+	current, locked := map[int]Member{}, map[int]*datasets.LockedPeriod{}
+	for _, series := range items {
+		for _, member := range series.Members {
+			current[member.DatasetID] = member
+			if member.IsLocked {
+				locked[member.DatasetID] = &datasets.LockedPeriod{SeriesID: series.ID, SeriesName: series.Name, PeriodKey: member.PeriodKey}
+			}
+		}
+	}
+	return current, locked
+}
+
+// refuseLockedMembers refuses, with exit 2, requests that PATCH or DELETE a member in locked, naming each such member
+// once in request order.
+func refuseLockedMembers(requests []Request, locked map[int]*datasets.LockedPeriod) error {
+	var refused []string
+	seen := map[int]bool{}
+	for _, r := range requests {
+		period := locked[r.DatasetID]
+		if period == nil || seen[r.DatasetID] || (r.Method != http.MethodPatch && r.Method != http.MethodDelete) {
+			continue
+		}
+		seen[r.DatasetID] = true
+		refused = append(refused, fmt.Sprintf("\n  table %d is locked %s; unlock it with `%s`", r.DatasetID, period, period.UnlockCommand()))
+	}
+	if len(refused) == 0 {
+		return nil
+	}
+	return qerrors.NewBadUsagef("spec.members: the manifest moves, re-keys or removes a member whose period is locked, "+
+		"which the server refuses; nothing was written:%s", strings.Join(refused, ""))
 }
 
 func (p *Plan) planPeriodColumn(m *Manifest) {

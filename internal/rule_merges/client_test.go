@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -160,7 +161,7 @@ func TestGet_DecodesTheMerge(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Get: %v", err)
 	}
-	if merge.State != api.DatasetCopyStateApplying || merge.SourceDatasetID != testSourceID ||
+	if merge.State != api.DatasetCopyStateApplying || merge.SourceDatasetID == nil || *merge.SourceDatasetID != testSourceID ||
 		merge.TargetDatasetID != testTargetID || len(merge.Items) != 2 {
 		t.Errorf("merge = %+v", merge)
 	}
@@ -381,6 +382,10 @@ func TestErrorStatusesKeepTheirExitCode(t *testing.T) {
 			_, _, err := c.Apply("token", testTargetID, testMergeID, nil)
 			return err
 		}},
+		"PreviewTemplate": {"POST", mergesPath, func(c *Client) error {
+			_, _, err := c.PreviewTemplate("token", testTargetID, Template{Name: "t"})
+			return err
+		}},
 	}
 	statuses := map[int]int{
 		http.StatusBadRequest:          qerrors.ExitBadUsage,
@@ -411,5 +416,76 @@ func TestErrorStatusesKeepTheirExitCode(t *testing.T) {
 				}
 			})
 		}
+	}
+}
+
+// TestPreviewTemplate_PostsOnlyTheTemplate: the body is {"template": ...}
+// with no source_dataset_id, each entry carries rule, release and only the
+// optional keys it sets, and row_filter goes out as an object, as null when
+// RowFilterSet has no filter, and not at all otherwise.
+func TestPreviewTemplate_PostsOnlyTheTemplate(t *testing.T) {
+	c, mock := newTestClient(t)
+	var sent json.RawMessage
+	mock.RegisterHandler("POST", mergesPath, func(w http.ResponseWriter, r *http.Request) {
+		sent, _ = io.ReadAll(r.Body)
+		respondRaw(w, http.StatusOK, previewedMerge)
+	})
+
+	name := "Order Total Check"
+	severity := api.RuleSeverityWarning
+	params := map[string]interface{}{"threshold": 12.5}
+	mapping := map[string]string{"Purchase Time": "purchased_at"}
+	produced := []api.RuleTemplateProducedFieldSchema{{RuleFieldName: "total_ok"}}
+	conditions := []api.RowFilterCondition{{ColumnName: "status", Operator: api.RowFilterOperator("eq"), Value: resolutionTestStr("done")}}
+	filter := &api.DescribedRowFilter{Description: "Completed orders", Conditions: &conditions}
+	template := Template{Name: "monthly-orders", Entries: []TemplateEntry{
+		{RuleTemplateEntrySchema: api.RuleTemplateEntrySchema{
+			Rule: "order-total-rule", Release: "2.0.0", InstanceName: &name, Severity: &severity,
+			Params: &params, ColumnMapping: &mapping, ProducedFields: &produced, RowFilter: filter,
+		}, RowFilterSet: true},
+		{RuleTemplateEntrySchema: api.RuleTemplateEntrySchema{Rule: "refund-rule", Release: "1.0.0"}, RowFilterSet: true},
+		{RuleTemplateEntrySchema: api.RuleTemplateEntrySchema{Rule: "customer-name-split-rule", Release: "1.3.0"}},
+	}}
+
+	merge, body, err := c.PreviewTemplate("token", testTargetID, template)
+	if err != nil {
+		t.Fatalf("PreviewTemplate: %v", err)
+	}
+	if string(body) != previewedMerge || merge.ID != testMergeID {
+		t.Errorf("merge = %+v, body = %s; want the decoded response and its body as received", merge, body)
+	}
+	if got, want := mock.Requests(), []string{"POST " + mergesPath}; !reflect.DeepEqual(got, want) {
+		t.Errorf("requests = %v, want %v", got, want)
+	}
+	testutil.RequireSameJSONTree(t, sent, `{"template": {"name": "monthly-orders", "entries": [
+  {"rule": "order-total-rule", "release": "2.0.0", "instance_name": "Order Total Check", "severity": "warning",
+   "params": {"threshold": 12.5}, "column_mapping": {"Purchase Time": "purchased_at"},
+   "produced_fields": [{"rule_field_name": "total_ok", "dataset_field_name": null}],
+   "row_filter": {"description": "Completed orders", "conditions": [
+     {"column_name": "status", "operator": "eq", "value": "done", "value_high": null, "value_list": null}]}},
+  {"rule": "refund-rule", "release": "1.0.0", "row_filter": null},
+  {"rule": "customer-name-split-rule", "release": "1.3.0"}
+]}}`)
+}
+
+// TestTemplateMirrorsTheGeneratedSchema fails when a regenerated
+// RuleTemplateSchema or RuleTemplateEntrySchema gains or renames a key the
+// hand-written Template or templateEntryJSON does not send.
+func TestTemplateMirrorsTheGeneratedSchema(t *testing.T) {
+	keys := func(v interface{}) []string {
+		var out []string
+		typ := reflect.TypeOf(v)
+		for i := 0; i < typ.NumField(); i++ {
+			name, _, _ := strings.Cut(typ.Field(i).Tag.Get("json"), ",")
+			out = append(out, name)
+		}
+		sort.Strings(out)
+		return out
+	}
+	if got, want := keys(Template{}), keys(api.RuleTemplateSchema{}); !reflect.DeepEqual(got, want) {
+		t.Errorf("Template keys = %v, want the generated %v", got, want)
+	}
+	if got, want := keys(templateEntryJSON{}), keys(api.RuleTemplateEntrySchema{}); !reflect.DeepEqual(got, want) {
+		t.Errorf("templateEntryJSON keys = %v, want the generated %v", got, want)
 	}
 }

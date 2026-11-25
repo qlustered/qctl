@@ -28,8 +28,9 @@ that a rule change paused. An approval is permanent: a series with an
 approval cannot be deleted.
 
 Before confirmation, stderr shows the rule set's fingerprint, each table's rule
-count and the latest approval, including under --yes. The request approves
-that fingerprint; if the rules change meanwhile the server refuses, and you
+count and the latest approval, including under --yes. The fingerprint covers
+only each table's enabled rules. The request approves that fingerprint; if
+the enabled rules change meanwhile the server refuses, and you
 re-review with qctl get table-series <name-or-id> --rule-approval. Pass
 --fingerprint to approve only the fingerprint you reviewed: a different current
 fingerprint exits 2 before any write. A series without tables exits 2.

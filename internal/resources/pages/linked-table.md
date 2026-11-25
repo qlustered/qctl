@@ -4,7 +4,7 @@ aliases: [composite-dataset]
 kind: LinkedTable
 schema: openapi:CompositeDatasetApplyManifest
 guide: link-tables
-signature: a795350
+signature: 6740ae2
 ---
 
 ## USAGE

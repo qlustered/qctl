@@ -66,7 +66,7 @@ func TestCloudSourceDeleteRows_SendsCommentAndCarriesTheCount(t *testing.T) {
 	got := recordJSON(t, mock, "/api/orgs/"+csOrgID+"/data-sources/7/delete-rows",
 		http.StatusOK, `{"result":"ok","affected_rows":1,"unmatched_signatures":[],"not_excluded_signatures":[]}`)
 
-	res, err := c.DeleteRows("tok", 7, []string{"deadbeef"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 7, []string{"deadbeef"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -76,7 +76,7 @@ func TestCloudSourceDeleteRows_SendsCommentAndCarriesTheCount(t *testing.T) {
 	if got.query != "is_bad_data=true" {
 		t.Errorf("query = %q, want %q", got.query, "is_bad_data=true")
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":["deadbeef"]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":true,"signatures":["deadbeef"]}` {
 		t.Errorf("body = %q, want the signature list and the comment", body)
 	}
 }
@@ -87,7 +87,7 @@ func TestCloudSourceDeleteRows_NoCountStaysNil(t *testing.T) {
 	recordJSON(t, mock, "/api/orgs/"+csOrgID+"/data-sources/7/delete-rows",
 		http.StatusOK, `{"result":"ok"}`)
 
-	res, err := c.DeleteRows("tok", 7, []string{"deadbeef"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 7, []string{"deadbeef"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -104,13 +104,13 @@ func TestCloudSourceDeleteRows_CleanPopulationSendsIsBadDataFalse(t *testing.T) 
 	got := recordJSON(t, mock, "/api/orgs/"+csOrgID+"/data-sources/7/delete-rows",
 		http.StatusOK, `{"result":"ok"}`)
 
-	if _, err := c.DeleteRows("tok", 7, []string{"beef", "cafe"}, false, nil, "dupes"); err != nil {
+	if _, err := c.DeleteRows("tok", 7, []string{"beef", "cafe"}, false, nil, &excludeTrue, "dupes"); err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
 	if got.query != "is_bad_data=false" {
 		t.Errorf("query = %q, want %q", got.query, "is_bad_data=false")
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":["beef","cafe"]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":true,"signatures":["beef","cafe"]}` {
 		t.Errorf("body = %q", body)
 	}
 }
@@ -123,10 +123,10 @@ func TestCloudSourceDeleteRows_NilSignaturesSendsEmptyListNotNull(t *testing.T) 
 	got := recordJSON(t, mock, "/api/orgs/"+csOrgID+"/data-sources/7/delete-rows",
 		http.StatusOK, `{"result":"ok"}`)
 
-	if _, err := c.DeleteRows("tok", 7, nil, true, nil, "dupes"); err != nil {
+	if _, err := c.DeleteRows("tok", 7, nil, true, nil, nil, "dupes"); err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
-	if body := trimNL(got.body); body != `{"comment":"dupes","signatures":[]}` {
+	if body := trimNL(got.body); body != `{"comment":"dupes","exclude_from_future_uploads":null,"signatures":[]}` {
 		t.Errorf("body = %q, want an empty signature list — a nil slice marshals to null and the backend rejects it", body)
 	}
 }
@@ -368,7 +368,7 @@ func TestCloudSourceDeleteRows_CarriesUnmatchedAndNotExcluded(t *testing.T) {
 	recordJSON(t, mock, "/api/orgs/"+csOrgID+"/data-sources/7/delete-rows", http.StatusOK,
 		`{"result":"ok","affected_rows":1,"unmatched_signatures":["cafe"],"not_excluded_signatures":["beef"]}`)
 
-	res, err := c.DeleteRows("tok", 7, []string{"beef", "cafe"}, true, nil, "dupes")
+	res, err := c.DeleteRows("tok", 7, []string{"beef", "cafe"}, true, nil, &excludeTrue, "dupes")
 	if err != nil {
 		t.Fatalf("DeleteRows: %v", err)
 	}
@@ -379,3 +379,7 @@ func TestCloudSourceDeleteRows_CarriesUnmatchedAndNotExcluded(t *testing.T) {
 		t.Errorf("NotExcludedSignatures = %v", res.NotExcludedSignatures)
 	}
 }
+
+// excludeTrue is the exclude_from_future_uploads value the signature deletes
+// above send.
+var excludeTrue = true

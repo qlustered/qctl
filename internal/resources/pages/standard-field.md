@@ -4,7 +4,7 @@ aliases: [concept]
 kind: StandardField
 schema: openapi:ConceptSchemaFull
 guide: standard-field-vocabulary
-signature: 50ff6e1
+signature: 3821b05
 ---
 
 ## USAGE

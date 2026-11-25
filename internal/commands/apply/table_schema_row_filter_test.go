@@ -60,7 +60,7 @@ func TestApplyTableSchema_RowFilterTypeWarningStreamsAndPages(t *testing.T) {
 			if format != "table" {
 				warning, other = stderr, stdout
 			}
-			for _, want := range []string{"changes the type", "enabled_check", "pending_check", "may invalidate", "does not re-check its saved filter"} {
+			for _, want := range []string{"changes the type", "enabled_check", "pending_check", "may invalidate", "is refused (422) while the saved filter"} {
 				if !strings.Contains(warning, want) {
 					t.Errorf("warning missing %q: %s", want, warning)
 				}

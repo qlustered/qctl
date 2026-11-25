@@ -447,6 +447,24 @@ func (c *Client) GetRuleRevisionAllReleases(accessToken string, ruleRevisionID s
 // revision. Numbers in its interface{} fields decode as jsonnum.Unmarshal
 // decodes them.
 func (c *Client) GetRuleRevisionDetails(accessToken string, ruleRevisionID string, datasetID ...int) (*RuleRevisionFull, error) {
+	params := &api.GetOneRuleRevisionDetailsParams{}
+	if len(datasetID) > 0 {
+		params.DatasetID = &datasetID[0]
+	}
+	return c.getRuleRevisionDetails(accessToken, ruleRevisionID, params)
+}
+
+// GetRuleRevisionBindingPreview fetches a rule revision with the server's
+// per-field binding preview for one table. upgradedFrom, when non-nil, names
+// the table rule whose bindings the preview inherits.
+func (c *Client) GetRuleRevisionBindingPreview(accessToken string, ruleRevisionID string, datasetID int, upgradedFrom *uuid.UUID) (*RuleRevisionFull, error) {
+	return c.getRuleRevisionDetails(accessToken, ruleRevisionID, &api.GetOneRuleRevisionDetailsParams{
+		DatasetID:    &datasetID,
+		UpgradedFrom: upgradedFrom,
+	})
+}
+
+func (c *Client) getRuleRevisionDetails(accessToken string, ruleRevisionID string, params *api.GetOneRuleRevisionDetailsParams) (*RuleRevisionFull, error) {
 	revisionUUID, err := uuid.Parse(ruleRevisionID)
 	if err != nil {
 		return nil, fmt.Errorf("invalid rule revision ID: %w", err)
@@ -462,10 +480,6 @@ func (c *Client) GetRuleRevisionDetails(accessToken string, ruleRevisionID strin
 		return nil, fmt.Errorf("failed to create API client: %w", err)
 	}
 
-	params := &api.GetOneRuleRevisionDetailsParams{}
-	if len(datasetID) > 0 {
-		params.DatasetID = &datasetID[0]
-	}
 	resp, err := apiClient.API.GetOneRuleRevisionDetailsWithResponse(
 		context.Background(), c.organizationID, revisionUUID, params,
 	)

@@ -17,7 +17,7 @@ import (
 func routingAlert() alerts.AlertFull {
 	resolved := false
 	var reason api.AlertBodySchema_Reason
-	_ = reason.FromSeriesFileRoutingReason(api.PeriodLocked)
+	_ = reason.FromSeriesFileRoutingReason(api.SeriesFileRoutingReasonPeriodLocked)
 	period := "2026-06"
 	list := []api.AlertAction{api.AlertActionAssignReportingPeriod, api.AlertActionTryAgain}
 	return alerts.AlertFull{

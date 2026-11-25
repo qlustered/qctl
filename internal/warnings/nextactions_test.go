@@ -234,7 +234,7 @@ func TestManufacturerCodeHasCrossSourceReach(t *testing.T) {
 // Pinned as the whole footer, so the generic line cannot ride along.
 func TestFooterStatesTheGTINPrefixReach(t *testing.T) {
 	w := warningOffering(api.AcceptGtinPrefix)
-	w.IssueType = api.UpcUnknownGtinPrefix
+	w.IssueType = api.IssueTypeEnumUpcUnknownGtinPrefix
 	out := withoutCatalogNotes(t, RenderNextActionsPlain(w, atTerminal), w)
 
 	note := strings.Split(alerts.PrefixFanOutNote("GTIN prefix"), "\n")
@@ -272,7 +272,7 @@ func TestFooterStatesTheGTINPrefixReach(t *testing.T) {
 // parameterless, so its note names the manufacturer code.
 func TestFooterStatesTheManufacturerCodeReachWithoutAPrompt(t *testing.T) {
 	w := warningOffering(api.AcceptVinManufacturerCode)
-	w.IssueType = api.VinUnknownWmi
+	w.IssueType = api.IssueTypeEnumVinUnknownWmi
 	out := withoutCatalogNotes(t, RenderNextActionsPlain(w, atTerminal), w)
 
 	want := []string{

@@ -27,7 +27,7 @@ const (
 // approvalAdvice is the Hint: for a file whose table series has no current
 // rule approval.
 const approvalAdvice = "an issues report goes out only for a file of a table series whose current rules the MGA has " +
-	"approved; a rule change since the approval voids it, and a table in no series has none. " +
+	"approved; a change to its enabled rules since the approval voids it, and a table in no series has none. " +
 	"Check it with 'qctl get table-series <series> --rule-approval', approve it with " +
 	"'qctl table-series approve-rules <series>', then send again."
 

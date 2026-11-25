@@ -96,6 +96,9 @@ func TestApplyNamePrintsEveryKindInFileOrder(t *testing.T) {
 		documents = append(documents, strings.TrimSpace(document)+"\n")
 		names = append(names, tc.name)
 	}
+	// A TableRuleTemplate must be the only document in its file, so it cannot
+	// join this one; TestApplyTemplateOutputFormats covers its -o name.
+	kinds = append(kinds, "TableRuleTemplate")
 	sort.Strings(kinds)
 	if !reflect.DeepEqual(kinds, applyKinds()) {
 		t.Fatalf("tested kinds = %v, want %v", kinds, applyKinds())

@@ -26,7 +26,7 @@ func anomalyWarning(actions ...api.WarningAction) warnings.WarningFull {
 		DatasetID:          42,
 		DatasetName:        "orders",
 		SettingsModelID:    100,
-		IssueType:          api.Anomaly,
+		IssueType:          api.IssueTypeEnumAnomaly,
 		Msg:                "Value looks anomalous",
 		Count:              1,
 		CreatedAt:          &createdAt,
@@ -171,7 +171,7 @@ func TestResolveRejectsAnOfferedParameterisedActionWithoutSending(t *testing.T) 
 // non-interactive stdin, which exits 2 too and would hide the reordering.
 func TestResolveRefusesAcceptGtinPrefixBeforeThePrompt(t *testing.T) {
 	mock := newWarningTestEnv(t)
-	registerGetWarning(mock, prefixWarning(api.UpcUnknownGtinPrefix, api.AcceptGtinPrefix))
+	registerGetWarning(mock, prefixWarning(api.IssueTypeEnumUpcUnknownGtinPrefix, api.AcceptGtinPrefix))
 	posts := registerResolvePost(mock, nil)
 	answerPrompts(t, "y")
 
@@ -297,7 +297,7 @@ func TestResolveAcceptVinManufacturerCodeDoesNotPrompt(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			mock := newWarningTestEnv(t)
-			registerResolvingGetWarning(mock, prefixWarning(api.VinUnknownWmi, api.AcceptVinManufacturerCode))
+			registerResolvingGetWarning(mock, prefixWarning(api.IssueTypeEnumVinUnknownWmi, api.AcceptVinManufacturerCode))
 			var rawBody []byte
 			posts := registerResolvePost(mock, &rawBody)
 			if tc.answers != nil {

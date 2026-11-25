@@ -57,6 +57,7 @@ var Types = []Type{
 	api.PiiAccessRequestDecided,
 	api.IssuesReportUpdated,
 	api.SeriesRuleApprovalStale,
+	api.SeriesRuleApprovalRequested,
 	api.DuplicateGroupRowsChanged,
 	api.RowsMovedToQuarantine,
 	api.DuplicateGroupDecisionChanged,
@@ -64,25 +65,30 @@ var Types = []Type{
 	api.DuplicateThreadShared,
 	api.FileNeedsDecision,
 	api.DailySummary,
+	api.DeliverableAtRisk,
+	api.IssuesReportCountsChanged,
 }
 
 // needsYou mirrors atlas NEEDS_YOU_NOTIFICATION_TYPES (common/common/types.py)
 // for the unread badge's needs_you count.
 var needsYou = map[Type]bool{
-	api.CommentMentioned:        true,
-	api.ReviewRequested:         true,
-	api.ReviewAssigned:          true,
-	api.DataReviewRequested:     true,
-	api.DataReviewAssigned:      true,
-	api.DataReviewGroupAssigned: true,
-	api.FileReadyToDownload:     true,
-	api.EmailUndeliverable:      true,
-	api.SeriesEscalation:        true,
-	api.SupportRequest:          true,
-	api.ChangeProposalSubmitted: true,
-	api.PiiAccessRequested:      true,
-	api.SeriesRuleApprovalStale: true,
-	api.FileNeedsDecision:       true,
+	api.CommentMentioned:            true,
+	api.ReviewRequested:             true,
+	api.ReviewAssigned:              true,
+	api.DataReviewRequested:         true,
+	api.DataReviewAssigned:          true,
+	api.DataReviewGroupAssigned:     true,
+	api.FileReadyToDownload:         true,
+	api.EmailUndeliverable:          true,
+	api.SeriesEscalation:            true,
+	api.SupportRequest:              true,
+	api.ChangeProposalSubmitted:     true,
+	api.PiiAccessRequested:          true,
+	api.SeriesRuleApprovalStale:     true,
+	api.SeriesRuleApprovalRequested: true,
+	api.FileNeedsDecision:           true,
+	api.DeliverableAtRisk:           true,
+	api.IssuesReportCountsChanged:   true,
 }
 
 // IsNeedsYou reports whether a type is counted in the badge's needs_you half.

@@ -16,7 +16,7 @@ func NewCommand() *cobra.Command {
 		Long: `Participate in the rule review workflow that gates enabling a rule; qctl data-review reviews quarantined rows instead.
 
 Typical flow for a rule author (or an AI agent driving one):
-  1. qctl submit rules -f my_rule.py
+  1. qctl submit rules -f my_rule.py                # ops role only (Qluster staff)
   2. qctl review request <rule> --release <version>
   3. qctl get rule-reviews                          # find reviews needing attention
   4. qctl describe rule-review <review-id>          # full detail + next actions

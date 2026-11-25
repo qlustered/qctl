@@ -20,12 +20,12 @@ import (
 
 // checkTableRuleDuplicates checks attached rules and pending create suggestions,
 // returning the forced update's target id, or a duplicate or read error.
-func checkTableRuleDuplicates(warnOut io.Writer, rules *dataset_rules.Client, suggestions *rule_suggestions.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revision *rule_versions.RuleRevisionFull, mapping map[string]string, fills map[string]conceptFill, upgradedFromID *uuid.UUID) (*uuid.UUID, error) {
-	target, err := checkAttachedTableRuleDuplicates(warnOut, rules, token, doc, manifest, revision, mapping, fills, upgradedFromID)
+func checkTableRuleDuplicates(warnOut io.Writer, rules *dataset_rules.Client, suggestions *rule_suggestions.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revision *rule_versions.RuleRevisionFull, mapping, auto map[string]string, upgradedFromID *uuid.UUID) (*uuid.UUID, error) {
+	target, err := checkAttachedTableRuleDuplicates(warnOut, rules, token, doc, manifest, revision, mapping, auto, upgradedFromID)
 	if err != nil {
 		return nil, err
 	}
-	if err := checkPendingTableRuleCreates(warnOut, suggestions, token, doc, manifest, revision, mapping, fills); err != nil {
+	if err := checkPendingTableRuleCreates(warnOut, suggestions, token, doc, manifest, revision, mapping, auto); err != nil {
 		return nil, err
 	}
 	return target, nil
@@ -38,9 +38,10 @@ func checkTableRuleDuplicates(warnOut io.Writer, rules *dataset_rules.Client, su
 // warnOut about a forced name collision, or about the live rules of the same
 // family. It returns the forced update's target id or a duplicate or read error.
 //
-// colMapping and conceptFills are instantiateColumnMapping's results.
+// colMapping is the rule_column_mapping the create sends, and auto the
+// columns the server is expected to bind the fields it leaves out to.
 // upgradedFromID is the resolved spec.upgradedFrom, or nil.
-func checkAttachedTableRuleDuplicates(warnOut io.Writer, client *dataset_rules.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, colMapping map[string]string, conceptFills map[string]conceptFill, upgradedFromID *uuid.UUID) (*uuid.UUID, error) {
+func checkAttachedTableRuleDuplicates(warnOut io.Writer, client *dataset_rules.Client, token string, doc manifestDoc, manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, colMapping, auto map[string]string, upgradedFromID *uuid.UUID) (*uuid.UUID, error) {
 	datasetID := manifest.Spec.DatasetID
 	rules, err := client.ListAllDatasetRules(token, datasetID)
 	if err != nil {
@@ -63,7 +64,7 @@ func checkAttachedTableRuleDuplicates(warnOut io.Writer, client *dataset_rules.C
 		return nil, nil
 	}
 	if !named {
-		if predicted, ok := predictInstance(manifest, revDetail, colMapping, conceptFills); ok {
+		if predicted, ok := predictInstance(manifest, revDetail, colMapping, auto); ok {
 			for i := range siblings {
 				same, err := repeatsInstance(client, token, &siblings[i], predicted)
 				if err != nil {
@@ -121,16 +122,16 @@ func liveFamilyInstances(rules []dataset_rules.DatasetRuleTiny, familyID uuid.UU
 }
 
 // predictedColumnMapping is the column mapping the create ends with:
-// colMapping, then each concept fill and each produced field's binding for a
+// colMapping, then each auto binding and each produced field's binding for a
 // field not yet mapped.
-func predictedColumnMapping(manifest *dataset_rules.TableRuleApplyManifest, colMapping map[string]string, conceptFills map[string]conceptFill) map[string]string {
-	predicted := make(map[string]string, len(colMapping)+len(conceptFills))
+func predictedColumnMapping(manifest *dataset_rules.TableRuleApplyManifest, colMapping, auto map[string]string) map[string]string {
+	predicted := make(map[string]string, len(colMapping)+len(auto))
 	for field, column := range colMapping {
 		predicted[field] = column
 	}
-	for field, fill := range conceptFills {
+	for field, column := range auto {
 		if _, ok := predicted[field]; !ok {
-			predicted[field] = fill.column
+			predicted[field] = column
 		}
 	}
 	if manifest.Spec.ProducedFields != nil {
@@ -159,7 +160,7 @@ type predictedInstance struct {
 // predictedColumnMapping. It reports false when spec.severity is unset and the
 // revision has no default_severity, or when spec.params does not encode as
 // JSON.
-func predictInstance(manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, colMapping map[string]string, conceptFills map[string]conceptFill) (predictedInstance, bool) {
+func predictInstance(manifest *dataset_rules.TableRuleApplyManifest, revDetail *rule_versions.RuleRevisionFull, colMapping, auto map[string]string) (predictedInstance, bool) {
 	severity := manifest.Spec.Severity
 	if severity == nil {
 		severity = revDetail.DefaultSeverity
@@ -180,7 +181,7 @@ func predictInstance(manifest *dataset_rules.TableRuleApplyManifest, revDetail *
 		revisionID: revDetail.ID,
 		severity:   *severity,
 		params:     normalized,
-		mapping:    predictedColumnMapping(manifest, colMapping, conceptFills),
+		mapping:    predictedColumnMapping(manifest, colMapping, auto),
 	}, true
 }
 

@@ -145,6 +145,11 @@ func TestChangeProposalRequiredHint(t *testing.T) {
 			"This change has no proposal path: someone whose role the policy lists must make it. " +
 				"`qctl get change-review-policy --table <table>` shows the roles the policy in force lists for each key.",
 		},
+		"rule merge apply, which has no proposal path": {
+			`{"operation":"rule_merge_apply","verb":"resolve","denied_keys":[["rules"]]}`,
+			"This change has no proposal path: someone whose role the policy lists must make it. " +
+				"`qctl get change-review-policy --table <table>` shows the roles the policy in force lists for each key.",
+		},
 		"an operation with no propose command": {
 			`{"operation":"settings_patch","verb":"resolve","denied_keys":[["anomaly_threshold"]]}`,
 			genericProposeHint,

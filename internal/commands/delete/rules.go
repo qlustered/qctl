@@ -27,8 +27,9 @@ func NewRulesCommand() *cobra.Command {
 		Short: "Unsubmit rule versions from a Python source file",
 		Long: `Unsubmit (remove) rule versions that match the definitions in a Python source file.
 
-This is the reverse of 'qctl apply rules -f <file.py>'. Rules defined in the file
-will be removed from the catalog if they exist.
+This is the reverse of 'qctl submit rules -f <file.py>'. Rules defined in the file
+will be removed from the catalog if they exist. It needs the ops role (Qluster
+operations staff); any other role gets a 403.
 
 Under -o json or yaml, the server's answer is printed: {message, deleted,
 not_found, skipped}, or one List of them when several files are given. -o name

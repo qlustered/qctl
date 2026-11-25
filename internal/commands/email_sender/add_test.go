@@ -196,7 +196,7 @@ func TestAddPostsTrimmedFieldsAsTyped(t *testing.T) {
 }
 
 func TestAddWarnsOnEveryOutcomeButScheduledAndExitsZero(t *testing.T) {
-	refused := api.OutboundEmailSkipReasonInvalidAddress
+	refused := api.InvalidAddress
 	cases := []struct {
 		status  email_intake.WelcomeStatus
 		reason  *api.OutboundEmailSkipReason

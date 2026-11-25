@@ -549,16 +549,16 @@ Loading: `pkgmanifest.LoadBytes(data)` → check `APIVersion` + `Kind` → `pkgm
 - `metadata` may be empty for instantiate (`metadata: {}`) — `kind: TableRule` is
   exempt from the generic `metadata.name` requirement (`kindsWithSpecIdentity`
   in `internal/pkg/manifest/manifest.go`).
-- Instantiate always fetches the rule revision once, then:
-  `column_mapping` omitted/empty → identity mapping built from `input_columns`
-  (rarely useful for a builtin, whose input names are placeholders, not real
-  table columns); explicit mapping → must cover every *required* input column
-  (`input_columns` minus the revision's `optional_columns`) — optional inputs
-  and validates/corrects/enriches columns are allowed keys but not mandatory
-  ones (client-side errors name missing/unknown keys). `spec.column` is sugar
-  for the common one-required-column case: it expands to a full
-  `column_mapping` before the confirmation prompt and is rejected outright for
-  multi-column rules or alongside `column_mapping`.
+- Instantiate fetches the rule revision with the table's binding preview
+  (`GetRuleRevisionBindingPreview`, again with `upgraded_from` for an
+  upgrade), then sends `column_mapping` as written: keys must name input or
+  validates/corrects/enriches fields (exit 2 otherwise), and the server binds
+  every field left out (`internal/commands/apply/table_rule_bindings.go`
+  renders the bindings, the local unbound refusal and the 422
+  `RULE_FIELD_MAPPING_UNRESOLVED` candidates). `spec.column` is sugar for the
+  one-required-field case: it expands to a full `column_mapping` before the
+  confirmation prompt and is rejected outright for multi-field rules or
+  alongside `column_mapping`.
 - `spec.upgradedFrom` is an instantiate-only, apply-only dataset-rule UUID or
   `r-*` alias. `resolveUpgradeSource` resolves the alias in the active server
   scope, fetches the predecessor, validates the same dataset and rule family,

@@ -24,9 +24,10 @@ func NewTablesOverviewCommand() *cobra.Command {
 		Long: `List standalone tables and table series, one row each, in the current organization.
 
 The default view is all, ordered by name. Use --view needs-attention to find
-positive attention scores, highest first, and series with a late broker for the
-period being collected. --view trash lists deleted tables individually,
-including their series and period membership.
+positive attention scores, highest first, series with a late broker for the
+period being collected, and series whose rules await approval. --view trash
+lists deleted tables individually, including their series and period
+membership.
 
 Series totals and latest periods cover the accessible periods selected by the
 state, destination, loading-process and table-kind filters. Search matches a

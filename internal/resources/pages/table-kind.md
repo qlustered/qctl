@@ -4,7 +4,7 @@ aliases: [problem-domain]
 kind: TableKind
 schema: openapi:ProblemDomainWithConceptsSchema
 guide: standard-field-vocabulary
-signature: b7f5a7e
+signature: bb58a89
 ---
 
 ## USAGE

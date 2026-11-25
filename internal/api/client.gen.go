@@ -382,6 +382,8 @@ const (
 	AppPermissionNotificationList                  AppPermission = "notification:list"
 	AppPermissionOpsDebugView                      AppPermission = "ops:debug:view"
 	AppPermissionOpsEmailIntakeManage              AppPermission = "ops:email-intake:manage"
+	AppPermissionOpsInboundEmailDownload           AppPermission = "ops:inbound-email:download"
+	AppPermissionOpsInboundEmailRead               AppPermission = "ops:inbound-email:read"
 	AppPermissionOpsMailSuppressionClear           AppPermission = "ops:mail-suppression:clear"
 	AppPermissionOpsMailSuppressionRead            AppPermission = "ops:mail-suppression:read"
 	AppPermissionOpsOrgCreate                      AppPermission = "ops:org:create"
@@ -394,6 +396,7 @@ const (
 	AppPermissionOpsPrivilegeRequest               AppPermission = "ops:privilege:request"
 	AppPermissionOpsQueueManage                    AppPermission = "ops:queue:manage"
 	AppPermissionOpsQueueRead                      AppPermission = "ops:queue:read"
+	AppPermissionOpsRuleCreate                     AppPermission = "ops:rule:create"
 	AppPermissionOpsSeriesPeriodManage             AppPermission = "ops:series-period:manage"
 	AppPermissionOpsSlackManage                    AppPermission = "ops:slack:manage"
 	AppPermissionOpsSoftDeletedTablesRead          AppPermission = "ops:soft-deleted-tables:read"
@@ -416,7 +419,6 @@ const (
 	AppPermissionReviewPolicyEdit                  AppPermission = "review:policy:edit"
 	AppPermissionReviewPolicyRead                  AppPermission = "review:policy:read"
 	AppPermissionReviewRequest                     AppPermission = "review:request"
-	AppPermissionRuleCreate                        AppPermission = "rule:create"
 	AppPermissionRuleEdit                          AppPermission = "rule:edit"
 	AppPermissionRuleInstantiate                   AppPermission = "rule:instantiate"
 	AppPermissionRuleList                          AppPermission = "rule:list"
@@ -907,6 +909,7 @@ const (
 	IntoExisting   DatasetCopyKind = "into_existing"
 	NewDataset     DatasetCopyKind = "new_dataset"
 	PeriodRecreate DatasetCopyKind = "period_recreate"
+	RuleTemplate   DatasetCopyKind = "rule_template"
 )
 
 // Defines values for DatasetCopyOption.
@@ -1010,6 +1013,14 @@ const (
 	DeliverableColumnSourceTypeRunParam DeliverableColumnSourceType = "run_param"
 )
 
+// Defines values for DeliverableDueState.
+const (
+	DeliverableDueStateAtRisk    DeliverableDueState = "at_risk"
+	DeliverableDueStateLate      DeliverableDueState = "late"
+	DeliverableDueStateSignedOff DeliverableDueState = "signed_off"
+	DeliverableDueStateUpcoming  DeliverableDueState = "upcoming"
+)
+
 // Defines values for DeliverableOrderBy.
 const (
 	DeliverableOrderByCreatedAt DeliverableOrderBy = "created_at"
@@ -1084,6 +1095,21 @@ const (
 	DryRunJobOrderByID         DryRunJobOrderBy = "id"
 	DryRunJobOrderBySnapshotAt DryRunJobOrderBy = "snapshot_at"
 	DryRunJobOrderByState      DryRunJobOrderBy = "state"
+)
+
+// Defines values for DryRunKind.
+const (
+	DryRunKindCompare    DryRunKind = "compare"
+	DryRunKindPreview    DryRunKind = "preview"
+	DryRunKindValidation DryRunKind = "validation"
+)
+
+// Defines values for DryRunResult.
+const (
+	DryRunResultFailed   DryRunResult = "failed"
+	DryRunResultFinished DryRunResult = "finished"
+	DryRunResultPassed   DryRunResult = "passed"
+	DryRunResultStopped  DryRunResult = "stopped"
 )
 
 // Defines values for DuplicateAllowAllSkipReason.
@@ -1200,10 +1226,10 @@ const (
 
 // Defines values for EmailIntakeWelcomeOutcomeSchemaStatus.
 const (
-	AlreadyScheduled EmailIntakeWelcomeOutcomeSchemaStatus = "already_scheduled"
-	RecipientRefused EmailIntakeWelcomeOutcomeSchemaStatus = "recipient_refused"
-	Scheduled        EmailIntakeWelcomeOutcomeSchemaStatus = "scheduled"
-	SourceInactive   EmailIntakeWelcomeOutcomeSchemaStatus = "source_inactive"
+	EmailIntakeWelcomeOutcomeSchemaStatusAlreadyScheduled EmailIntakeWelcomeOutcomeSchemaStatus = "already_scheduled"
+	EmailIntakeWelcomeOutcomeSchemaStatusRecipientRefused EmailIntakeWelcomeOutcomeSchemaStatus = "recipient_refused"
+	EmailIntakeWelcomeOutcomeSchemaStatusScheduled        EmailIntakeWelcomeOutcomeSchemaStatus = "scheduled"
+	EmailIntakeWelcomeOutcomeSchemaStatusSourceInactive   EmailIntakeWelcomeOutcomeSchemaStatus = "source_inactive"
 )
 
 // Defines values for EmailSuppressionSchemaReason.
@@ -1310,6 +1336,13 @@ const (
 	FileProgressStepStateStopped    FileProgressStepState = "stopped"
 )
 
+// Defines values for FileReportUnsendable.
+const (
+	FileReportUnsendableNoUploader        FileReportUnsendable = "no_uploader"
+	FileReportUnsendableNotEmailed        FileReportUnsendable = "not_emailed"
+	FileReportUnsendableRepliesSuppressed FileReportUnsendable = "replies_suppressed"
+)
+
 // Defines values for FileTypes.
 const (
 	FileTypesCsv          FileTypes = "csv"
@@ -1358,6 +1391,18 @@ const (
 	FormFieldRenderTypeSelect       FormFieldRenderType = "select"
 	FormFieldRenderTypeTable        FormFieldRenderType = "table"
 	FormFieldRenderTypeTextInput    FormFieldRenderType = "text_input"
+)
+
+// Defines values for FreeTextKind.
+const (
+	FreeTextKindAlert            FreeTextKind = "alert"
+	FreeTextKindChangeProposal   FreeTextKind = "change_proposal"
+	FreeTextKindCommentThread    FreeTextKind = "comment_thread"
+	FreeTextKindDataActionReview FreeTextKind = "data_action_review"
+	FreeTextKindDuplicateGroup   FreeTextKind = "duplicate_group"
+	FreeTextKindReviewGroup      FreeTextKind = "review_group"
+	FreeTextKindRowDelete        FreeTextKind = "row_delete"
+	FreeTextKindWarning          FreeTextKind = "warning"
 )
 
 // Defines values for GroupState.
@@ -1423,10 +1468,39 @@ const (
 	HistoryValueTypesUnknown   HistoryValueTypes = "unknown___"
 )
 
+// Defines values for IgnoredPartReason.
+const (
+	IgnoredPartReasonCalendar             IgnoredPartReason = "calendar"
+	IgnoredPartReasonContact              IgnoredPartReason = "contact"
+	IgnoredPartReasonDecodedBytesExceeded IgnoredPartReason = "decoded_bytes_exceeded"
+	IgnoredPartReasonDepthExceeded        IgnoredPartReason = "depth_exceeded"
+	IgnoredPartReasonEmpty                IgnoredPartReason = "empty"
+	IgnoredPartReasonExchangeDisclaimer   IgnoredPartReason = "exchange_disclaimer"
+	IgnoredPartReasonInlineImage          IgnoredPartReason = "inline_image"
+	IgnoredPartReasonMalformedContainer   IgnoredPartReason = "malformed_container"
+	IgnoredPartReasonMalformedPart        IgnoredPartReason = "malformed_part"
+	IgnoredPartReasonNoFileName           IgnoredPartReason = "no_file_name"
+	IgnoredPartReasonRelatedResource      IgnoredPartReason = "related_resource"
+	IgnoredPartReasonSignature            IgnoredPartReason = "signature"
+	IgnoredPartReasonUnsupportedExtension IgnoredPartReason = "unsupported_extension"
+	IgnoredPartReasonUnsupportedType      IgnoredPartReason = "unsupported_type"
+)
+
 // Defines values for InboundEmailHeldReason.
 const (
 	AuthFailed        InboundEmailHeldReason = "auth_failed"
 	MultipleDataFiles InboundEmailHeldReason = "multiple_data_files"
+)
+
+// Defines values for InboundEmailState.
+const (
+	InboundEmailStateAccepted   InboundEmailState = "accepted"
+	InboundEmailStateDropped    InboundEmailState = "dropped"
+	InboundEmailStateExpired    InboundEmailState = "expired"
+	InboundEmailStateFailed     InboundEmailState = "failed"
+	InboundEmailStateHeld       InboundEmailState = "held"
+	InboundEmailStateProcessing InboundEmailState = "processing"
+	InboundEmailStateReceived   InboundEmailState = "received"
 )
 
 // Defines values for IngestionJobKind.
@@ -1483,71 +1557,71 @@ const (
 
 // Defines values for IssueTypeEnum.
 const (
-	Anomaly                      IssueTypeEnum = "anomaly"
-	BadLookingFirstname          IssueTypeEnum = "bad_looking_firstname"
-	BadLookingFullname           IssueTypeEnum = "bad_looking_fullname"
-	BadLookingLastname           IssueTypeEnum = "bad_looking_lastname"
-	CarModelBelongsToAnotherMake IssueTypeEnum = "car_model_belongs_to_another_make"
-	DuplicateRow                 IssueTypeEnum = "duplicate_row"
-	GuestFailure                 IssueTypeEnum = "guest_failure"
-	IdenticalRows                IssueTypeEnum = "identical_rows"
-	InvalidBasicUpc              IssueTypeEnum = "invalid_basic_upc"
-	InvalidEmail                 IssueTypeEnum = "invalid_email"
-	InvalidGpc                   IssueTypeEnum = "invalid_gpc"
-	InvalidKeyword               IssueTypeEnum = "invalid_keyword"
-	InvalidLanguage              IssueTypeEnum = "invalid_language"
-	InvalidNoAreaCodePhone       IssueTypeEnum = "invalid_no_area_code_phone"
-	InvalidPhone                 IssueTypeEnum = "invalid_phone"
-	InvalidURL                   IssueTypeEnum = "invalid_url"
-	InvalidURLArray              IssueTypeEnum = "invalid_url_array"
-	InvalidUkCity                IssueTypeEnum = "invalid_uk_city"
-	InvalidUpc                   IssueTypeEnum = "invalid_upc"
-	InvalidUsAddressLine         IssueTypeEnum = "invalid_us_address_line"
-	InvalidUsAddressLine2        IssueTypeEnum = "invalid_us_address_line2"
-	InvalidUsCity                IssueTypeEnum = "invalid_us_city"
-	InvalidUsFullAddress         IssueTypeEnum = "invalid_us_full_address"
-	InvalidUsZip                 IssueTypeEnum = "invalid_us_zip"
-	NotNullable                  IssueTypeEnum = "not_nullable"
-	OutOfRange                   IssueTypeEnum = "out_of_range"
-	PersonMarkedDuplicate        IssueTypeEnum = "person_marked_duplicate"
-	RepeatedKey                  IssueTypeEnum = "repeated_key"
-	RequiredField                IssueTypeEnum = "required_field"
-	RequiredFieldMissing         IssueTypeEnum = "required_field_missing"
-	RuleBug                      IssueTypeEnum = "rule_bug"
-	RuleValidation               IssueTypeEnum = "rule_validation"
-	UnknownApparelSize           IssueTypeEnum = "unknown_apparel_size"
-	UnknownBrand                 IssueTypeEnum = "unknown_brand"
-	UnknownCarBodyType           IssueTypeEnum = "unknown_car_body_type"
-	UnknownCarMake               IssueTypeEnum = "unknown_car_make"
-	UnknownCarModel              IssueTypeEnum = "unknown_car_model"
-	UnknownCarModelForMake       IssueTypeEnum = "unknown_car_model_for_make"
-	UnknownClothSizing           IssueTypeEnum = "unknown_cloth_sizing"
-	UnknownColor                 IssueTypeEnum = "unknown_color"
-	UnknownCompanyName           IssueTypeEnum = "unknown_company_name"
-	UnknownCountry               IssueTypeEnum = "unknown_country"
-	UnknownCurrency              IssueTypeEnum = "unknown_currency"
-	UnknownFabricType            IssueTypeEnum = "unknown_fabric_type"
-	UnknownGender                IssueTypeEnum = "unknown_gender"
-	UnknownGeometryUnit          IssueTypeEnum = "unknown_geometry_unit"
-	UnknownGranularity           IssueTypeEnum = "unknown_granularity"
-	UnknownMassUnit              IssueTypeEnum = "unknown_mass_unit"
-	UnknownMaterialPhase         IssueTypeEnum = "unknown_material_phase"
-	UnknownProductCategory       IssueTypeEnum = "unknown_product_category"
-	UnknownTemperatureUnit       IssueTypeEnum = "unknown_temperature_unit"
-	UnknownTimeUnit              IssueTypeEnum = "unknown_time_unit"
-	UnknownUsDistrict            IssueTypeEnum = "unknown_us_district"
-	UnknownUsState               IssueTypeEnum = "unknown_us_state"
-	UnknownWeekDay               IssueTypeEnum = "unknown_week_day"
-	UpcUnknownGtinPrefix         IssueTypeEnum = "upc_unknown_gtin_prefix"
-	UserSubmitted                IssueTypeEnum = "user_submitted"
-	Validation                   IssueTypeEnum = "validation"
-	ValidationProblem            IssueTypeEnum = "validation_problem"
-	VinInvalidCheckDigit         IssueTypeEnum = "vin_invalid_check_digit"
-	VinInvalidFormat             IssueTypeEnum = "vin_invalid_format"
-	VinInvalidModelYearCode      IssueTypeEnum = "vin_invalid_model_year_code"
-	VinMakeMismatch              IssueTypeEnum = "vin_make_mismatch"
-	VinModelYearMismatch         IssueTypeEnum = "vin_model_year_mismatch"
-	VinUnknownWmi                IssueTypeEnum = "vin_unknown_wmi"
+	IssueTypeEnumAnomaly                      IssueTypeEnum = "anomaly"
+	IssueTypeEnumBadLookingFirstname          IssueTypeEnum = "bad_looking_firstname"
+	IssueTypeEnumBadLookingFullname           IssueTypeEnum = "bad_looking_fullname"
+	IssueTypeEnumBadLookingLastname           IssueTypeEnum = "bad_looking_lastname"
+	IssueTypeEnumCarModelBelongsToAnotherMake IssueTypeEnum = "car_model_belongs_to_another_make"
+	IssueTypeEnumDuplicateRow                 IssueTypeEnum = "duplicate_row"
+	IssueTypeEnumGuestFailure                 IssueTypeEnum = "guest_failure"
+	IssueTypeEnumIdenticalRows                IssueTypeEnum = "identical_rows"
+	IssueTypeEnumInvalidBasicUpc              IssueTypeEnum = "invalid_basic_upc"
+	IssueTypeEnumInvalidEmail                 IssueTypeEnum = "invalid_email"
+	IssueTypeEnumInvalidGpc                   IssueTypeEnum = "invalid_gpc"
+	IssueTypeEnumInvalidKeyword               IssueTypeEnum = "invalid_keyword"
+	IssueTypeEnumInvalidLanguage              IssueTypeEnum = "invalid_language"
+	IssueTypeEnumInvalidNoAreaCodePhone       IssueTypeEnum = "invalid_no_area_code_phone"
+	IssueTypeEnumInvalidPhone                 IssueTypeEnum = "invalid_phone"
+	IssueTypeEnumInvalidURL                   IssueTypeEnum = "invalid_url"
+	IssueTypeEnumInvalidURLArray              IssueTypeEnum = "invalid_url_array"
+	IssueTypeEnumInvalidUkCity                IssueTypeEnum = "invalid_uk_city"
+	IssueTypeEnumInvalidUpc                   IssueTypeEnum = "invalid_upc"
+	IssueTypeEnumInvalidUsAddressLine         IssueTypeEnum = "invalid_us_address_line"
+	IssueTypeEnumInvalidUsAddressLine2        IssueTypeEnum = "invalid_us_address_line2"
+	IssueTypeEnumInvalidUsCity                IssueTypeEnum = "invalid_us_city"
+	IssueTypeEnumInvalidUsFullAddress         IssueTypeEnum = "invalid_us_full_address"
+	IssueTypeEnumInvalidUsZip                 IssueTypeEnum = "invalid_us_zip"
+	IssueTypeEnumNotNullable                  IssueTypeEnum = "not_nullable"
+	IssueTypeEnumOutOfRange                   IssueTypeEnum = "out_of_range"
+	IssueTypeEnumPersonMarkedDuplicate        IssueTypeEnum = "person_marked_duplicate"
+	IssueTypeEnumRepeatedKey                  IssueTypeEnum = "repeated_key"
+	IssueTypeEnumRequiredField                IssueTypeEnum = "required_field"
+	IssueTypeEnumRequiredFieldMissing         IssueTypeEnum = "required_field_missing"
+	IssueTypeEnumRuleBug                      IssueTypeEnum = "rule_bug"
+	IssueTypeEnumRuleValidation               IssueTypeEnum = "rule_validation"
+	IssueTypeEnumUnknownApparelSize           IssueTypeEnum = "unknown_apparel_size"
+	IssueTypeEnumUnknownBrand                 IssueTypeEnum = "unknown_brand"
+	IssueTypeEnumUnknownCarBodyType           IssueTypeEnum = "unknown_car_body_type"
+	IssueTypeEnumUnknownCarMake               IssueTypeEnum = "unknown_car_make"
+	IssueTypeEnumUnknownCarModel              IssueTypeEnum = "unknown_car_model"
+	IssueTypeEnumUnknownCarModelForMake       IssueTypeEnum = "unknown_car_model_for_make"
+	IssueTypeEnumUnknownClothSizing           IssueTypeEnum = "unknown_cloth_sizing"
+	IssueTypeEnumUnknownColor                 IssueTypeEnum = "unknown_color"
+	IssueTypeEnumUnknownCompanyName           IssueTypeEnum = "unknown_company_name"
+	IssueTypeEnumUnknownCountry               IssueTypeEnum = "unknown_country"
+	IssueTypeEnumUnknownCurrency              IssueTypeEnum = "unknown_currency"
+	IssueTypeEnumUnknownFabricType            IssueTypeEnum = "unknown_fabric_type"
+	IssueTypeEnumUnknownGender                IssueTypeEnum = "unknown_gender"
+	IssueTypeEnumUnknownGeometryUnit          IssueTypeEnum = "unknown_geometry_unit"
+	IssueTypeEnumUnknownGranularity           IssueTypeEnum = "unknown_granularity"
+	IssueTypeEnumUnknownMassUnit              IssueTypeEnum = "unknown_mass_unit"
+	IssueTypeEnumUnknownMaterialPhase         IssueTypeEnum = "unknown_material_phase"
+	IssueTypeEnumUnknownProductCategory       IssueTypeEnum = "unknown_product_category"
+	IssueTypeEnumUnknownTemperatureUnit       IssueTypeEnum = "unknown_temperature_unit"
+	IssueTypeEnumUnknownTimeUnit              IssueTypeEnum = "unknown_time_unit"
+	IssueTypeEnumUnknownUsDistrict            IssueTypeEnum = "unknown_us_district"
+	IssueTypeEnumUnknownUsState               IssueTypeEnum = "unknown_us_state"
+	IssueTypeEnumUnknownWeekDay               IssueTypeEnum = "unknown_week_day"
+	IssueTypeEnumUpcUnknownGtinPrefix         IssueTypeEnum = "upc_unknown_gtin_prefix"
+	IssueTypeEnumUserSubmitted                IssueTypeEnum = "user_submitted"
+	IssueTypeEnumValidation                   IssueTypeEnum = "validation"
+	IssueTypeEnumValidationProblem            IssueTypeEnum = "validation_problem"
+	IssueTypeEnumVinInvalidCheckDigit         IssueTypeEnum = "vin_invalid_check_digit"
+	IssueTypeEnumVinInvalidFormat             IssueTypeEnum = "vin_invalid_format"
+	IssueTypeEnumVinInvalidModelYearCode      IssueTypeEnum = "vin_invalid_model_year_code"
+	IssueTypeEnumVinMakeMismatch              IssueTypeEnum = "vin_make_mismatch"
+	IssueTypeEnumVinModelYearMismatch         IssueTypeEnum = "vin_model_year_mismatch"
+	IssueTypeEnumVinUnknownWmi                IssueTypeEnum = "vin_unknown_wmi"
 )
 
 // Defines values for IssuesReportSendReason.
@@ -1610,6 +1684,13 @@ const (
 	IngestionJob         LogicalJobType = "IngestionJob"
 	TrainingJob          LogicalJobType = "TrainingJob"
 	WorkerJob            LogicalJobType = "WorkerJob"
+)
+
+// Defines values for MailPartKind.
+const (
+	MailPartKindData     MailPartKind = "data"
+	MailPartKindIgnored  MailPartKind = "ignored"
+	MailPartKindOversize MailPartKind = "oversize"
 )
 
 // Defines values for MigrationOrderBy.
@@ -1716,6 +1797,7 @@ const (
 	DataReviewDecision            NotificationType = "data_review_decision"
 	DataReviewGroupAssigned       NotificationType = "data_review_group_assigned"
 	DataReviewRequested           NotificationType = "data_review_requested"
+	DeliverableAtRisk             NotificationType = "deliverable_at_risk"
 	DuplicateGroupDecisionChanged NotificationType = "duplicate_group_decision_changed"
 	DuplicateGroupResponse        NotificationType = "duplicate_group_response"
 	DuplicateGroupRowsChanged     NotificationType = "duplicate_group_rows_changed"
@@ -1726,6 +1808,7 @@ const (
 	FileNeedsDecision             NotificationType = "file_needs_decision"
 	FileNotLoaded                 NotificationType = "file_not_loaded"
 	FileReadyToDownload           NotificationType = "file_ready_to_download"
+	IssuesReportCountsChanged     NotificationType = "issues_report_counts_changed"
 	IssuesReportSent              NotificationType = "issues_report_sent"
 	IssuesReportUpdated           NotificationType = "issues_report_updated"
 	PeriodSummary                 NotificationType = "period_summary"
@@ -1739,6 +1822,7 @@ const (
 	RowsMovedToQuarantine         NotificationType = "rows_moved_to_quarantine"
 	RuleUpgrade                   NotificationType = "rule_upgrade"
 	SeriesEscalation              NotificationType = "series_escalation"
+	SeriesRuleApprovalRequested   NotificationType = "series_rule_approval_requested"
 	SeriesRuleApprovalStale       NotificationType = "series_rule_approval_stale"
 	SevereRuleBug                 NotificationType = "severe_rule_bug"
 	SupportRequest                NotificationType = "support_request"
@@ -1754,14 +1838,14 @@ const (
 
 // Defines values for OutboundEmailSkipReason.
 const (
-	OutboundEmailSkipReasonAudienceMismatch          OutboundEmailSkipReason = "audience_mismatch"
-	OutboundEmailSkipReasonDevRecipientNotAllowed    OutboundEmailSkipReason = "dev_recipient_not_allowed"
-	OutboundEmailSkipReasonInvalidAddress            OutboundEmailSkipReason = "invalid_address"
-	OutboundEmailSkipReasonMembershipInactive        OutboundEmailSkipReason = "membership_inactive"
-	OutboundEmailSkipReasonNotAMember                OutboundEmailSkipReason = "not_a_member"
-	OutboundEmailSkipReasonOrganizationInactive      OutboundEmailSkipReason = "organization_inactive"
-	OutboundEmailSkipReasonSourceNotAssigned         OutboundEmailSkipReason = "source_not_assigned"
-	OutboundEmailSkipReasonSourceOutsideOrganization OutboundEmailSkipReason = "source_outside_organization"
+	AudienceMismatch          OutboundEmailSkipReason = "audience_mismatch"
+	DevRecipientNotAllowed    OutboundEmailSkipReason = "dev_recipient_not_allowed"
+	InvalidAddress            OutboundEmailSkipReason = "invalid_address"
+	MembershipInactive        OutboundEmailSkipReason = "membership_inactive"
+	NotAMember                OutboundEmailSkipReason = "not_a_member"
+	OrganizationInactive      OutboundEmailSkipReason = "organization_inactive"
+	SourceNotAssigned         OutboundEmailSkipReason = "source_not_assigned"
+	SourceOutsideOrganization OutboundEmailSkipReason = "source_outside_organization"
 )
 
 // Defines values for OutboundEmailState.
@@ -1903,6 +1987,13 @@ const (
 	ProblemKindWarning ProblemKind = "warning"
 )
 
+// Defines values for ProblemSeverity.
+const (
+	ProblemSeverityBlocker    ProblemSeverity = "blocker"
+	ProblemSeverityNotChecked ProblemSeverity = "not_checked"
+	ProblemSeverityWarning    ProblemSeverity = "warning"
+)
+
 // Defines values for QuarantineHold.
 const (
 	QuarantineHoldHold      QuarantineHold = "hold"
@@ -2042,9 +2133,9 @@ const (
 
 // Defines values for ReviewStatusFilter.
 const (
-	Accepted         ReviewStatusFilter = "accepted"
-	AwaitingDecision ReviewStatusFilter = "awaiting_decision"
-	Rejected         ReviewStatusFilter = "rejected"
+	ReviewStatusFilterAccepted         ReviewStatusFilter = "accepted"
+	ReviewStatusFilterAwaitingDecision ReviewStatusFilter = "awaiting_decision"
+	ReviewStatusFilterRejected         ReviewStatusFilter = "rejected"
 )
 
 // Defines values for ReviewerType.
@@ -2095,10 +2186,25 @@ const (
 	RuleFamilyOrderBySlug        RuleFamilyOrderBy = "slug"
 )
 
+// Defines values for RuleFieldBindingSource.
+const (
+	RuleFieldBindingSourceConcept      RuleFieldBindingSource = "concept"
+	RuleFieldBindingSourceInherited    RuleFieldBindingSource = "inherited"
+	RuleFieldBindingSourceNormalized   RuleFieldBindingSource = "normalized"
+	RuleFieldBindingSourceOriginalName RuleFieldBindingSource = "original_name"
+)
+
+// Defines values for RuleFieldBindingStatus.
+const (
+	Ambiguous RuleFieldBindingStatus = "ambiguous"
+	Bound     RuleFieldBindingStatus = "bound"
+	Unbound   RuleFieldBindingStatus = "unbound"
+)
+
 // Defines values for RuleMatchBucket.
 const (
-	Concept RuleMatchBucket = "concept"
-	Generic RuleMatchBucket = "generic"
+	RuleMatchBucketConcept RuleMatchBucket = "concept"
+	RuleMatchBucketGeneric RuleMatchBucket = "generic"
 )
 
 // Defines values for RuleMatchKind.
@@ -2106,6 +2212,35 @@ const (
 	RuleMatchKindFull    RuleMatchKind = "full"
 	RuleMatchKindGeneric RuleMatchKind = "generic"
 	RuleMatchKindPartial RuleMatchKind = "partial"
+)
+
+// Defines values for RuleMergeApplyBlockerCode.
+const (
+	RuleMergeApplyBlockerCodeDraftMigration RuleMergeApplyBlockerCode = "draft_migration"
+	RuleMergeApplyBlockerCodeMergeApplying  RuleMergeApplyBlockerCode = "merge_applying"
+	RuleMergeApplyBlockerCodePeriodLocked   RuleMergeApplyBlockerCode = "period_locked"
+)
+
+// Defines values for RuleMergeItemReason.
+const (
+	RuleMergeItemReasonAdoptedDiffers          RuleMergeItemReason = "adopted_differs"
+	RuleMergeItemReasonAmbiguousMatch          RuleMergeItemReason = "ambiguous_match"
+	RuleMergeItemReasonChangedBoth             RuleMergeItemReason = "changed_both"
+	RuleMergeItemReasonDeletedOnTable          RuleMergeItemReason = "deleted_on_table"
+	RuleMergeItemReasonEditedOnTable           RuleMergeItemReason = "edited_on_table"
+	RuleMergeItemReasonFamilyMismatch          RuleMergeItemReason = "family_mismatch"
+	RuleMergeItemReasonInReview                RuleMergeItemReason = "in_review"
+	RuleMergeItemReasonInvalidParams           RuleMergeItemReason = "invalid_params"
+	RuleMergeItemReasonInvalidRowFilter        RuleMergeItemReason = "invalid_row_filter"
+	RuleMergeItemReasonNeedsTableReview        RuleMergeItemReason = "needs_table_review"
+	RuleMergeItemReasonNotInTemplate           RuleMergeItemReason = "not_in_template"
+	RuleMergeItemReasonNotSubmitted            RuleMergeItemReason = "not_submitted"
+	RuleMergeItemReasonProducedColumnCollision RuleMergeItemReason = "produced_column_collision"
+	RuleMergeItemReasonReleaseDisabled         RuleMergeItemReason = "release_disabled"
+	RuleMergeItemReasonSuggestionPending       RuleMergeItemReason = "suggestion_pending"
+	RuleMergeItemReasonUnmapped                RuleMergeItemReason = "unmapped"
+	RuleMergeItemReasonUpgradeInProgress       RuleMergeItemReason = "upgrade_in_progress"
+	RuleMergeItemReasonWaitingValidation       RuleMergeItemReason = "waiting_validation"
 )
 
 // Defines values for RulePlanAction.
@@ -2160,10 +2295,20 @@ const (
 
 // Defines values for RuleState.
 const (
-	Disabled RuleState = "disabled"
-	Draft    RuleState = "draft"
-	Enabled  RuleState = "enabled"
-	InReview RuleState = "in_review"
+	RuleStateDisabled RuleState = "disabled"
+	RuleStateDraft    RuleState = "draft"
+	RuleStateEnabled  RuleState = "enabled"
+	RuleStateInReview RuleState = "in_review"
+)
+
+// Defines values for RuleTemplateBindingSource.
+const (
+	Concept      RuleTemplateBindingSource = "concept"
+	Inherited    RuleTemplateBindingSource = "inherited"
+	Live         RuleTemplateBindingSource = "live"
+	Normalized   RuleTemplateBindingSource = "normalized"
+	OriginalName RuleTemplateBindingSource = "original_name"
+	Override     RuleTemplateBindingSource = "override"
 )
 
 // Defines values for RunParameterValueType.
@@ -2184,10 +2329,10 @@ const (
 
 // Defines values for SearchMatchMode.
 const (
-	SearchMatchModeContains                SearchMatchMode = "contains"
-	SearchMatchModeContainsCaseInsensitive SearchMatchMode = "contains_case_insensitive"
-	SearchMatchModeRegex                   SearchMatchMode = "regex"
-	SearchMatchModeRegexCaseInsensitive    SearchMatchMode = "regex_case_insensitive"
+	Contains                SearchMatchMode = "contains"
+	ContainsCaseInsensitive SearchMatchMode = "contains_case_insensitive"
+	Regex                   SearchMatchMode = "regex"
+	RegexCaseInsensitive    SearchMatchMode = "regex_case_insensitive"
 )
 
 // Defines values for SenderOutcome.
@@ -2225,15 +2370,15 @@ const (
 
 // Defines values for SeriesFileRoutingReason.
 const (
-	DeltaFile               SeriesFileRoutingReason = "delta_file"
-	FileReadFailed          SeriesFileRoutingReason = "file_read_failed"
-	InvalidPeriodColumn     SeriesFileRoutingReason = "invalid_period_column"
-	MultipleMatchingPeriods SeriesFileRoutingReason = "multiple_matching_periods"
-	NoMatchingPeriod        SeriesFileRoutingReason = "no_matching_period"
-	NoUnlockedPeriod        SeriesFileRoutingReason = "no_unlocked_period"
-	PeriodLocked            SeriesFileRoutingReason = "period_locked"
-	RoutingFailed           SeriesFileRoutingReason = "routing_failed"
-	Superseded              SeriesFileRoutingReason = "superseded"
+	SeriesFileRoutingReasonDeltaFile               SeriesFileRoutingReason = "delta_file"
+	SeriesFileRoutingReasonFileReadFailed          SeriesFileRoutingReason = "file_read_failed"
+	SeriesFileRoutingReasonInvalidPeriodColumn     SeriesFileRoutingReason = "invalid_period_column"
+	SeriesFileRoutingReasonMultipleMatchingPeriods SeriesFileRoutingReason = "multiple_matching_periods"
+	SeriesFileRoutingReasonNoMatchingPeriod        SeriesFileRoutingReason = "no_matching_period"
+	SeriesFileRoutingReasonNoUnlockedPeriod        SeriesFileRoutingReason = "no_unlocked_period"
+	SeriesFileRoutingReasonPeriodLocked            SeriesFileRoutingReason = "period_locked"
+	SeriesFileRoutingReasonRoutingFailed           SeriesFileRoutingReason = "routing_failed"
+	SeriesFileRoutingReasonSuperseded              SeriesFileRoutingReason = "superseded"
 )
 
 // Defines values for SeriesFrequency.
@@ -2254,6 +2399,33 @@ const (
 	Copy               SeriesPeriodRecreateSchemaOption = "copy"
 	CopyWithoutColumns SeriesPeriodRecreateSchemaOption = "copy_without_columns"
 	LearnFromFile      SeriesPeriodRecreateSchemaOption = "learn_from_file"
+)
+
+// Defines values for SeriesRuleApprovalState.
+const (
+	Approved             SeriesRuleApprovalState = "approved"
+	ChangedSinceApproval SeriesRuleApprovalState = "changed_since_approval"
+	NeverApproved        SeriesRuleApprovalState = "never_approved"
+)
+
+// Defines values for SeriesRuleChange.
+const (
+	SeriesRuleChangeAdded     SeriesRuleChange = "added"
+	SeriesRuleChangeChanged   SeriesRuleChange = "changed"
+	SeriesRuleChangeUnchanged SeriesRuleChange = "unchanged"
+)
+
+// Defines values for SeriesRuleChangedPart.
+const (
+	SeriesRuleChangedPartColumns        SeriesRuleChangedPart = "columns"
+	SeriesRuleChangedPartOrder          SeriesRuleChangedPart = "order"
+	SeriesRuleChangedPartParameters     SeriesRuleChangedPart = "parameters"
+	SeriesRuleChangedPartProducedFields SeriesRuleChangedPart = "produced_fields"
+	SeriesRuleChangedPartRelease        SeriesRuleChangedPart = "release"
+	SeriesRuleChangedPartReleaseState   SeriesRuleChangedPart = "release_state"
+	SeriesRuleChangedPartRowFilter      SeriesRuleChangedPart = "row_filter"
+	SeriesRuleChangedPartSeverity       SeriesRuleChangedPart = "severity"
+	SeriesRuleChangedPartState          SeriesRuleChangedPart = "state"
 )
 
 // Defines values for SessionRevocationSchemaScope.
@@ -2348,6 +2520,12 @@ const (
 	SubmissionBoardStatusWaived            SubmissionBoardStatus = "waived"
 )
 
+// Defines values for SubmissionChannel.
+const (
+	SubmissionChannelEmail  SubmissionChannel = "email"
+	SubmissionChannelPortal SubmissionChannel = "portal"
+)
+
 // Defines values for SubmissionDeclarationKind.
 const (
 	SubmissionDeclarationKindNil    SubmissionDeclarationKind = "nil"
@@ -2356,11 +2534,11 @@ const (
 
 // Defines values for SubmissionFileOutcome.
 const (
-	SubmissionFileOutcomeDiscarded          SubmissionFileOutcome = "discarded"
-	SubmissionFileOutcomeLoaded             SubmissionFileOutcome = "loaded"
-	SubmissionFileOutcomeLoadedWithProblems SubmissionFileOutcome = "loaded_with_problems"
-	SubmissionFileOutcomeReplaced           SubmissionFileOutcome = "replaced"
-	SubmissionFileOutcomeUnchanged          SubmissionFileOutcome = "unchanged"
+	Discarded          SubmissionFileOutcome = "discarded"
+	Loaded             SubmissionFileOutcome = "loaded"
+	LoadedWithProblems SubmissionFileOutcome = "loaded_with_problems"
+	Replaced           SubmissionFileOutcome = "replaced"
+	Unchanged          SubmissionFileOutcome = "unchanged"
 )
 
 // Defines values for SubmissionFileState.
@@ -2467,14 +2645,14 @@ const (
 
 // Defines values for TrainingJobOrderBy.
 const (
-	TrainingJobOrderByDatasetID       TrainingJobOrderBy = "dataset_id"
-	TrainingJobOrderByDatasetName     TrainingJobOrderBy = "dataset_name"
-	TrainingJobOrderByID              TrainingJobOrderBy = "id"
-	TrainingJobOrderByMsg             TrainingJobOrderBy = "msg"
-	TrainingJobOrderBySettingsModelID TrainingJobOrderBy = "settings_model_id"
-	TrainingJobOrderByState           TrainingJobOrderBy = "state"
-	TrainingJobOrderByStep            TrainingJobOrderBy = "step"
-	TrainingJobOrderByUpdatedAt       TrainingJobOrderBy = "updated_at"
+	DatasetID       TrainingJobOrderBy = "dataset_id"
+	DatasetName     TrainingJobOrderBy = "dataset_name"
+	ID              TrainingJobOrderBy = "id"
+	Msg             TrainingJobOrderBy = "msg"
+	SettingsModelID TrainingJobOrderBy = "settings_model_id"
+	State           TrainingJobOrderBy = "state"
+	Step            TrainingJobOrderBy = "step"
+	UpdatedAt       TrainingJobOrderBy = "updated_at"
 )
 
 // Defines values for TrainingJobState.
@@ -2502,14 +2680,20 @@ const (
 	Migrate  TrainingJobStep = "migrate"
 )
 
+// Defines values for TrendBasis.
+const (
+	File   TrendBasis = "file"
+	Period TrendBasis = "period"
+)
+
 // Defines values for UserOrderBy.
 const (
-	CreatedAt UserOrderBy = "created_at"
-	Email     UserOrderBy = "email"
-	IsActive  UserOrderBy = "is_active"
-	LastName  UserOrderBy = "last_name"
-	Role      UserOrderBy = "role"
-	UpdatedAt UserOrderBy = "updated_at"
+	UserOrderByCreatedAt UserOrderBy = "created_at"
+	UserOrderByEmail     UserOrderBy = "email"
+	UserOrderByIsActive  UserOrderBy = "is_active"
+	UserOrderByLastName  UserOrderBy = "last_name"
+	UserOrderByRole      UserOrderBy = "role"
+	UserOrderByUpdatedAt UserOrderBy = "updated_at"
 )
 
 // Defines values for UserSubmittedDetachReason.
@@ -2550,6 +2734,55 @@ const (
 	ValidationEvidenceKindPassed    ValidationEvidenceKind = "passed"
 	ValidationEvidenceKindQueued    ValidationEvidenceKind = "queued"
 	ValidationEvidenceKindStale     ValidationEvidenceKind = "stale"
+)
+
+// Defines values for WaitingOn.
+const (
+	Broker  WaitingOn = "broker"
+	Qluster WaitingOn = "qluster"
+	You     WaitingOn = "you"
+)
+
+// Defines values for WalkthroughAnswerKind.
+const (
+	FixValue WalkthroughAnswerKind = "fix_value"
+	KeepAsIs WalkthroughAnswerKind = "keep_as_is"
+	Note     WalkthroughAnswerKind = "note"
+)
+
+// Defines values for WalkthroughAnswerState.
+const (
+	Applied          WalkthroughAnswerState = "applied"
+	ChangesRequested WalkthroughAnswerState = "changes_requested"
+	Closed           WalkthroughAnswerState = "closed"
+	Executed         WalkthroughAnswerState = "executed"
+	Executing        WalkthroughAnswerState = "executing"
+	ExecutionFailed  WalkthroughAnswerState = "execution_failed"
+	NoteOpen         WalkthroughAnswerState = "note_open"
+	NoteReplied      WalkthroughAnswerState = "note_replied"
+	PendingReview    WalkthroughAnswerState = "pending_review"
+	Rejected         WalkthroughAnswerState = "rejected"
+)
+
+// Defines values for WalkthroughItemSchemaKind.
+const (
+	WalkthroughItemSchemaKindAlert   WalkthroughItemSchemaKind = "alert"
+	WalkthroughItemSchemaKindWarning WalkthroughItemSchemaKind = "warning"
+)
+
+// Defines values for WalkthroughItemSchemaSeverity.
+const (
+	WalkthroughItemSchemaSeverityBlocker WalkthroughItemSchemaSeverity = "blocker"
+	WalkthroughItemSchemaSeverityWarning WalkthroughItemSchemaSeverity = "warning"
+)
+
+// Defines values for WalkthroughSignOffBlock.
+const (
+	NoPermission     WalkthroughSignOffBlock = "no_permission"
+	NotRendered      WalkthroughSignOffBlock = "not_rendered"
+	OpenBlockers     WalkthroughSignOffBlock = "open_blockers"
+	PendingProposals WalkthroughSignOffBlock = "pending_proposals"
+	SignedOff        WalkthroughSignOffBlock = "signed_off"
 )
 
 // Defines values for WarningAction.
@@ -2616,13 +2849,19 @@ const (
 
 // Defines values for ReadDeliverableRunReadinessParamsBucket.
 const (
-	ReadDeliverableRunReadinessParamsBucketBlockedAwaitingReview ReadDeliverableRunReadinessParamsBucket = "blocked_awaiting_review"
-	ReadDeliverableRunReadinessParamsBucketBlockedFailingRules   ReadDeliverableRunReadinessParamsBucket = "blocked_failing_rules"
-	ReadDeliverableRunReadinessParamsBucketBlockedIndeterminate  ReadDeliverableRunReadinessParamsBucket = "blocked_indeterminate"
-	ReadDeliverableRunReadinessParamsBucketCarriedForward        ReadDeliverableRunReadinessParamsBucket = "carried_forward"
-	ReadDeliverableRunReadinessParamsBucketCarriedUnbound        ReadDeliverableRunReadinessParamsBucket = "carried_unbound"
-	ReadDeliverableRunReadinessParamsBucketIncluded              ReadDeliverableRunReadinessParamsBucket = "included"
-	ReadDeliverableRunReadinessParamsBucketWaived                ReadDeliverableRunReadinessParamsBucket = "waived"
+	BlockedAwaitingReview ReadDeliverableRunReadinessParamsBucket = "blocked_awaiting_review"
+	BlockedFailingRules   ReadDeliverableRunReadinessParamsBucket = "blocked_failing_rules"
+	BlockedIndeterminate  ReadDeliverableRunReadinessParamsBucket = "blocked_indeterminate"
+	CarriedForward        ReadDeliverableRunReadinessParamsBucket = "carried_forward"
+	CarriedUnbound        ReadDeliverableRunReadinessParamsBucket = "carried_unbound"
+	Included              ReadDeliverableRunReadinessParamsBucket = "included"
+	Waived                ReadDeliverableRunReadinessParamsBucket = "waived"
+)
+
+// Defines values for GetSenderWalkthroughParamsAnswersOf.
+const (
+	Caller  GetSenderWalkthroughParamsAnswersOf = "caller"
+	Senders GetSenderWalkthroughParamsAnswersOf = "senders"
 )
 
 // APIError defines model for APIError.
@@ -3055,6 +3294,9 @@ type AlertResolveSchema struct {
 	// Comment Why the files are trashed; required and not blank for the `trash_file` and `trash_alert_associated_files` actions, and recorded with who trashed each file and when.
 	Comment *string `json:"comment"`
 
+	// CommentThreadID A comment thread with a target naming this alert, such as a sender's note, whose direction the change follows; every history item the resolve writes carries it. Any other thread is a 422.
+	CommentThreadID *openapi_types.UUID `json:"comment_thread_id"`
+
 	// DismissSuggestionIds With apply_migration: pending rule suggestions of the draft migration to dismiss before it is applied, so it accepts none of them.
 	DismissSuggestionIds *[]openapi_types.UUID `json:"dismiss_suggestion_ids"`
 
@@ -3136,7 +3378,7 @@ type AlertSchema struct {
 	// BoundaryData The notable field values that may help the user make the right decision when resolving this alert.
 	BoundaryData *DisplayValuesForResponse `json:"boundary_data,omitempty"`
 
-	// ChangeProposal The live change proposal holding this alert, if any.
+	// ChangeProposal The live change proposal holding this whole alert, if any.
 	ChangeProposal *ChangeProposalSummarySchema `json:"change_proposal,omitempty"`
 
 	// Count For is_row_level alerts, the approximate number of live destination rows carrying this alert's token, from 1 to ISSUE_ROW_COUNT_CAP while unresolved; the cap means at least that many rows. For other alerts, the number of times reported.
@@ -3218,6 +3460,9 @@ type AlertSchema struct {
 	// ResolvedAt When was this alert resolved.
 	ResolvedAt *time.Time `json:"resolved_at"`
 
+	// RowChangeProposals The live change proposals each holding some rows of this issue, oldest first; `change_proposal` holds the whole issue.
+	RowChangeProposals *[]RowChangeProposalSummarySchema `json:"row_change_proposals,omitempty"`
+
 	// RuleRevisionID The rule revision that first raised this alert. Later revisions raising the same signature do not replace it.
 	RuleRevisionID  *openapi_types.UUID `json:"rule_revision_id"`
 	SettingsModelID int                 `json:"settings_model_id"`
@@ -3245,7 +3490,7 @@ type AlertTinySchema struct {
 	AffectedStoredItems *[]StoredItemToAlertSchema `json:"affected_stored_items"`
 	AssignedUser        *UserInfoTinySchema        `json:"assigned_user,omitempty"`
 
-	// ChangeProposal The live change proposal holding this alert, if any.
+	// ChangeProposal The live change proposal holding this whole alert, if any.
 	ChangeProposal *ChangeProposalSummarySchema `json:"change_proposal,omitempty"`
 
 	// Count Affected row count. Exact for the selected file when stored_item_id filters the list.
@@ -3282,9 +3527,12 @@ type AlertTinySchema struct {
 	ResolveAfterMigration *bool `json:"resolve_after_migration,omitempty"`
 
 	// ResolvedAt When was this alert resolved.
-	ResolvedAt          *time.Time                      `json:"resolved_at"`
-	UserSubmittedIssues *[]UserSubmittedIssueReadSchema `json:"user_submitted_issues,omitempty"`
-	Whodunit            *UserInfoTinySchema             `json:"whodunit,omitempty"`
+	ResolvedAt *time.Time `json:"resolved_at"`
+
+	// RowChangeProposals The live change proposals each holding some rows of this issue, oldest first; `change_proposal` holds the whole issue.
+	RowChangeProposals  *[]RowChangeProposalSummarySchema `json:"row_change_proposals,omitempty"`
+	UserSubmittedIssues *[]UserSubmittedIssueReadSchema   `json:"user_submitted_issues,omitempty"`
+	Whodunit            *UserInfoTinySchema               `json:"whodunit,omitempty"`
 }
 
 // AlertType defines model for AlertType.
@@ -4839,10 +5087,15 @@ type CommentThreadCreateResponseSchema struct {
 // “targets“ caps the ROW count; the total CELL count is capped separately at
 // “MAX_THREAD_TARGET_CELLS“.
 type CommentThreadCreateSchema struct {
-	Body       string                      `json:"body"`
-	IsInternal *bool                       `json:"is_internal,omitempty"`
-	Targets    []CommentThreadTargetSchema `json:"targets"`
-	Title      *string                     `json:"title"`
+	// AlertItemID The alert this thread answers on its target rows.
+	AlertItemID *int                        `json:"alert_item_id"`
+	Body        string                      `json:"body"`
+	IsInternal  *bool                       `json:"is_internal,omitempty"`
+	Targets     []CommentThreadTargetSchema `json:"targets"`
+	Title       *string                     `json:"title"`
+
+	// WarningItemID The warning this thread answers on its target rows.
+	WarningItemID *int `json:"warning_item_id"`
 }
 
 // CommentThreadListSchema A page of threads; each has “comments: []“ and its “comment_count“.
@@ -4887,8 +5140,10 @@ type CommentThreadResponseSchema struct {
 
 // CommentThreadTargetResponseSchema defines model for CommentThreadTargetResponseSchema.
 type CommentThreadTargetResponseSchema struct {
-	FieldName *string `json:"field_name"`
-	RowID     int     `json:"row_id"`
+	AlertItemID   *int    `json:"alert_item_id"`
+	FieldName     *string `json:"field_name"`
+	RowID         int     `json:"row_id"`
+	WarningItemID *int    `json:"warning_item_id"`
 }
 
 // CommentThreadTargetSchema One targeted row. Empty/absent “field_names“ = the whole row.
@@ -5336,6 +5591,9 @@ type CompositeErasureResponseSchema struct {
 
 	// ErasedRowIds Its rows this request erased.
 	ErasedRowIds []int `json:"erased_row_ids"`
+
+	// KeptSharedFreeText Its records holding free text about an erased row and a row not erased, whose text was kept.
+	KeptSharedFreeText []SharedFreeTextSchema `json:"kept_shared_free_text"`
 
 	// RowDeleteID The row delete recording it there; null when no row changed.
 	RowDeleteID *int `json:"row_delete_id"`
@@ -5956,6 +6214,24 @@ type CreateReviewRequestSchema struct {
 // composite: rows are derived from other datasets.
 // Identity and content hashes per process: docs/signature-columns.md.
 type DataLoadingProcess string
+
+// DataQualityAnalytics The trend and repeat problems of a table, for the whole table or one sender.
+//
+// “trend“ is None with fewer than two points or when the table's problem domains switch it off;
+// “trend_sentence“ compares its last point with the one before, None when either has no submission.
+// “repeat_problems“ is None outside a series or when switched off, most periods running first.
+type DataQualityAnalytics struct {
+	// Nouns Words the summary uses for a sender and a file, singular and plural.
+	Nouns          SummaryNouns     `json:"nouns"`
+	RepeatProblems *[]RepeatProblem `json:"repeat_problems"`
+
+	// Scope The table, series, period and sender the summary covers, and when it was generated.
+	//
+	// ``mga_name``: the MGA's organization name.
+	Scope         SummaryScope  `json:"scope"`
+	Trend         *QualityTrend `json:"trend,omitempty"`
+	TrendSentence *string       `json:"trend_sentence"`
+}
 
 // DataRerequestReviewersResponseSchema Response for a data-arc re-request: who was actually re-notified.
 type DataRerequestReviewersResponseSchema struct {
@@ -6880,6 +7156,7 @@ type DataSourceModelAllOptionalSchema struct {
 	EndPeriodKey                                         *string                  `json:"end_period_key"`
 	ExcelSheetName                                       *string                  `json:"excel_sheet_name"`
 	ExcludedRowSignaturesOverride                        *[]string                `json:"excluded_row_signatures_override"`
+	ExportRequestDays                                    *int                     `json:"export_request_days"`
 	FieldNameFullConversionOverride                      *map[string]string       `json:"field_name_full_conversion_override"`
 	FieldNamePartConversionOverride                      *map[string]string       `json:"field_name_part_conversion_override"`
 	FieldsToExpandOverride                               *[]string                `json:"fields_to_expand_override"`
@@ -6975,6 +7252,7 @@ type DataSourceModelCopyRequestSchema struct {
 	EndPeriodKey                    *string            `json:"end_period_key"`
 	ExcelSheetName                  *string            `json:"excel_sheet_name"`
 	ExcludedRowSignaturesOverride   *[]string          `json:"excluded_row_signatures_override"`
+	ExportRequestDays               *int               `json:"export_request_days"`
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
 	FieldNamePartConversionOverride *map[string]string `json:"field_name_part_conversion_override"`
 	FieldsToExpandOverride          *[]string          `json:"fields_to_expand_override"`
@@ -7135,6 +7413,9 @@ type DataSourceModelCopyResponseSchema struct {
 
 	// ExcludedRowSignaturesOverride Delete these rows of data when they appear on this cloud source.
 	ExcludedRowSignaturesOverride *[]string `json:"excluded_row_signatures_override"`
+
+	// ExportRequestDays Day of the reminder to the series followers to ask the sender for a period's export while no file has arrived for it, in days after the period ends (0 is its last day). Null turns it off. Only on a series source.
+	ExportRequestDays *int `json:"export_request_days"`
 
 	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
@@ -7387,6 +7668,9 @@ type DataSourceModelCopyTemplateSchema struct {
 	// ExcludedRowSignaturesOverride Delete these rows of data when they appear on this cloud source.
 	ExcludedRowSignaturesOverride *[]string `json:"excluded_row_signatures_override"`
 
+	// ExportRequestDays Day of the reminder to the series followers to ask the sender for a period's export while no file has arrived for it, in days after the period ends (0 is its last day). Null turns it off. Only on a series source.
+	ExportRequestDays *int `json:"export_request_days"`
+
 	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
 
@@ -7638,6 +7922,9 @@ type DataSourceModelFullSchema struct {
 	// ExcludedRowSignaturesOverride Delete these rows of data when they appear on this cloud source.
 	ExcludedRowSignaturesOverride *[]string `json:"excluded_row_signatures_override"`
 
+	// ExportRequestDays Day of the reminder to the series followers to ask the sender for a period's export while no file has arrived for it, in days after the period ends (0 is its last day). Null turns it off. Only on a series source.
+	ExportRequestDays *int `json:"export_request_days"`
+
 	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
 
@@ -7886,6 +8173,9 @@ type DataSourceModelFullSchemaDraft struct {
 	// ExcludedRowSignaturesOverride Delete these rows of data when they appear on this cloud source.
 	ExcludedRowSignaturesOverride *[]string `json:"excluded_row_signatures_override"`
 
+	// ExportRequestDays Day of the reminder to the series followers to ask the sender for a period's export while no file has arrived for it, in days after the period ends (0 is its last day). Null turns it off. Only on a series source.
+	ExportRequestDays *int `json:"export_request_days"`
+
 	// FieldNameFullConversionOverride Use this to tell Qluster which field names should be considered to be the same field. This is useful if you have field names changing across different CSVs. Example: {'field 1': 'field a', 'field 2': 'field b'}
 	FieldNameFullConversionOverride *map[string]string `json:"field_name_full_conversion_override"`
 
@@ -8094,6 +8384,7 @@ type DataSourceModelPatchRequestSchema struct {
 	EndPeriodKey                                         *string                       `json:"end_period_key"`
 	ExcelSheetName                                       *string                       `json:"excel_sheet_name"`
 	ExcludedRowSignaturesOverride                        *[]string                     `json:"excluded_row_signatures_override"`
+	ExportRequestDays                                    *int                          `json:"export_request_days"`
 	FieldNameFullConversionOverride                      *map[string]string            `json:"field_name_full_conversion_override"`
 	FieldNamePartConversionOverride                      *map[string]string            `json:"field_name_part_conversion_override"`
 	FieldsToExpandOverride                               *[]string                     `json:"fields_to_expand_override"`
@@ -8185,6 +8476,7 @@ type DataSourceModelPostRequestSchema struct {
 	EndPeriodKey                                         *string                       `json:"end_period_key"`
 	ExcelSheetName                                       *string                       `json:"excel_sheet_name"`
 	ExcludedRowSignaturesOverride                        *[]string                     `json:"excluded_row_signatures_override"`
+	ExportRequestDays                                    *int                          `json:"export_request_days"`
 	FieldNameFullConversionOverride                      *map[string]string            `json:"field_name_full_conversion_override"`
 	FieldNamePartConversionOverride                      *map[string]string            `json:"field_name_part_conversion_override"`
 	FieldsToExpandOverride                               *[]string                     `json:"fields_to_expand_override"`
@@ -8530,7 +8822,7 @@ type DatasetCopyItemSchema struct {
 type DatasetCopyItemType string
 
 // DatasetCopyKind Whether a “DatasetCopy“ made a new dataset, merged into an existing one,
-// or recreated a series period.
+// recreated a series period, or applied a rule template.
 //
 // Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
 // change (genesis regeneration).
@@ -8740,13 +9032,15 @@ type DatasetCopySchema struct {
 	Items []DatasetCopyItemSchema `json:"items"`
 
 	// Kind Whether a ``DatasetCopy`` made a new dataset, merged into an existing one,
-	// or recreated a series period.
+	// recreated a series period, or applied a rule template.
 	//
 	// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
 	// change (genesis regeneration).
-	Kind            DatasetCopyKind        `json:"kind"`
-	Options         map[string]interface{} `json:"options"`
-	SourceDatasetID int                    `json:"source_dataset_id"`
+	Kind    DatasetCopyKind        `json:"kind"`
+	Options map[string]interface{} `json:"options"`
+
+	// SourceDatasetID Null for a rule template merge.
+	SourceDatasetID *int `json:"source_dataset_id"`
 
 	// State Lifecycle of a ``DatasetCopy``.
 	//
@@ -8919,16 +9213,28 @@ type DatasetRuleDetailSchema struct {
 	CreatedByUser     *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
 	DatasetID         int                     `json:"dataset_id"`
 	FamilyName        string                  `json:"family_name"`
-	ID                openapi_types.UUID      `json:"id"`
-	InstanceName      string                  `json:"instance_name"`
-	IsBuiltin         bool                    `json:"is_builtin"`
-	IsCaf             bool                    `json:"is_caf"`
-	LastEditedByUser  *UserInfoTinyDictSchema `json:"last_edited_by_user,omitempty"`
+
+	// FieldBindings The binding of each rule field the instantiate request left unmapped; null outside an instantiate response.
+	FieldBindings    *[]RuleFieldBindingSchema `json:"field_bindings"`
+	ID               openapi_types.UUID        `json:"id"`
+	InstanceName     string                    `json:"instance_name"`
+	IsBuiltin        bool                      `json:"is_builtin"`
+	IsCaf            bool                      `json:"is_caf"`
+	LastEditedByUser *UserInfoTinyDictSchema   `json:"last_edited_by_user,omitempty"`
 
 	// MaskedFields Columns whose PII visibility masks this rule.
-	MaskedFields   *[]string              `json:"masked_fields,omitempty"`
-	OrganizationID openapi_types.UUID     `json:"organization_id"`
-	Params         map[string]interface{} `json:"params"`
+	MaskedFields *[]string `json:"masked_fields,omitempty"`
+
+	// NewerReleaseAvailable Whether the rule's family has an enabled revision with a higher release than the rule's own revision.
+	NewerReleaseAvailable bool `json:"newer_release_available"`
+
+	// NewestRelease The release of newest_revision_id; null when it is null.
+	NewestRelease *string `json:"newest_release"`
+
+	// NewestRevisionID The family's enabled revision with the highest release; null when the family has no enabled revision.
+	NewestRevisionID *openapi_types.UUID    `json:"newest_revision_id"`
+	OrganizationID   openapi_types.UUID     `json:"organization_id"`
+	Params           map[string]interface{} `json:"params"`
 
 	// PendingMigrationModelID Id of the open draft migration when it adds, drops, retypes or resizes a column the rule produces, compared with the table's applied schema. Reported for a rule in pending_validation or disabled; null otherwise. A produced-field edit writes the draft before the rule's validation dry run runs, so a value here does not mean the rule passed validation.
 	PendingMigrationModelID *int                           `json:"pending_migration_model_id"`
@@ -9112,6 +9418,15 @@ type DatasetRuleTinySchema struct {
 	// MaskedFields Columns whose PII visibility masks this rule.
 	MaskedFields *[]string `json:"masked_fields,omitempty"`
 
+	// NewerReleaseAvailable Whether the rule's family has an enabled revision with a higher release than the rule's own revision.
+	NewerReleaseAvailable bool `json:"newer_release_available"`
+
+	// NewestRelease The release of newest_revision_id; null when it is null.
+	NewestRelease *string `json:"newest_release"`
+
+	// NewestRevisionID The family's enabled revision with the highest release; null when the family has no enabled revision.
+	NewestRevisionID *openapi_types.UUID `json:"newest_revision_id"`
+
 	// PendingMigrationModelID Id of the open draft migration when it adds, drops, retypes or resizes a column the rule produces, compared with the table's applied schema. Reported for a rule in pending_validation or disabled; null otherwise. A produced-field edit writes the draft before the rule's validation dry run runs, so a value here does not mean the rule passed validation.
 	PendingMigrationModelID *int   `json:"pending_migration_model_id"`
 	Position                int    `json:"position"`
@@ -9138,6 +9453,12 @@ type DatasetRuleTinySchema struct {
 	//     deletes the rule, or promotes a revision that passed a dry run.
 	State     DatasetRuleState `json:"state"`
 	UpdatedAt time.Time        `json:"updated_at"`
+
+	// UpgradedFromID The rule this one replaces once it is enabled. Null when it is not an upgrade.
+	UpgradedFromID *openapi_types.UUID `json:"upgraded_from_id"`
+
+	// ValidationBlocksEnable Whether recorded validation evidence blocks enabling this rule.
+	ValidationBlocksEnable bool `json:"validation_blocks_enable"`
 
 	// ValidationState What the rule's validation dry runs prove about its current configuration. not_needed: a builtin or CAF rule that declares no produced fields, which needs no validation run. none: the rule has no validation run. queued: a validation request is waiting for a dry run. in_flight: its newest run is queued or executing. failed: its newest run is not in flight and did not pass. stale: its newest run passed for a revision, column mapping or produced fields the rule no longer has. passed: its newest run passed for the rule's current revision, column mapping and produced fields.
 	ValidationState *ValidationEvidenceKind `json:"validation_state,omitempty"`
@@ -9185,6 +9506,25 @@ type DeadlineSchedulePeriodSchema struct {
 	PeriodEnd   openapi_types.Date `json:"period_end"`
 	PeriodKey   string             `json:"period_key"`
 	PeriodStart openapi_types.Date `json:"period_start"`
+}
+
+// DeadlineSnoozeListSchema The caller's snoozes that have not ended, soonest ending first.
+type DeadlineSnoozeListSchema struct {
+	Items []DeadlineSnoozeSchema `json:"items"`
+}
+
+// DeadlineSnoozeSchema The caller's deadline reminders for an intake and period are snoozed until “snoozed_until“.
+type DeadlineSnoozeSchema struct {
+	DataSourceModelID int                `json:"data_source_model_id"`
+	ID                int                `json:"id"`
+	IntakeName        string             `json:"intake_name"`
+	PeriodKey         string             `json:"period_key"`
+	PeriodLabel       string             `json:"period_label"`
+	SeriesID          openapi_types.UUID `json:"series_id"`
+	SeriesName        string             `json:"series_name"`
+
+	// SnoozedUntil The day, in the organization's time zone, on which the reminders resume.
+	SnoozedUntil openapi_types.Date `json:"snoozed_until"`
 }
 
 // DeadlineStepSchema A reminder step: its days and whether it is sent.
@@ -9306,6 +9646,9 @@ type DeleteRowsRequestSchema struct {
 	// Comment Why the rows are deleted; recorded with who deleted which rows. Must not be blank.
 	Comment string `json:"comment"`
 
+	// ExcludeFromFutureUploads Required when `signatures` is non-empty, and refused when it is empty. The rows' exclusion entries always go to the list of each file in view (the file on the stored-item route, else every file a deleted row is linked to). True also adds them to the view's list, so a new upload drops the line: the table's list on the dataset route; on the data source and stored-item routes, the data source's list, or the table's list for a table-series source.
+	ExcludeFromFutureUploads *bool `json:"exclude_from_future_uploads"`
+
 	// Signatures Hex signatures of the rows to delete.
 	Signatures *[]string `json:"signatures,omitempty"`
 }
@@ -9388,6 +9731,8 @@ type DeliverableColumnSourceType string
 
 // DeliverableCreateRequest defines model for DeliverableCreateRequest.
 type DeliverableCreateRequest struct {
+	// DueDays Due date of each period's run, in days after the period of its series ends (5 is the 5th of the next month for a monthly series), on the Friday before when on a weekend; null when it has none.
+	DueDays         *int   `json:"due_days"`
 	FilenamePattern string `json:"filename_pattern"`
 	Name            string `json:"name"`
 
@@ -9395,6 +9740,9 @@ type DeliverableCreateRequest struct {
 	PeriodParam   *string `json:"period_param"`
 	ReceiverLabel *string `json:"receiver_label,omitempty"`
 }
+
+// DeliverableDueState Where a deliverable stands against its due date for one period.
+type DeliverableDueState string
 
 // DeliverableLatestRunSummary defines model for DeliverableLatestRunSummary.
 type DeliverableLatestRunSummary struct {
@@ -9412,8 +9760,11 @@ type DeliverableLatestRunSummary struct {
 
 // DeliverableListItem defines model for DeliverableListItem.
 type DeliverableListItem struct {
-	ArchivedAt        *time.Time                   `json:"archived_at"`
-	CreatedAt         *time.Time                   `json:"created_at"`
+	ArchivedAt *time.Time `json:"archived_at"`
+	CreatedAt  *time.Time `json:"created_at"`
+
+	// DueDays Due date of each period's run, in days after the period of its series ends (5 is the 5th of the next month for a monthly series), on the Friday before when on a weekend; null when it has none.
+	DueDays           *int                         `json:"due_days"`
 	EnabledRevisionID *openapi_types.UUID          `json:"enabled_revision_id"`
 	FilenamePattern   string                       `json:"filename_pattern"`
 	ID                openapi_types.UUID           `json:"id"`
@@ -9445,6 +9796,8 @@ type DeliverableOrderBy string
 
 // DeliverablePatchRequest defines model for DeliverablePatchRequest.
 type DeliverablePatchRequest struct {
+	// DueDays Due date of each period's run, in days after the period of its series ends (5 is the 5th of the next month for a monthly series), on the Friday before when on a weekend; null when it has none. Omitted keeps the stored value; null clears it.
+	DueDays         *int    `json:"due_days"`
 	FilenamePattern *string `json:"filename_pattern"`
 	Name            *string `json:"name"`
 
@@ -9455,8 +9808,14 @@ type DeliverablePatchRequest struct {
 
 // DeliverableResponse defines model for DeliverableResponse.
 type DeliverableResponse struct {
-	ArchivedAt        *time.Time          `json:"archived_at"`
-	CreatedAt         *time.Time          `json:"created_at"`
+	ArchivedAt *time.Time `json:"archived_at"`
+	CreatedAt  *time.Time `json:"created_at"`
+
+	// DueDays Due date of each period's run, in days after the period of its series ends (5 is the 5th of the next month for a monthly series), on the Friday before when on a weekend; null when it has none.
+	DueDays *int `json:"due_days"`
+
+	// DueWarnings One warning per series the enabled revision reads whose broker due date falls after the due date: the sender's file would arrive too late.
+	DueWarnings       *[]string           `json:"due_warnings,omitempty"`
 	EnabledRevisionID *openapi_types.UUID `json:"enabled_revision_id"`
 	FilenamePattern   string              `json:"filename_pattern"`
 	ID                openapi_types.UUID  `json:"id"`
@@ -9996,13 +10355,26 @@ type DryRunJobPreviewResponse struct {
 
 // DryRunJobTinySchema defines model for DryRunJobTinySchema.
 type DryRunJobTinySchema struct {
-	DatasetID      int               `json:"dataset_id"`
-	DatasetName    string            `json:"dataset_name"`
-	ID             int               `json:"id"`
-	IngestionJobID *int              `json:"ingestion_job_id"`
-	SnapshotAt     *time.Time        `json:"snapshot_at"`
-	State          IngestionJobState `json:"state"`
-	Summary        *string           `json:"summary"`
+	CreatedAt time.Time `json:"created_at"`
+
+	// CreatedByUser Who launched the run; null for a run no user launched.
+	CreatedByUser  *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
+	DatasetID      int                     `json:"dataset_id"`
+	DatasetName    string                  `json:"dataset_name"`
+	ID             int                     `json:"id"`
+	IngestionJobID *int                    `json:"ingestion_job_id"`
+
+	// Kind What a dry run was for.
+	Kind DryRunKind `json:"kind"`
+
+	// Result A validation run: `passed`, or `failed` when it ended any other way. Any other run: `finished`, `stopped` or `failed`. Null while the run has not ended.
+	Result *DryRunResult `json:"result,omitempty"`
+
+	// Rules The rules the run ran, by position.
+	Rules      *[]DryRunRuleTinySchema `json:"rules,omitempty"`
+	SnapshotAt *time.Time              `json:"snapshot_at"`
+	State      IngestionJobState       `json:"state"`
+	Summary    *string                 `json:"summary"`
 }
 
 // DryRunJobsListSchema defines model for DryRunJobsListSchema.
@@ -10018,6 +10390,12 @@ type DryRunJobsListSchema struct {
 	TotalRows *int                  `json:"total_rows"`
 }
 
+// DryRunKind What a dry run was for.
+type DryRunKind string
+
+// DryRunResult How a dry run ended.
+type DryRunResult string
+
 // DryRunRuleStats Stats for one side (Rule 0 or Rule 1).
 type DryRunRuleStats struct {
 	CleanCount      int     `json:"clean_count"`
@@ -10025,6 +10403,17 @@ type DryRunRuleStats struct {
 	QuarantineCount int     `json:"quarantine_count"`
 	RuleIndex       int     `json:"rule_index"`
 	TotalRows       int     `json:"total_rows"`
+}
+
+// DryRunRuleTinySchema One rule a dry run ran.
+type DryRunRuleTinySchema struct {
+	// Name The rule's name; null when the run names no known rule release.
+	Name     *string `json:"name"`
+	Position int     `json:"position"`
+
+	// Release The rule release; null when the run names no known rule release.
+	Release        *string             `json:"release"`
+	RuleRevisionID *openapi_types.UUID `json:"rule_revision_id"`
 }
 
 // DuplicateAllowAllPendingSchema A group whose allow the caller proposed or approved and that is still pending: the approvals
@@ -10760,7 +11149,7 @@ type EmailDeliveryStatusSchemaStatus string
 
 // EmailIntakePutSchema defines model for EmailIntakePutSchema.
 type EmailIntakePutSchema struct {
-	// AutoSendIssuesReport Send each loaded file's issues report automatically. Omit to keep the current choice.
+	// AutoSendIssuesReport Send each loaded file's issues report automatically. Omit to keep the current choice; omitted on the first enable, it turns on when the change review policy lets you change it.
 	AutoSendIssuesReport *bool `json:"auto_send_issues_report"`
 	Enabled              bool  `json:"enabled"`
 }
@@ -11638,6 +12027,9 @@ type FileProgressUserSchema struct {
 	Name string `json:"name"`
 }
 
+// FileReportUnsendable Why a file's issues report has no recipient to go to.
+type FileReportUnsendable string
+
 // FileTrashSchema A trash of a file: who trashed it, when and why, and what it deleted.
 type FileTrashSchema struct {
 	// ApprovedRowsCount Deleted live quarantine rows that were approved.
@@ -11771,6 +12163,9 @@ type FollowDefaultsResponse struct {
 // FormFieldRenderType Renderer hint for a rule parameter field in the basic-UI form.
 type FormFieldRenderType string
 
+// FreeTextKind A kind of record holding free text about rows.
+type FreeTextKind string
+
 // GroupState The review state of a duplicate group.
 type GroupState string
 
@@ -11814,6 +12209,9 @@ type HistoryOrderBy string
 type HistoryTinySchema struct {
 	// ChangeProposalID The change proposal whose execution made this change.
 	ChangeProposalID *openapi_types.UUID `json:"change_proposal_id"`
+
+	// CommentThreadID The comment thread the change was made on the direction of, named by the resolve that made it.
+	CommentThreadID *openapi_types.UUID `json:"comment_thread_id"`
 
 	// CreatedAt When this history item was recorded.
 	CreatedAt time.Time `json:"created_at"`
@@ -11896,8 +12294,180 @@ type HistoryUndoStatus string
 // HistoryValueTypes defines model for HistoryValueTypes.
 type HistoryValueTypes string
 
+// IgnoredPartReason Why a part or container member is not a data attachment.
+type IgnoredPartReason string
+
+// InboundEmailDetailSchema defines model for InboundEmailDetailSchema.
+type InboundEmailDetailSchema struct {
+	// Attachments Parts of the raw message; empty when it was not read.
+	Attachments   []InboundEmailPartSchema `json:"attachments"`
+	AttemptCount  int                      `json:"attempt_count"`
+	AutoSubmitted *string                  `json:"auto_submitted"`
+
+	// BodyText Body text; null when the raw message was not read.
+	BodyText *string `json:"body_text"`
+
+	// BodyTruncated Whether `body_text` was cut short.
+	BodyTruncated bool `json:"body_truncated"`
+
+	// CommentID The comment a reply by email was posted as.
+	CommentID         *openapi_types.UUID `json:"comment_id"`
+	CreatedAt         time.Time           `json:"created_at"`
+	DataSourceModelID *int                `json:"data_source_model_id"`
+	DataSourceName    *string             `json:"data_source_name"`
+	DkimVerdict       *string             `json:"dkim_verdict"`
+	DmarcPolicy       *string             `json:"dmarc_policy"`
+	DmarcVerdict      *string             `json:"dmarc_verdict"`
+
+	// HeaderFrom From header.
+	HeaderFrom *string `json:"header_from"`
+
+	// HeaderFromAddress The From header's address when it holds one mailbox.
+	HeaderFromAddress *string `json:"header_from_address"`
+	HeaderMessageID   *string `json:"header_message_id"`
+	HeaderReferences  *string `json:"header_references"`
+	ID                int     `json:"id"`
+	InReplyTo         *string `json:"in_reply_to"`
+
+	// LastError Latest failure code.
+	LastError       *string    `json:"last_error"`
+	LoadedOpsPingAt *time.Time `json:"loaded_ops_ping_at"`
+
+	// MailFrom Envelope sender.
+	MailFrom string `json:"mail_from"`
+
+	// MessageTooLarge Whether the raw message is too large to read.
+	MessageTooLarge         bool                `json:"message_too_large"`
+	NextAttemptAt           time.Time           `json:"next_attempt_at"`
+	OpsNotificationQueuedAt *time.Time          `json:"ops_notification_queued_at"`
+	OrganizationID          *openapi_types.UUID `json:"organization_id"`
+	OrganizationName        *string             `json:"organization_name"`
+
+	// Outcome Latest ingestion outcome code.
+	Outcome            *string    `json:"outcome"`
+	OutcomeCheckAt     *time.Time `json:"outcome_check_at"`
+	OutcomeFollowUntil *time.Time `json:"outcome_follow_until"`
+	Precedence         *string    `json:"precedence"`
+
+	// RawAvailable Whether the raw message is still stored.
+	RawAvailable bool `json:"raw_available"`
+
+	// Reason Outcome code.
+	Reason     *string   `json:"reason"`
+	ReceivedAt time.Time `json:"received_at"`
+
+	// Recipient Envelope recipient.
+	Recipient         string     `json:"recipient"`
+	RepliesSuppressed *bool      `json:"replies_suppressed"`
+	ReportReminderAt  *time.Time `json:"report_reminder_at"`
+
+	// SenderUserID The user the sender was matched to.
+	SenderUserID   *openapi_types.UUID `json:"sender_user_id"`
+	SesMessageID   string              `json:"ses_message_id"`
+	SilenceCheckAt *time.Time          `json:"silence_check_at"`
+	SpamVerdict    *string             `json:"spam_verdict"`
+	SpfVerdict     *string             `json:"spf_verdict"`
+
+	// State Processing state of an ``InboundEmail``.
+	//
+	// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
+	// change (genesis regeneration).
+	State         InboundEmailState `json:"state"`
+	StoredItemIds []int             `json:"stored_item_ids"`
+
+	// StoredItems Stored items of `stored_item_ids` that still exist.
+	StoredItems  []InboundEmailStoredItemSchema `json:"stored_items"`
+	Subject      *string                        `json:"subject"`
+	UpdatedAt    time.Time                      `json:"updated_at"`
+	VirusVerdict *string                        `json:"virus_verdict"`
+}
+
 // InboundEmailHeldReason Why the data files of an inbound email were held.
 type InboundEmailHeldReason string
+
+// InboundEmailListSchema defines model for InboundEmailListSchema.
+type InboundEmailListSchema struct {
+	// Emails Newest first.
+	Emails []InboundEmailRowSchema `json:"emails"`
+
+	// NextCursor Pass as `cursor` for the next page; null on the last page.
+	NextCursor *string `json:"next_cursor"`
+}
+
+// InboundEmailPartSchema defines model for InboundEmailPartSchema.
+type InboundEmailPartSchema struct {
+	// Containers The containers the part was unwrapped from, outermost first.
+	Containers  []string `json:"containers"`
+	ContentType *string  `json:"content_type"`
+	FileName    *string  `json:"file_name"`
+
+	// IgnoredReason Why the part was ignored.
+	IgnoredReason *IgnoredPartReason `json:"ignored_reason"`
+
+	// Index Part index for the attachment download.
+	Index int `json:"index"`
+
+	// IsDataAttachment Whether the part is a data file.
+	IsDataAttachment *bool `json:"is_data_attachment,omitempty"`
+
+	// Kind How ``extract_inbound_mail`` classified a part or container member.
+	Kind MailPartKind `json:"kind"`
+
+	// Size Decoded size in bytes; null when not measured.
+	Size *int `json:"size"`
+}
+
+// InboundEmailRowSchema defines model for InboundEmailRowSchema.
+type InboundEmailRowSchema struct {
+	DataSourceModelID *int    `json:"data_source_model_id"`
+	DataSourceName    *string `json:"data_source_name"`
+
+	// HeaderFrom From header.
+	HeaderFrom *string `json:"header_from"`
+	ID         int     `json:"id"`
+
+	// MailFrom Envelope sender.
+	MailFrom         string              `json:"mail_from"`
+	OrganizationID   *openapi_types.UUID `json:"organization_id"`
+	OrganizationName *string             `json:"organization_name"`
+
+	// Outcome Latest ingestion outcome code.
+	Outcome *string `json:"outcome"`
+
+	// Reason Outcome code.
+	Reason     *string   `json:"reason"`
+	ReceivedAt time.Time `json:"received_at"`
+
+	// Recipient Envelope recipient.
+	Recipient string `json:"recipient"`
+
+	// SenderUserID The user the sender was matched to.
+	SenderUserID *openapi_types.UUID `json:"sender_user_id"`
+
+	// State Processing state of an ``InboundEmail``.
+	//
+	// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
+	// change (genesis regeneration).
+	State InboundEmailState `json:"state"`
+
+	// StoredItemIds Stored items the email saved.
+	StoredItemIds []int   `json:"stored_item_ids"`
+	Subject       *string `json:"subject"`
+}
+
+// InboundEmailState Processing state of an “InboundEmail“.
+//
+// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
+// change (genesis regeneration).
+type InboundEmailState string
+
+// InboundEmailStoredItemSchema defines model for InboundEmailStoredItemSchema.
+type InboundEmailStoredItemSchema struct {
+	DataSourceModelID int     `json:"data_source_model_id"`
+	DatasetID         int     `json:"dataset_id"`
+	FileName          *string `json:"file_name"`
+	ID                int     `json:"id"`
+}
 
 // IncompatibleFieldTypesDict defines model for IncompatibleFieldTypesDict.
 type IncompatibleFieldTypesDict struct {
@@ -12061,6 +12631,18 @@ type IngestionJobsRunRequestSchema struct {
 	IngestionJobIds []int `json:"ingestion_job_ids"`
 }
 
+// InstantiateProducedFieldRequestSchema A produced-field declaration of an instantiate request.
+type InstantiateProducedFieldRequestSchema struct {
+	// DatasetFieldName Concrete downstream dataset column name. Omitted, it is rule_field_name run through the table's field name normalizer.
+	DatasetFieldName *string `json:"dataset_field_name"`
+
+	// FieldSchema Field definition for the new dataset column (type, is_nullable, precision, scale, etc.). Any `generated_by` supplied here is ignored; the server sets it.
+	FieldSchema map[string]interface{} `json:"field_schema"`
+
+	// RuleFieldName Generic rule field name (must appear in the rule revision's enriches_columns or corrects_columns)
+	RuleFieldName string `json:"rule_field_name"`
+}
+
 // InstantiateRuleRequestSchema Request schema for instantiating a rule (creating a DatasetRule).
 type InstantiateRuleRequestSchema struct {
 	// DatasetID Target dataset/table id
@@ -12076,12 +12658,12 @@ type InstantiateRuleRequestSchema struct {
 	Params *map[string]interface{} `json:"params,omitempty"`
 
 	// ProducedFields Optional list of new downstream dataset columns this rule produces. Each column is added to the dataset's draft migration and appears in the dataset schema once that migration is applied.
-	ProducedFields *[]ProducedFieldRequestSchema `json:"produced_fields"`
+	ProducedFields *[]InstantiateProducedFieldRequestSchema `json:"produced_fields"`
 
 	// RowFilter Conditions a row must all meet, then a Starlark predicate it must meet, checked against the table's columns, with a description of them in plain words. A predicate is refused on a custom rule.
 	RowFilter *DescribedRowFilter `json:"row_filter,omitempty"`
 
-	// RuleColumnMapping Map of generic input name -> dataset column. A non-optional rule field left out here and in produced_fields is mapped to the table's non-deleted column carrying the field's concept, when exactly one such column carries it.
+	// RuleColumnMapping Map of rule field name -> dataset column; an entry here always wins. A field left out here and in produced_fields binds, in order, to the predecessor rule's column on an upgrade (upgraded_from_dataset_rule_id), to the one column carrying its concept, to the one column whose original name equals the field name, or to the one column named as the table's normalizer turns the field name. Only columns whose type the field accepts count. An ambiguous field, or a required field matching no column, is a 422 RULE_FIELD_MAPPING_UNRESOLVED whose context carries field_bindings.
 	RuleColumnMapping *map[string]string `json:"rule_column_mapping,omitempty"`
 
 	// Severity What this instance does with the severity its issues declare: 'warning' forces every issue to warn, 'blocker' forces every issue to quarantine the row, 'as_declared' keeps each issue's own severity. Omit to use the rule revision's declared default (RuleMetadata.default_severity).
@@ -12089,6 +12671,70 @@ type InstantiateRuleRequestSchema struct {
 
 	// UpgradedFromDatasetRuleID If provided, the dataset rule to disable after this one is created (upgrade flow).
 	UpgradedFromDatasetRuleID *openapi_types.UUID `json:"upgraded_from_dataset_rule_id"`
+}
+
+// InstantiateRuleSuggestionSchema defines model for InstantiateRuleSuggestionSchema.
+type InstantiateRuleSuggestionSchema struct {
+	// Action What rule change the suggestion proposes.
+	Action                       SuggestionAction        `json:"action"`
+	ColumnMappingDict            *map[string]string      `json:"column_mapping_dict"`
+	CreatedAt                    time.Time               `json:"created_at"`
+	CreatedByUser                *UserInfoTinyDictSchema `json:"created_by_user,omitempty"`
+	CreatedDatasetRuleID         *openapi_types.UUID     `json:"created_dataset_rule_id"`
+	DatasetID                    int                     `json:"dataset_id"`
+	ExistingDatasetRuleID        *openapi_types.UUID     `json:"existing_dataset_rule_id"`
+	ExpectedDatasetRuleVersionID *int                    `json:"expected_dataset_rule_version_id"`
+	FamilyName                   *string                 `json:"family_name"`
+
+	// FieldBindings The binding of each rule field the instantiate request left unmapped.
+	FieldBindings           *[]RuleFieldBindingSchema `json:"field_bindings,omitempty"`
+	ID                      openapi_types.UUID        `json:"id"`
+	InstanceName            string                    `json:"instance_name"`
+	IsBuiltin               *bool                     `json:"is_builtin"`
+	IsCaf                   *bool                     `json:"is_caf"`
+	IsRevalidationCandidate *bool                     `json:"is_revalidation_candidate,omitempty"`
+
+	// MaskedFields Columns whose PII visibility masks this rule.
+	MaskedFields     *[]string          `json:"masked_fields,omitempty"`
+	MigrationModelID *int               `json:"migration_model_id"`
+	OrganizationID   openapi_types.UUID `json:"organization_id"`
+
+	// Params Rule parameters
+	Params *map[string]interface{} `json:"params,omitempty"`
+
+	// ProducedFields Produced-field declarations carried with the suggestion (rule_field_name, dataset_field_name, field_schema); applied to the rule when the suggestion is accepted. Null means the staged request did not touch produced_fields; an empty list means it explicitly cleared them.
+	ProducedFields         *[]map[string]interface{} `json:"produced_fields"`
+	ResolutionMsg          *string                   `json:"resolution_msg"`
+	ResolvedAt             *time.Time                `json:"resolved_at"`
+	RevalidationRetryCount *int                      `json:"revalidation_retry_count,omitempty"`
+
+	// RowFilter Conditions a row must all meet, then a Starlark predicate it must meet. Null when the suggestion has no row filter.
+	RowFilter *RowFilter `json:"row_filter,omitempty"`
+
+	// RuleColumnMapping Map of generic input name -> dataset column
+	RuleColumnMapping map[string]string        `json:"rule_column_mapping"`
+	RuleFamilyID      openapi_types.UUID       `json:"rule_family_id"`
+	RuleRevision      *RuleRevisionSmallSchema `json:"rule_revision,omitempty"`
+	RuleRevisionID    *openapi_types.UUID      `json:"rule_revision_id"`
+	Score             *float64                 `json:"score"`
+
+	// Severity What a rule instance does with the severity its issues declare.
+	Severity RuleSeverity `json:"severity"`
+
+	// Source How the suggestion was generated.
+	Source SuggestionSource `json:"source"`
+
+	// StagedState Staged state change applied to the target rule when the suggestion is accepted (never 'deleted' — a staged delete maps to action=delete instead). None means the staged request did not change state.
+	StagedState *DatasetRuleState `json:"staged_state,omitempty"`
+
+	// State Lifecycle state of a DatasetRuleSuggestion.
+	State                     SuggestionState     `json:"state"`
+	UpgradedFromDatasetRuleID *openapi_types.UUID `json:"upgraded_from_dataset_rule_id"`
+	ValidatedAt               *time.Time          `json:"validated_at"`
+	ValidationDryRunJobID     *int                `json:"validation_dry_run_job_id"`
+
+	// ValidationQueued True while a pending revalidation candidate waits for its validation dry run: a validation request names it and validation_dry_run_job_id is null.
+	ValidationQueued *bool `json:"validation_queued,omitempty"`
 }
 
 // IssueSeverity defines model for IssueSeverity.
@@ -12302,6 +12948,9 @@ type ListOfStrResponseSchema struct {
 
 // LogicalJobType defines model for LogicalJobType.
 type LogicalJobType string
+
+// MailPartKind How “extract_inbound_mail“ classified a part or container member.
+type MailPartKind string
 
 // MarkAllReadResponseSchema Response for the mark-all-read endpoint.
 type MarkAllReadResponseSchema struct {
@@ -12826,6 +13475,7 @@ type NotificationSchema struct {
 	// QuarantinedRowsCount quarantined_rows: the recipient's quarantined row count in the table; 0 once the quarantine is cleared.
 	QuarantinedRowsCount *int                        `json:"quarantined_rows_count"`
 	ReadAt               *time.Time                  `json:"read_at"`
+	ReportCountsChange   *ReportCountsChangeSchema   `json:"report_counts_change,omitempty"`
 	ReviewGroupID        *openapi_types.UUID         `json:"review_group_id"`
 	ReviewID             *openapi_types.UUID         `json:"review_id"`
 	RowID                *int                        `json:"row_id"`
@@ -13613,6 +14263,9 @@ type ProblemDomainsListSchema struct {
 // ProblemKind The query spelling of an issue kind.
 type ProblemKind string
 
+// ProblemSeverity defines model for ProblemSeverity.
+type ProblemSeverity string
+
 // ProducedFieldRequestSchema Declaration that a DatasetRule produces a new downstream dataset column.
 //
 // See ticket M ("Rule-Output Columns"). The client supplies the generic
@@ -13647,6 +14300,16 @@ type ProducedFieldSpec struct {
 	DatasetFieldName string                 `json:"dataset_field_name"`
 	FieldSchema      map[string]interface{} `json:"field_schema"`
 	RuleFieldName    string                 `json:"rule_field_name"`
+}
+
+// QualityTrend Points of the last periods up to the table's own, or of its last whole-file ingestions outside a series,
+// oldest first.
+//
+// “period_count“ is the total; “points“ lists the last ones, at most “MAX_TREND_PERIODS“.
+type QualityTrend struct {
+	Basis       TrendBasis   `json:"basis"`
+	PeriodCount int          `json:"period_count"`
+	Points      []TrendPoint `json:"points"`
 }
 
 // QuarantineCountByStatusResponseSchema Hold-state and validation-status counts for quarantine rows.
@@ -13938,6 +14601,17 @@ type RemoveProblemDomainFromDatasetsResponseSchema struct {
 // RemoveProblemDomainFromDatasetsResponseSchemaResult defines model for RemoveProblemDomainFromDatasetsResponseSchema.Result.
 type RemoveProblemDomainFromDatasetsResponseSchemaResult string
 
+// RepeatProblem A problem open in the table's period and in the periods just before.
+//
+// “periods_seen“ counts the periods running, the table's own included; “note“ says so.
+type RepeatProblem struct {
+	FieldNames  []string        `json:"field_names"`
+	Label       string          `json:"label"`
+	Note        string          `json:"note"`
+	PeriodsSeen int             `json:"periods_seen"`
+	Severity    ProblemSeverity `json:"severity"`
+}
+
 // RepeatedKeyCopiesSchema An active repeated_key group and every live copy of its key.
 type RepeatedKeyCopiesSchema struct {
 	GroupID openapi_types.UUID `json:"group_id"`
@@ -13960,6 +14634,21 @@ type RepeatedKeyCopySchemaTable string
 
 // ReplacementAnswer An uploader's answer to whether a new file replaces an older one.
 type ReplacementAnswer string
+
+// ReportCountsChangeSchema A broker's alert and blocked row counts on an intake's period at its last email and at the pending change.
+type ReportCountsChangeSchema struct {
+	AlertsAfter       int       `json:"alerts_after"`
+	AlertsBefore      int       `json:"alerts_before"`
+	BlockedRowsAfter  int       `json:"blocked_rows_after"`
+	BlockedRowsBefore int       `json:"blocked_rows_before"`
+	ChangedAt         time.Time `json:"changed_at"`
+}
+
+// ReportUpdateSendResultSchema The broker report update emails scheduled for an intake's period.
+type ReportUpdateSendResultSchema struct {
+	// Scheduled The number of update emails scheduled, one per broker assigned to the data source who can be emailed.
+	Scheduled int `json:"scheduled"`
+}
 
 // ReprocessBadRowsRequestSchema The request to reprocess one or more bad rows in the quarantine table based on the bad rows IDs.
 // Note that the request is limited to the dataset passed in the URL.
@@ -14330,6 +15019,19 @@ type RowApprovalProgressSchema struct {
 	RowID             int `json:"row_id"`
 }
 
+// RowChangeProposalSummarySchema A change proposal holding some rows of an issue, and how many.
+type RowChangeProposalSummarySchema struct {
+	// HeldRowCount The count of the issue's rows the proposal holds.
+	HeldRowCount int                `json:"held_row_count"`
+	ID           openapi_types.UUID `json:"id"`
+
+	// State Lifecycle of a ``ChangeProposal``.
+	//
+	// Materialised as a PostgreSQL enum type, so adding a member is a schema
+	// change (genesis regeneration).
+	State ChangeProposalState `json:"state"`
+}
+
 // RowDeleteSummarySchema A row delete: who made it, when, why and whether it was undone.
 type RowDeleteSummarySchema struct {
 	Comment   string                  `json:"comment"`
@@ -14349,7 +15051,7 @@ type RowDiffMetadata struct {
 
 // RowErasureRequestSchema The rows to erase, by row id, and why.
 type RowErasureRequestSchema struct {
-	// Reason Why the rows are erased; recorded with who erased which rows. Must not be blank.
+	// Reason Why the rows are erased; recorded with who erased which rows and kept after the erasure. Must not be blank and must not name the person: give a request reference.
 	Reason string `json:"reason"`
 
 	// RowIds Ids of the rows to erase, clean or quarantine.
@@ -14369,6 +15071,9 @@ type RowErasureResponseSchema struct {
 
 	// ErasedRowIds Rows this request erased.
 	ErasedRowIds []int `json:"erased_row_ids"`
+
+	// KeptSharedFreeText Records holding free text about an erased row and a row not erased, whose text was kept.
+	KeptSharedFreeText []SharedFreeTextSchema `json:"kept_shared_free_text"`
 
 	// KeptSharedHistoryItemIds Cell history items also held by rows not erased, whose values were kept.
 	KeptSharedHistoryItemIds []int `json:"kept_shared_history_item_ids"`
@@ -14584,16 +15289,67 @@ type RuleFamilyUpgradeDetailsSchema struct {
 	OutdatedItems        []OutdatedDatasetRuleSchema `json:"outdated_items"`
 }
 
-// RuleFieldColumnCandidatesSchema A rule field and the table columns carrying its concept.
+// RuleFieldBindingSchema The table column a rule field binds to.
+type RuleFieldBindingSchema struct {
+	// BoundTo The chosen column; null unless status is bound.
+	BoundTo *string `json:"bound_to"`
+
+	// Candidates Up to 5 type-compatible columns the field could bind to, best first; empty when status is bound.
+	Candidates []RuleFieldColumnCandidateSchema `json:"candidates"`
+
+	// Required True when the rule field must be bound to a column.
+	Required bool `json:"required"`
+
+	// RuleFieldName Rule field name.
+	RuleFieldName string `json:"rule_field_name"`
+
+	// Source What chose the column; null unless status is bound.
+	Source *RuleFieldBindingSource `json:"source"`
+
+	// Status Whether a rule field binds to a table column.
+	Status RuleFieldBindingStatus `json:"status"`
+}
+
+// RuleFieldBindingSource What bound a rule field to its table column.
+type RuleFieldBindingSource string
+
+// RuleFieldBindingStatus Whether a rule field binds to a table column.
+type RuleFieldBindingStatus string
+
+// RuleFieldColumnCandidateSchema A table column a rule field could bind to.
+type RuleFieldColumnCandidateSchema struct {
+	// Column Table column name.
+	Column string `json:"column"`
+
+	// Reason Why the column is offered, starting with 'type ok'.
+	Reason string `json:"reason"`
+}
+
+// RuleFieldColumnCandidatesSchema A rule field, the table columns carrying its concept, and the column it binds to.
 type RuleFieldColumnCandidatesSchema struct {
+	// BoundTo The chosen column; null unless status is bound.
+	BoundTo *string `json:"bound_to"`
+
 	// CandidateColumns The table's columns carrying the field's concept, except deleted ones, sorted. Empty for a field bound to no concept.
 	CandidateColumns []string `json:"candidate_columns"`
+
+	// Candidates Up to 5 type-compatible columns the field could bind to, best first; empty when status is bound.
+	Candidates []RuleFieldColumnCandidateSchema `json:"candidates"`
 
 	// Concept The concept the field is bound to; null for a field bound to no concept.
 	Concept *RuleRevisionConceptSchema `json:"concept"`
 
+	// Required True when the rule field must be bound to a column.
+	Required bool `json:"required"`
+
 	// RuleFieldName Rule field name.
 	RuleFieldName string `json:"rule_field_name"`
+
+	// Source What chose the column; null unless status is bound.
+	Source *RuleFieldBindingSource `json:"source"`
+
+	// Status Whether a rule field binds to a table column.
+	Status RuleFieldBindingStatus `json:"status"`
 
 	// SuggestedColumn The only candidate column; null for zero or several candidates.
 	SuggestedColumn *string `json:"suggested_column"`
@@ -14616,11 +15372,27 @@ type RuleMatchBucket string
 // RuleMatchKind How a rule revision matches a table.
 type RuleMatchKind string
 
+// RuleMergeApplyBlockerCode Why applying a rule merge would be refused.
+type RuleMergeApplyBlockerCode string
+
+// RuleMergeApplyBlockerSchema One reason applying a rule merge would be refused now.
+type RuleMergeApplyBlockerSchema struct {
+	// Code Why applying a rule merge would be refused.
+	Code    RuleMergeApplyBlockerCode `json:"code"`
+	Message string                    `json:"message"`
+}
+
 // RuleMergeApplyRequestSchema The resolutions a rule merge is applied with.
 type RuleMergeApplyRequestSchema struct {
 	// Resolutions One per conflict item, plus one per created or replaced item to decline.
 	Resolutions *[]RuleMergeResolutionSchema `json:"resolutions,omitempty"`
 }
+
+// RuleMergeItemReason What a rule merge item's action rests on, machine-readable.
+//
+// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
+// change (genesis regeneration).
+type RuleMergeItemReason string
 
 // RuleMergeItemSchema What a rule merge plans for one rule of the source dataset.
 type RuleMergeItemSchema struct {
@@ -14642,8 +15414,17 @@ type RuleMergeItemSchema struct {
 	// CandidateObjectIds Ids of the target rules an ambiguous match could pair the source rule with.
 	CandidateObjectIds []string                   `json:"candidate_object_ids"`
 	ConflictChoice     *DatasetCopyConflictChoice `json:"conflict_choice"`
-	ID                 int                        `json:"id"`
-	Note               *string                    `json:"note"`
+
+	// Effects What applying the item does to the table's state.
+	Effects []string `json:"effects"`
+
+	// FieldBindings Per rule field, the column a rule template item binds it to; empty for a dataset merge.
+	FieldBindings []RuleTemplateFieldBindingSchema `json:"field_bindings"`
+	ID            int                              `json:"id"`
+	Note          *string                          `json:"note"`
+
+	// Reason What the item's action rests on.
+	Reason *RuleMergeItemReason `json:"reason"`
 
 	// RuleSnapshot A DatasetRule's configuration when a dataset copy carried it.
 	//
@@ -14657,7 +15438,7 @@ type RuleMergeItemSchema struct {
 	// SourceChanges Configuration keys of the source rule that differ from the base, comparing states as enabled or not; null without a base.
 	SourceChanges *[]string `json:"source_changes"`
 
-	// SourceObjectID Id of the source rule.
+	// SourceObjectID Id of the source rule; null for a rule template item.
 	SourceObjectID *string `json:"source_object_id"`
 
 	// TargetChanges Configuration keys of the target rule that differ from the base, comparing states as enabled or not; null without a base or a target rule.
@@ -14671,12 +15452,18 @@ type RuleMergeItemSchema struct {
 
 	// TargetSnapshotMaskedFields Columns whose PII visibility on the target dataset masks target_snapshot.
 	TargetSnapshotMaskedFields *[]string `json:"target_snapshot_masked_fields,omitempty"`
+
+	// TemplateKey The rule template entry's key: its instance name, else its rule family slug; null for a dataset merge.
+	TemplateKey *string `json:"template_key"`
 }
 
-// RuleMergeRequestSchema A merge of the rules of one dataset into the dataset of the path.
+// RuleMergeRequestSchema A merge into the dataset of the path; the merge source is another dataset's rules or a rule template.
 type RuleMergeRequestSchema struct {
 	// SourceDatasetID The dataset whose rules are merged.
-	SourceDatasetID int `json:"source_dataset_id"`
+	SourceDatasetID *int `json:"source_dataset_id"`
+
+	// Template The rule template merged.
+	Template *RuleTemplateSchema `json:"template,omitempty"`
 }
 
 // RuleMergeResolutionSchema What to do with one item of a rule merge.
@@ -14706,14 +15493,18 @@ type RuleMergeResolutionSchema struct {
 	TargetRuleID *openapi_types.UUID `json:"target_rule_id"`
 }
 
-// RuleMergeSchema A merge of the rules of one dataset into another, with what it plans per source rule.
+// RuleMergeSchema A merge of another dataset's rules or a rule template into a dataset, with what it plans per rule.
 type RuleMergeSchema struct {
-	CreatedAt time.Time `json:"created_at"`
-	ID        int       `json:"id"`
+	// ApplyBlockers Why applying would be refused now; listed for a previewed merge only.
+	ApplyBlockers []RuleMergeApplyBlockerSchema `json:"apply_blockers"`
+	CreatedAt     time.Time                     `json:"created_at"`
+	ID            int                           `json:"id"`
 
 	// Items Ordered by id.
-	Items           []RuleMergeItemSchema `json:"items"`
-	SourceDatasetID int                   `json:"source_dataset_id"`
+	Items []RuleMergeItemSchema `json:"items"`
+
+	// SourceDatasetID Null for a rule template merge.
+	SourceDatasetID *int `json:"source_dataset_id"`
 
 	// State Lifecycle of a ``DatasetCopy``.
 	//
@@ -14724,6 +15515,9 @@ type RuleMergeSchema struct {
 	// Summary The number of items per action, once the merge is applied, partially applied or failed.
 	Summary         *string `json:"summary"`
 	TargetDatasetID int     `json:"target_dataset_id"`
+
+	// TemplateName Name of the rule template merged; null for a dataset merge.
+	TemplateName *string `json:"template_name"`
 }
 
 // RuleNameCheckResponseSchema Response for the rule instance name availability check.
@@ -14794,7 +15588,7 @@ type RuleRevisionFullSchema struct {
 	EnrichesColumns      []string                           `json:"enriches_columns"`
 	FamilyID             openapi_types.UUID                 `json:"family_id"`
 
-	// FieldColumnCandidates Present only when dataset_id is given: every rule field in affected_columns except '*' and its candidate columns in that table, by rule_field_name.
+	// FieldColumnCandidates Present only when dataset_id is given: every rule field in affected_columns except '*', its concept's columns in that table and the column it would bind to with an empty mapping, inheriting the mapping of the upgraded_from table rule when given; by rule_field_name.
 	FieldColumnCandidates *[]RuleFieldColumnCandidatesSchema `json:"field_column_candidates"`
 
 	// FieldConcepts Every bound rule field and its concept, by rule_field_name.
@@ -15388,6 +16182,68 @@ type RuleSeverity string
 //	    Existing DatasetRules must be disabled before transitioning here.
 type RuleState string
 
+// RuleTemplateBindingSource What bound a rule template item's rule field to its table column.
+type RuleTemplateBindingSource string
+
+// RuleTemplateEntrySchema One rule of a rule template. A field the entry sets is managed by the template (compared and changed); a
+// field it omits is never compared or changed.
+type RuleTemplateEntrySchema struct {
+	// ColumnMapping Rule field to table column; fields left out are bound automatically.
+	ColumnMapping *map[string]string `json:"column_mapping"`
+
+	// InstanceName Name of the rule on the table; required when the rule family appears more than once.
+	InstanceName *string `json:"instance_name"`
+
+	// Params Rule params, in display units.
+	Params         *map[string]interface{}            `json:"params"`
+	ProducedFields *[]RuleTemplateProducedFieldSchema `json:"produced_fields"`
+
+	// Release Release of the rule family.
+	Release string `json:"release"`
+
+	// RowFilter An explicit null manages the row filter and clears it; omitted leaves it unmanaged.
+	RowFilter *DescribedRowFilter `json:"row_filter,omitempty"`
+
+	// Rule Rule family slug.
+	Rule     string        `json:"rule"`
+	Severity *RuleSeverity `json:"severity,omitempty"`
+}
+
+// RuleTemplateFieldBindingSchema The table column a rule template item binds a rule field to.
+type RuleTemplateFieldBindingSchema struct {
+	// BoundTo The chosen column; null unless status is bound.
+	BoundTo *string `json:"bound_to"`
+
+	// Candidates Type-compatible columns the field could bind to, best first; empty when status is bound.
+	Candidates []RuleFieldColumnCandidateSchema `json:"candidates"`
+
+	// Required True when the rule field must be bound to a column.
+	Required      bool   `json:"required"`
+	RuleFieldName string `json:"rule_field_name"`
+
+	// Source What chose the column; null unless status is bound.
+	Source *RuleTemplateBindingSource `json:"source"`
+
+	// Status Whether a rule field binds to a table column.
+	Status RuleFieldBindingStatus `json:"status"`
+}
+
+// RuleTemplateProducedFieldSchema A field a rule template entry's rule produces.
+type RuleTemplateProducedFieldSchema struct {
+	// DatasetFieldName Table column the field writes; defaults to the field name run through the table's field-name normalizer.
+	DatasetFieldName *string `json:"dataset_field_name"`
+
+	// RuleFieldName The rule's produced field.
+	RuleFieldName string `json:"rule_field_name"`
+}
+
+// RuleTemplateSchema A rule template: the declared mapping and metadata used to instantiate dataset rules.
+type RuleTemplateSchema struct {
+	// Entries Keys are unique: each entry's instance_name, else its rule.
+	Entries []RuleTemplateEntrySchema `json:"entries"`
+	Name    string                    `json:"name"`
+}
+
 // RuleVerdictEvidenceSchema What one manifest entry did to one row in one run.
 //
 // “verdict“ is the “RuleVerdict“ member name and “verdict_code“ its
@@ -15610,6 +16466,30 @@ type SenderResponseFilter string
 
 // SenderState Where a duplicate group stands for its sender.
 type SenderState string
+
+// SenderWalkthroughResponseSchema A page of a file's issues for its sender, or for a reviewer of the senders' answers.
+type SenderWalkthroughResponseSchema struct {
+	// Deliverables With `answers_of=senders`, for a caller who manages deliverables, the runs of unarchived deliverables reading the file's table, except cancelled ones, by deliverable name and run id; else empty.
+	Deliverables []WalkthroughDeliverableSchema `json:"deliverables"`
+
+	// Items The page's cards.
+	Items []WalkthroughItemSchema `json:"items"`
+
+	// NextOffset The offset of the next page; null on the last page.
+	NextOffset *int `json:"next_offset"`
+
+	// Progress How far the answers go through the file's blockers.
+	Progress WalkthroughProgressSchema `json:"progress"`
+
+	// Senders The users who gave the cards' answers, across all pages, by first name, last name and id.
+	Senders []UserInfoTinySchema `json:"senders"`
+
+	// StoredItemID The file's id.
+	StoredItemID int `json:"stored_item_id"`
+
+	// TotalItems The number of cards across all pages.
+	TotalItems int `json:"total_items"`
+}
 
 // SensorRunSchema defines model for SensorRunSchema.
 type SensorRunSchema struct {
@@ -15850,6 +16730,26 @@ type SeriesPeriodStayedWithReplacedTableSchema struct {
 	UnresolvedAlerts int `json:"unresolved_alerts"`
 }
 
+// SeriesRuleApprovalAskResultSchema defines model for SeriesRuleApprovalAskResultSchema.
+type SeriesRuleApprovalAskResultSchema struct {
+	// AlreadyRequested The caller had already asked today; nobody was notified again.
+	AlreadyRequested bool      `json:"already_requested"`
+	CreatedAt        time.Time `json:"created_at"`
+	ID               int       `json:"id"`
+	Message          *string   `json:"message"`
+
+	// NotifiedCount The number of people who can approve that were notified.
+	NotifiedCount int                `json:"notified_count"`
+	RequestedByID openapi_types.UUID `json:"requested_by_id"`
+	SeriesID      openapi_types.UUID `json:"series_id"`
+}
+
+// SeriesRuleApprovalAskSchema defines model for SeriesRuleApprovalAskSchema.
+type SeriesRuleApprovalAskSchema struct {
+	// Message An optional note to the approvers.
+	Message *string `json:"message"`
+}
+
 // SeriesRuleApprovalRequestSchema defines model for SeriesRuleApprovalRequestSchema.
 type SeriesRuleApprovalRequestSchema struct {
 	Fingerprint string `json:"fingerprint"`
@@ -15857,20 +16757,223 @@ type SeriesRuleApprovalRequestSchema struct {
 
 // SeriesRuleApprovalSchema defines model for SeriesRuleApprovalSchema.
 type SeriesRuleApprovalSchema struct {
-	ApprovedAt       time.Time                `json:"approved_at"`
-	ApprovedByID     openapi_types.UUID       `json:"approved_by_id"`
-	ChangeProposalID *openapi_types.UUID      `json:"change_proposal_id"`
-	Fingerprint      string                   `json:"fingerprint"`
-	ID               int                      `json:"id"`
-	RuleSet          []map[string]interface{} `json:"rule_set"`
+	ApprovedAt       time.Time           `json:"approved_at"`
+	ApprovedByID     openapi_types.UUID  `json:"approved_by_id"`
+	ChangeProposalID *openapi_types.UUID `json:"change_proposal_id"`
+	Fingerprint      string              `json:"fingerprint"`
+	ID               int                 `json:"id"`
+
+	// RuleSet The rules of each table, with each rule's params and row-filter literals masked for the PII columns the caller sees masked in that table, listed in the rule's masked_fields.
+	RuleSet []map[string]interface{} `json:"rule_set"`
 }
+
+// SeriesRuleApprovalState A series' rule set against its latest MGA approval.
+type SeriesRuleApprovalState string
 
 // SeriesRuleApprovalStatusSchema defines model for SeriesRuleApprovalStatusSchema.
 type SeriesRuleApprovalStatusSchema struct {
-	Approvals   []SeriesRuleApprovalSchema `json:"approvals"`
-	Approved    bool                       `json:"approved"`
+	Approvals []SeriesRuleApprovalSchema `json:"approvals"`
+	Approved  bool                       `json:"approved"`
+
+	// Approvers Everyone other than the caller who can approve the series' rules, by name.
+	Approvers   []SeriesRuleApproverSchema `json:"approvers"`
 	Fingerprint string                     `json:"fingerprint"`
-	RuleSet     []map[string]interface{}   `json:"rule_set"`
+	Review      SeriesRuleReviewSchema     `json:"review"`
+
+	// RuleSet The rules of each table, with each rule's params and row-filter literals masked for the PII columns the caller sees masked in that table, listed in the rule's masked_fields.
+	RuleSet []map[string]interface{} `json:"rule_set"`
+
+	// Summary The series' rule approval as the caller sees it. Null when the series has nothing to approve.
+	Summary *SeriesRuleApprovalSummarySchema `json:"summary"`
+}
+
+// SeriesRuleApprovalSummarySchema defines model for SeriesRuleApprovalSummarySchema.
+type SeriesRuleApprovalSummarySchema struct {
+	// CanApprove The caller may approve the series' rules.
+	CanApprove bool `json:"can_approve"`
+
+	// RequestedByMeAt When the caller asked for approval today; null when they have not, or after an approval.
+	RequestedByMeAt *time.Time `json:"requested_by_me_at"`
+
+	// State A series' rule set against its latest MGA approval.
+	State SeriesRuleApprovalState `json:"state"`
+
+	// WaitingReportsCount Broker files whose issues report is waiting on approval.
+	WaitingReportsCount int `json:"waiting_reports_count"`
+}
+
+// SeriesRuleApproverSchema defines model for SeriesRuleApproverSchema.
+type SeriesRuleApproverSchema struct {
+	// Name Null when the user has no name.
+	Name   *string            `json:"name"`
+	UserID openapi_types.UUID `json:"user_id"`
+}
+
+// SeriesRuleChange How a rule configuration compares with the latest approval.
+type SeriesRuleChange string
+
+// SeriesRuleChangedPart A part of a rule configuration that differs from the approved one.
+type SeriesRuleChangedPart string
+
+// SeriesRuleChangesSchema defines model for SeriesRuleChangesSchema.
+type SeriesRuleChangesSchema struct {
+	AddedCount     int                           `json:"added_count"`
+	ChangedCount   int                           `json:"changed_count"`
+	LastApprovalID *int                          `json:"last_approval_id"`
+	LastApprovedAt *time.Time                    `json:"last_approved_at"`
+	NeverApproved  bool                          `json:"never_approved"`
+	Removed        []SeriesRuleRemovedRuleSchema `json:"removed"`
+	RemovedCount   int                           `json:"removed_count"`
+}
+
+// SeriesRuleRemovedRuleSchema defines model for SeriesRuleRemovedRuleSchema.
+type SeriesRuleRemovedRuleSchema struct {
+	Name string `json:"name"`
+
+	// RuleName Null when the approved rule release no longer exists.
+	RuleName *string                          `json:"rule_name"`
+	Tables   []SeriesRuleReviewTableRefSchema `json:"tables"`
+}
+
+// SeriesRuleReviewBeforeSchema defines model for SeriesRuleReviewBeforeSchema.
+type SeriesRuleReviewBeforeSchema struct {
+	// Columns The dataset columns the rule reads.
+	Columns        []SeriesRuleReviewColumnSchema    `json:"columns"`
+	MaskedFields   []string                          `json:"masked_fields"`
+	Parameters     []SeriesRuleReviewParameterSchema `json:"parameters"`
+	ProducedFields []SeriesRuleReviewColumnSchema    `json:"produced_fields"`
+
+	// Release Null when the rule release no longer exists.
+	Release *string `json:"release"`
+
+	// RowFilter The rows the rule checks, in plain words; null without a filter.
+	RowFilter *string `json:"row_filter"`
+
+	// Severity What a rule instance does with the severity its issues declare.
+	Severity     RuleSeverity `json:"severity"`
+	SeverityText string       `json:"severity_text"`
+
+	// State Lifecycle state of a DatasetRule.
+	//
+	// pending_validation: waiting for a validation dry run.
+	// enabled: runs on the dataset.
+	// disabled: excluded from execution.
+	// validation_failed: the dry run failed; create the rule again to retry.
+	// error: crashed at runtime. Excluded from execution and blocks the dataset
+	//     through a severe_rule_bug alert until an authorized user disables or
+	//     deletes the rule, or promotes a revision that passed a dry run.
+	State DatasetRuleState `json:"state"`
+}
+
+// SeriesRuleReviewColumnSchema defines model for SeriesRuleReviewColumnSchema.
+type SeriesRuleReviewColumnSchema struct {
+	Column    string `json:"column"`
+	Label     string `json:"label"`
+	RuleField string `json:"rule_field"`
+}
+
+// SeriesRuleReviewParameterSchema defines model for SeriesRuleReviewParameterSchema.
+type SeriesRuleReviewParameterSchema struct {
+	Label string `json:"label"`
+	Name  string `json:"name"`
+
+	// Value The value in words, an object's members as 'Label: value' pairs; null when the parameter is set to null.
+	Value *string `json:"value"`
+}
+
+// SeriesRuleReviewRuleSchema defines model for SeriesRuleReviewRuleSchema.
+type SeriesRuleReviewRuleSchema struct {
+	AppliesToAllTables bool `json:"applies_to_all_tables"`
+
+	// Before The approved configuration the rule changed from; null unless change is changed.
+	Before *SeriesRuleReviewBeforeSchema `json:"before"`
+
+	// Change Null when the series was never approved, and for a rule that is not enabled unless it was enabled at approval: an approval covers only enabled rules.
+	Change       *SeriesRuleChange       `json:"change"`
+	ChangedParts []SeriesRuleChangedPart `json:"changed_parts"`
+
+	// Columns The dataset columns the rule reads.
+	Columns []SeriesRuleReviewColumnSchema `json:"columns"`
+
+	// Description What the rule checks, in plain words.
+	Description  *string  `json:"description"`
+	MaskedFields []string `json:"masked_fields"`
+
+	// Name The rule instance name in the first of its tables.
+	Name           string                            `json:"name"`
+	Parameters     []SeriesRuleReviewParameterSchema `json:"parameters"`
+	ProducedFields []SeriesRuleReviewColumnSchema    `json:"produced_fields"`
+	Release        string                            `json:"release"`
+
+	// RowFilter The rows the rule checks, in plain words; null without a filter.
+	RowFilter *string `json:"row_filter"`
+	RuleName  string  `json:"rule_name"`
+
+	// Severity What a rule instance does with the severity its issues declare.
+	Severity     RuleSeverity `json:"severity"`
+	SeverityText string       `json:"severity_text"`
+
+	// State Lifecycle state of a DatasetRule.
+	//
+	// pending_validation: waiting for a validation dry run.
+	// enabled: runs on the dataset.
+	// disabled: excluded from execution.
+	// validation_failed: the dry run failed; create the rule again to retry.
+	// error: crashed at runtime. Excluded from execution and blocks the dataset
+	//     through a severe_rule_bug alert until an authorized user disables or
+	//     deletes the rule, or promotes a revision that passed a dry run.
+	State DatasetRuleState `json:"state"`
+
+	// Tables One entry per rule instance with this configuration, in table order.
+	Tables []SeriesRuleReviewRuleTableSchema `json:"tables"`
+}
+
+// SeriesRuleReviewRuleTableSchema defines model for SeriesRuleReviewRuleTableSchema.
+type SeriesRuleReviewRuleTableSchema struct {
+	DatasetID     int                `json:"dataset_id"`
+	DatasetRuleID openapi_types.UUID `json:"dataset_rule_id"`
+	Name          string             `json:"name"`
+	PeriodKey     string             `json:"period_key"`
+}
+
+// SeriesRuleReviewSchema defines model for SeriesRuleReviewSchema.
+type SeriesRuleReviewSchema struct {
+	Changes SeriesRuleChangesSchema `json:"changes"`
+
+	// Rules Every undeleted rule but a rule that is not enabled and that an undeleted rule of its table was upgraded from. Rules that are not enabled come first, those changed since the approval ahead of the others; they do not run and the approval does not cover them.
+	Rules                     []SeriesRuleReviewRuleSchema   `json:"rules"`
+	TableConfigurationsDiffer bool                           `json:"table_configurations_differ"`
+	Tables                    []SeriesRuleReviewTableSchema  `json:"tables"`
+	WaitingReports            SeriesRuleWaitingReportsSchema `json:"waiting_reports"`
+}
+
+// SeriesRuleReviewTableRefSchema defines model for SeriesRuleReviewTableRefSchema.
+type SeriesRuleReviewTableRefSchema struct {
+	DatasetID int    `json:"dataset_id"`
+	Name      string `json:"name"`
+	PeriodKey string `json:"period_key"`
+}
+
+// SeriesRuleReviewTableSchema defines model for SeriesRuleReviewTableSchema.
+type SeriesRuleReviewTableSchema struct {
+	// Configuration 1-based number of the configuration of the table's enabled rules; tables with the same number have the same configuration.
+	Configuration int `json:"configuration"`
+	DatasetID     int `json:"dataset_id"`
+
+	// MatchesApproval Whether the latest approval covers the configuration of the table's enabled rules; null when the series was never approved.
+	MatchesApproval *bool  `json:"matches_approval"`
+	Name            string `json:"name"`
+	PeriodKey       string `json:"period_key"`
+	RuleCount       int    `json:"rule_count"`
+}
+
+// SeriesRuleWaitingReportsSchema defines model for SeriesRuleWaitingReportsSchema.
+type SeriesRuleWaitingReportsSchema struct {
+	// Files Distinct files whose latest issues report send was skipped for lack of approval, or whose report was refused for lack of approval since the latest approval; approving lets them be sent again.
+	Files int `json:"files"`
+
+	// ReportUpdates Distinct data source and table pairs whose broker's alert or blocked row counts changed a lot since the broker's last email, not yet sent or dismissed.
+	ReportUpdates int `json:"report_updates"`
 }
 
 // SeriesSubmissionCountsSchema A series' board counts for the period being collected.
@@ -16219,6 +17322,15 @@ type SettingsSchemaOptional struct {
 	VersionID                                    int                                    `json:"version_id"`
 	WhodunitID                                   *openapi_types.UUID                    `json:"whodunit_id"`
 	XlsDateMode                                  *XLSDateMode                           `json:"xls_date_mode,omitempty"`
+}
+
+// SharedFreeTextSchema A record whose free text the erasure kept because it is also about rows not erased.
+type SharedFreeTextSchema struct {
+	// ID The record's id.
+	ID string `json:"id"`
+
+	// Kind A kind of record holding free text about rows.
+	Kind FreeTextKind `json:"kind"`
 }
 
 // SheetBindingCreateRequest defines model for SheetBindingCreateRequest.
@@ -17030,11 +18142,67 @@ type SubmissionBoardCountsSchema struct {
 	Waived            int `json:"waived"`
 }
 
+// SubmissionBoardDeliverableSchema A deliverable bound to the series against its due date for the period.
+type SubmissionBoardDeliverableSchema struct {
+	// AtRisk The date the deliverable turns at risk: the series' at-risk days before the due date.
+	AtRisk        openapi_types.Date `json:"at_risk"`
+	DeliverableID openapi_types.UUID `json:"deliverable_id"`
+
+	// Due The due date for the period, on the Friday before when on a weekend.
+	Due           openapi_types.Date `json:"due"`
+	Name          string             `json:"name"`
+	ReceiverLabel string             `json:"receiver_label"`
+
+	// SignedOffAt When that run was signed off.
+	SignedOffAt *time.Time `json:"signed_off_at"`
+
+	// SignedOffRunID The first run of the period signed off, if any.
+	SignedOffRunID *int `json:"signed_off_run_id"`
+
+	// State Where a deliverable stands against its due date for one period.
+	State DeliverableDueState `json:"state"`
+}
+
 // SubmissionBoardFileSchema A file counted toward the period.
 type SubmissionBoardFileSchema struct {
-	CreatedAt    time.Time `json:"created_at"`
-	FileName     string    `json:"file_name"`
-	StoredItemID int       `json:"stored_item_id"`
+	// Channel How the file arrived: email or portal; null otherwise (collected from storage, split from another file, or not recorded).
+	Channel   *SubmissionChannel `json:"channel"`
+	CreatedAt time.Time          `json:"created_at"`
+	FileName  string             `json:"file_name"`
+
+	// Sender The user who uploaded or emailed the file; null when not known.
+	Sender       *UserInfoTinySchema `json:"sender"`
+	StoredItemID int                 `json:"stored_item_id"`
+}
+
+// SubmissionBoardNotLoadedFileSchema A file that arrived for the period and has not loaded, as the MGA's board shows it.
+type SubmissionBoardNotLoadedFileSchema struct {
+	// AlertItemID The alert stopping the file, if any.
+	AlertItemID *int `json:"alert_item_id"`
+
+	// Channel How the file arrived: email or portal; null otherwise (collected from storage, split from another file, or not recorded).
+	Channel   *SubmissionChannel `json:"channel"`
+	CreatedAt time.Time          `json:"created_at"`
+	FileName  string             `json:"file_name"`
+
+	// FixOwner Who fixes that alert.
+	FixOwner *FixOwner `json:"fix_owner"`
+
+	// HoldReasons When on hold, each pre-load check finding's reason (`preload_check_held`), the held email's reason (`inbound_email_held`), or `waiting_for_period` (`series_file_routing`); else empty.
+	HoldReasons []string `json:"hold_reasons"`
+
+	// IsOnHold Whether that alert holds the file before loading, including a `series_file_routing` alert waiting for someone to say the file's period.
+	IsOnHold bool `json:"is_on_hold"`
+
+	// Sender The user who uploaded or emailed the file; null when not known.
+	Sender *UserInfoTinySchema `json:"sender"`
+
+	// SenderAsk The latest time the file's sender was asked about the alert stopping it; null when nobody was asked.
+	SenderAsk    *FileProgressSenderAskSchema `json:"sender_ask"`
+	StoredItemID int                          `json:"stored_item_id"`
+
+	// WaitingOn Who must act next on a file that has not loaded.
+	WaitingOn WaitingOn `json:"waiting_on"`
 }
 
 // SubmissionBoardRowSchema One intake's submission for one period on the MGA's board.
@@ -17045,7 +18213,8 @@ type SubmissionBoardRowSchema struct {
 	// BoardStatus Where an intake's submission for one period stands on the MGA's board, in the board's order.
 	//
 	// A ``SubmissionStatus``, with ``expected`` split by the broker due date and ``received_not_loaded`` split by
-	// whether the file is held before loading.
+	// whether the file is held before loading; either is ``on_hold`` while a file waiting for its period could belong
+	// to the period.
 	BoardStatus SubmissionBoardStatus `json:"board_status"`
 
 	// BrokerDue The broker due date of the period.
@@ -17058,7 +18227,7 @@ type SubmissionBoardRowSchema struct {
 	// DatasetID The period's table; null when it has none.
 	DatasetID *int `json:"dataset_id"`
 
-	// DaysLate Days past the broker due date while no file has loaded and nothing is declared; else null.
+	// DaysLate Days past the broker due date while no file has loaded, nothing is declared and waiting_file is null; else null.
 	DaysLate *int `json:"days_late"`
 
 	// Declaration The waiver in effect when status is waived, the nil return in effect when it is nil, else null.
@@ -17068,6 +18237,15 @@ type SubmissionBoardRowSchema struct {
 	FileCount int  `json:"file_count"`
 	IsLocked  bool `json:"is_locked"`
 
+	// IssuesReportSentAt When an issues report email was last scheduled for the latest file; null when none was.
+	IssuesReportSentAt *time.Time `json:"issues_report_sent_at"`
+
+	// IssuesReportTarget The file an issues report email for the period would cover, its recipient and refusals; null when no file counted toward the period has loaded.
+	IssuesReportTarget *SubmissionIssuesReportTargetSchema `json:"issues_report_target"`
+
+	// IssuesReportWaitingReason The reason of the latest file's newest issues report send that scheduled no email; null when that send scheduled one, is still queued, or there was none.
+	IssuesReportWaitingReason *IssuesReportSendReason `json:"issues_report_waiting_reason"`
+
 	// LastRemindedAt The latest deadline reminder submitted to a broker for this intake and period; else null.
 	LastRemindedAt *time.Time `json:"last_reminded_at"`
 
@@ -17075,24 +18253,33 @@ type SubmissionBoardRowSchema struct {
 	LatestFile *SubmissionBoardFileSchema `json:"latest_file"`
 
 	// NotLoadedFile Set only when status is received_not_loaded.
-	NotLoadedFile *SubmissionNotLoadedFileSchema `json:"not_loaded_file"`
+	NotLoadedFile *SubmissionBoardNotLoadedFileSchema `json:"not_loaded_file"`
 
 	// PendingFile The newest file counted toward the period, whatever the status, when it has neither loaded nor been turned down; else null.
-	PendingFile *SubmissionNotLoadedFileSchema `json:"pending_file"`
-	PeriodEnd   openapi_types.Date             `json:"period_end"`
-	PeriodKey   string                         `json:"period_key"`
-	PeriodStart openapi_types.Date             `json:"period_start"`
+	PendingFile *SubmissionBoardNotLoadedFileSchema `json:"pending_file"`
+	PeriodEnd   openapi_types.Date                  `json:"period_end"`
+	PeriodKey   string                              `json:"period_key"`
+	PeriodStart openapi_types.Date                  `json:"period_start"`
 
 	// Status Where an intake's submission for one period stands.
 	Status SubmissionStatus `json:"status"`
+
+	// WaitingFile While status is expected or received_not_loaded and the period is not locked, the intake's newest file waiting for its period (on hold, `waiting_for_period`) that could belong to this period: one its question offered, its alert names, or its email or file name reads as; with none of those, any period starting by the day it arrived. The intake is not late for the period meanwhile. Else null.
+	WaitingFile *SubmissionBoardNotLoadedFileSchema `json:"waiting_file"`
 }
 
 // SubmissionBoardSchema Each intake of a series expected for one period, with its submission status.
 type SubmissionBoardSchema struct {
 	BrokerDue openapi_types.Date `json:"broker_due"`
 
+	// ChangeProposalsAwaitingReview The count of pending-review change proposals on any table of the series that the caller may decide; the length of the change proposal list filtered by `series_id` and `reviewable_by_me`.
+	ChangeProposalsAwaitingReview int `json:"change_proposals_awaiting_review"`
+
 	// Counts How many intakes are in each board status; the statuses partition the intakes.
 	Counts SubmissionBoardCountsSchema `json:"counts"`
+
+	// Deliverables The unarchived deliverables with a due date whose enabled revision reads the series, by due date, then name.
+	Deliverables []SubmissionBoardDeliverableSchema `json:"deliverables"`
 
 	// FilesWaitingForPeriod The files of the series' intakes waiting to be told their period, newest first.
 	FilesWaitingForPeriod []SubmissionWaitingFileSchema `json:"files_waiting_for_period"`
@@ -17106,9 +18293,12 @@ type SubmissionBoardSchema struct {
 	// IsLocked Whether the period's table is locked.
 	IsLocked    bool               `json:"is_locked"`
 	MgaDeadline openapi_types.Date `json:"mga_deadline"`
-	PeriodEnd   openapi_types.Date `json:"period_end"`
-	PeriodKey   string             `json:"period_key"`
-	PeriodStart openapi_types.Date `json:"period_start"`
+
+	// OpenFiles The newest file of each intake and unlocked period of the series that has neither loaded nor been turned down, oldest first; files waiting for their period and files held only for multiple_data_files are left out.
+	OpenFiles   []SubmissionOpenFileSchema `json:"open_files"`
+	PeriodEnd   openapi_types.Date         `json:"period_end"`
+	PeriodKey   string                     `json:"period_key"`
+	PeriodStart openapi_types.Date         `json:"period_start"`
 
 	// Rows In board status order, then most days late or most rows failing first, then by broker name.
 	Rows       []SubmissionBoardRowSchema `json:"rows"`
@@ -17119,8 +18309,12 @@ type SubmissionBoardSchema struct {
 // SubmissionBoardStatus Where an intake's submission for one period stands on the MGA's board, in the board's order.
 //
 // A “SubmissionStatus“, with “expected“ split by the broker due date and “received_not_loaded“ split by
-// whether the file is held before loading.
+// whether the file is held before loading; either is “on_hold“ while a file waiting for its period could belong
+// to the period.
 type SubmissionBoardStatus string
+
+// SubmissionChannel How a file reached a series intake.
+type SubmissionChannel string
 
 // SubmissionCommentThreadSchema The discussion containing the body of a submission email.
 type SubmissionCommentThreadSchema struct {
@@ -17243,7 +18437,7 @@ type SubmissionFileStepSchema struct {
 	// AlertID The alert stopping the file at this step, when it is an alert of one of the caller's sources.
 	AlertID *int `json:"alert_id"`
 
-	// ChangeProposal The proposal awaiting review or revision at this step; null unless its blocking alert is on one of the caller's sources.
+	// ChangeProposal The proposal awaiting review or revision at this step that holds the blocking alert whole, else the oldest such proposal holding a row of it; null unless the blocking alert is on one of the caller's sources.
 	ChangeProposal *SubmissionProposalWaitSchema `json:"change_proposal,omitempty"`
 	State          SubmissionStepState           `json:"state"`
 	Step           SubmissionFileStep            `json:"step"`
@@ -17273,7 +18467,7 @@ type SubmissionIntakeSchema struct {
 	BrokerDue         openapi_types.Date `json:"broker_due"`
 	DataSourceModelID int                `json:"data_source_model_id"`
 
-	// DaysLate Days past broker_due while no file has loaded and nothing is declared; else null.
+	// DaysLate Days past broker_due while no file has loaded, nothing is declared and no file of the source waiting for its period could belong to the period; else null.
 	DaysLate *int `json:"days_late"`
 
 	// Declaration Who declared the nil return and when; null unless status is nil.
@@ -17288,6 +18482,30 @@ type SubmissionIntakeSchema struct {
 
 	// UploadCreatesPeriod Whether an upload by the caller through this source naming the month's period_key creates the month's table; false for a month that has a table.
 	UploadCreatesPeriod bool `json:"upload_creates_period"`
+}
+
+// SubmissionIssuesReportTargetSchema The file an issues report email for the period would cover and who it would go to.
+type SubmissionIssuesReportTargetSchema struct {
+	// BrokerFixableRowCount The live held rows of the intake linked to the file, or to the parts it was split into, that carry an unresolved alert the broker fixes (`broker_file` or `broker_portal`); 0 on a composite table.
+	BrokerFixableRowCount int    `json:"broker_fixable_row_count"`
+	FileName              string `json:"file_name"`
+
+	// Recipient The user the send emails: the sender of the file's newest inbound email when it was emailed, else its uploader; null when there is none.
+	Recipient *UserInfoTinySchema `json:"recipient"`
+
+	// RecipientRefusal Why the send would be refused with `BROKER_REPORT_RECIPIENT_REFUSED`: its `context.reason`; null when the recipient can be emailed.
+	RecipientRefusal SubmissionIssuesReportTargetSchema_RecipientRefusal `json:"recipient_refusal"`
+
+	// ReportRefusal Why the send would be refused with `BROKER_REPORT_REFUSED`: its `context.reason`; null when the file is ready for a report. The series rule approval is checked apart.
+	ReportRefusal *BrokerReportRefusal `json:"report_refusal"`
+
+	// StoredItemID The newest loaded file counted toward the period that is not an unchanged re-send, else the newest loaded one; the file of `POST .../stored-items/{stored_item_id}/issues-report-emails`.
+	StoredItemID int `json:"stored_item_id"`
+}
+
+// SubmissionIssuesReportTargetSchema_RecipientRefusal Why the send would be refused with `BROKER_REPORT_RECIPIENT_REFUSED`: its `context.reason`; null when the recipient can be emailed.
+type SubmissionIssuesReportTargetSchema_RecipientRefusal struct {
+	union json.RawMessage
 }
 
 // SubmissionMonthSchema One table the caller's sources submit to, with the counts of the caller's own rows and flags on it, or a
@@ -17342,12 +18560,49 @@ type SubmissionNotLoadedFileSchema struct {
 	// FixOwner Who fixes that alert.
 	FixOwner *FixOwner `json:"fix_owner"`
 
-	// HoldReasons When on hold, each pre-load check finding's reason (`preload_check_held`) or the held email's reason (`inbound_email_held`); else empty.
+	// HoldReasons When on hold, each pre-load check finding's reason (`preload_check_held`), the held email's reason (`inbound_email_held`), or `waiting_for_period` (`series_file_routing`); else empty.
 	HoldReasons []string `json:"hold_reasons"`
 
-	// IsOnHold Whether that alert holds the file before loading.
+	// IsOnHold Whether that alert holds the file before loading, including a `series_file_routing` alert waiting for someone to say the file's period.
 	IsOnHold     bool `json:"is_on_hold"`
 	StoredItemID int  `json:"stored_item_id"`
+}
+
+// SubmissionOpenFileSchema A series intake's newest file for an unlocked period that has neither loaded nor been turned down.
+type SubmissionOpenFileSchema struct {
+	// AlertItemID The alert stopping the file, if any.
+	AlertItemID *int `json:"alert_item_id"`
+
+	// BrokerName The intake's name.
+	BrokerName string `json:"broker_name"`
+
+	// Channel How the file arrived: email or portal; null otherwise (collected from storage, split from another file, or not recorded).
+	Channel           *SubmissionChannel `json:"channel"`
+	CreatedAt         time.Time          `json:"created_at"`
+	DataSourceModelID int                `json:"data_source_model_id"`
+	FileName          string             `json:"file_name"`
+
+	// FixOwner Who fixes that alert.
+	FixOwner *FixOwner `json:"fix_owner"`
+
+	// HoldReasons When on hold, each pre-load check finding's reason (`preload_check_held`), the held email's reason (`inbound_email_held`), or `waiting_for_period` (`series_file_routing`); else empty.
+	HoldReasons []string `json:"hold_reasons"`
+
+	// IsOnHold Whether that alert holds the file before loading, including a `series_file_routing` alert waiting for someone to say the file's period.
+	IsOnHold bool `json:"is_on_hold"`
+
+	// PeriodKey The period the file counts toward.
+	PeriodKey string `json:"period_key"`
+
+	// Sender The user who uploaded or emailed the file; null when not known.
+	Sender *UserInfoTinySchema `json:"sender"`
+
+	// SenderAsk The latest time the file's sender was asked about the alert stopping it; null when nobody was asked.
+	SenderAsk    *FileProgressSenderAskSchema `json:"sender_ask"`
+	StoredItemID int                          `json:"stored_item_id"`
+
+	// WaitingOn Who must act next on a file that has not loaded.
+	WaitingOn WaitingOn `json:"waiting_on"`
 }
 
 // SubmissionPeriodStatusSchema The submission status of one intake for one period.
@@ -17372,6 +18627,9 @@ type SubmissionPeriodStatusSchema struct {
 
 	// Status Where an intake's submission for one period stands.
 	Status SubmissionStatus `json:"status"`
+
+	// WaitingFile While status is expected or received_not_loaded and the period is not locked, the intake's newest file waiting for its period (on hold, `waiting_for_period`) that could belong to this period: one its question offered, its alert names, or its email or file name reads as; with none of those, any period starting by the day it arrived. The intake is not late for the period meanwhile. Else null.
+	WaitingFile *SubmissionNotLoadedFileSchema `json:"waiting_file"`
 }
 
 // SubmissionProposalWaitSchema The proposed change holding a file step, and whose move is next.
@@ -17436,6 +18694,9 @@ type SubmissionWaitingFileSchema struct {
 	// Sender The user who uploaded or emailed the file; null when not known.
 	Sender       *UserInfoTinySchema `json:"sender"`
 	StoredItemID int                 `json:"stored_item_id"`
+
+	// WaitingOn Who must act next on a file that has not loaded.
+	WaitingOn WaitingOn `json:"waiting_on"`
 }
 
 // SubmissionsSummarySchema The caller's submissions in an organization.
@@ -17508,6 +18769,26 @@ type SuggestionSource string
 // SuggestionState Lifecycle state of a DatasetRuleSuggestion.
 type SuggestionState string
 
+// SummaryNouns Words the summary uses for a sender and a file, singular and plural.
+type SummaryNouns struct {
+	File    *string `json:"file,omitempty"`
+	Files   *string `json:"files,omitempty"`
+	Sender  *string `json:"sender,omitempty"`
+	Senders *string `json:"senders,omitempty"`
+}
+
+// SummaryScope The table, series, period and sender the summary covers, and when it was generated.
+//
+// “mga_name“: the MGA's organization name.
+type SummaryScope struct {
+	GeneratedAt time.Time `json:"generated_at"`
+	MgaName     *string   `json:"mga_name"`
+	PeriodLabel *string   `json:"period_label"`
+	SenderName  *string   `json:"sender_name"`
+	SeriesName  *string   `json:"series_name"`
+	TableName   string    `json:"table_name"`
+}
+
 // SupportRequestCreateSchema A message for help from a task on an alert.
 type SupportRequestCreateSchema struct {
 	// Message What the sender needs help with.
@@ -17516,7 +18797,7 @@ type SupportRequestCreateSchema struct {
 	// Step The task step the sender was on.
 	Step string `json:"step"`
 
-	// StoredItemID The alert's file the sender was on; one of the alert's `stored_items_to_alerts`.
+	// StoredItemID The file the sender was on: one of the alert's `stored_items_to_alerts`, or a file of the alert's data source on its table.
 	StoredItemID *int `json:"stored_item_id"`
 }
 
@@ -17752,6 +19033,12 @@ type TableSeriesSchema struct {
 	// FirstPeriodKey Key of the first period a file is expected for. Null when unset.
 	FirstPeriodKey *string `json:"first_period_key"`
 
+	// FollowEmail The current user's email setting for this follow. Null when not followed, or when the follow uses their default.
+	FollowEmail *bool `json:"follow_email"`
+
+	// FollowSlack Whether this follow tags the current user in the organization's Slack posts. Null when not followed, or when the follow uses their default.
+	FollowSlack *bool `json:"follow_slack"`
+
 	// Frequency How long each period of a table series is.
 	//
 	// Materialised as a PostgreSQL enum type, so adding a member is a SCHEMA
@@ -17769,7 +19056,10 @@ type TableSeriesSchema struct {
 
 	// PeriodColumnKind Whether period_column holds period keys or dates. Null when period_column is null.
 	PeriodColumnKind *PeriodColumnKind `json:"period_column_kind"`
-	UpdatedAt        time.Time         `json:"updated_at"`
+
+	// ReceiveNotifications Whether the current user follows the series.
+	ReceiveNotifications bool      `json:"receive_notifications"`
+	UpdatedAt            time.Time `json:"updated_at"`
 }
 
 // TableSeriesStartRequestSchema A series to create with a new table as the table of period “period_key“.
@@ -17925,6 +19215,9 @@ type TablesOverviewSeriesSchema struct {
 
 	// RowsWithIssuesCount Quarantine rows that fail validation.
 	RowsWithIssuesCount *int `json:"rows_with_issues_count"`
+
+	// RuleApproval The series' rule approval for broker reports. Null when the series has nothing to approve or the caller cannot view its approval.
+	RuleApproval *SeriesRuleApprovalSummarySchema `json:"rule_approval"`
 
 	// TopAlert The top alert of the unlocked period with the highest attention_score, the latest on a tie. Null when there is none or that score is 0.
 	TopAlert         *TablesOverviewSeriesTopAlertSchema `json:"top_alert"`
@@ -18233,6 +19526,21 @@ type TransitionStat struct {
 
 	// UnblockedByFilter Of unblocked, rows the candidate's row filter skipped.
 	UnblockedByFilter int `json:"unblocked_by_filter"`
+}
+
+// TrendBasis defines model for TrendBasis.
+type TrendBasis string
+
+// TrendPoint The first submission and the held rows of one period or file.
+//
+// “rows_submitted“: data rows of the first whole-file ingestion of each sender in the
+// period, or of the file; “rows_with_problems“: those it held. Both None without one.
+// “rows_held“: the stored held rows of the period, or None when not counted.
+type TrendPoint struct {
+	PeriodLabel      string `json:"period_label"`
+	RowsHeld         *int   `json:"rows_held"`
+	RowsSubmitted    *int   `json:"rows_submitted"`
+	RowsWithProblems *int   `json:"rows_with_problems"`
 }
 
 // UnassignReviewersSchema Request schema for unassigning reviewers from a review.
@@ -18699,6 +20007,9 @@ type ViewDownloadResponseSchema struct {
 	Result         string `json:"result"`
 }
 
+// WaitingOn Who must act next on a file that has not loaded.
+type WaitingOn string
+
 // WaivableRowItem defines model for WaivableRowItem.
 type WaivableRowItem struct {
 	MemberDatasetID int `json:"member_dataset_id"`
@@ -18717,6 +20028,168 @@ type WaiverCreateRequest struct {
 	Reason          string `json:"reason"`
 	RowID           int    `json:"row_id"`
 }
+
+// WalkthroughActionSchema An answer the caller may give on a card.
+type WalkthroughActionSchema struct {
+	// Action The resolve action that gives the answer (`ignore_rule_for_row` or `overwrite_value`); null for a note.
+	Action *string               `json:"action"`
+	Kind   WalkthroughAnswerKind `json:"kind"`
+	Mode   ActionMode            `json:"mode"`
+}
+
+// WalkthroughAnswerKind defines model for WalkthroughAnswerKind.
+type WalkthroughAnswerKind string
+
+// WalkthroughAnswerSchema The latest answer on a card and what became of it.
+type WalkthroughAnswerSchema struct {
+	AnsweredBy UserInfoTinySchema `json:"answered_by"`
+
+	// CanChange Whether the caller may replace the answer now: a proposal waiting for review, sent back or rejected, or a note, on an issue still open on the row; always false with `answers_of=senders`.
+	CanChange bool `json:"can_change"`
+
+	// ChangeProposalID The change proposal holding the answer, if any.
+	ChangeProposalID *openapi_types.UUID `json:"change_proposal_id"`
+
+	// CommentThreadID The latest note on the issue and row, for a note or beside a change proposal.
+	CommentThreadID *openapi_types.UUID `json:"comment_thread_id"`
+
+	// CreatedAt When the answer was given.
+	CreatedAt time.Time `json:"created_at"`
+
+	// DecidedAt When the reviewer approved, rejected or sent back the change proposal, if they did.
+	DecidedAt *time.Time `json:"decided_at"`
+
+	// DecidedBy Who approved, rejected or sent back the change proposal, if someone did.
+	DecidedBy *UserInfoTinySchema `json:"decided_by"`
+
+	// DecisionReason The reviewer's reason, for `rejected` or `changes_requested`.
+	DecisionReason *string `json:"decision_reason"`
+
+	// KeepReason For `keep_as_is`, the reason given.
+	KeepReason *string               `json:"keep_reason"`
+	Kind       WalkthroughAnswerKind `json:"kind"`
+
+	// LastReplyAt When `last_reply_text` was written.
+	LastReplyAt *time.Time `json:"last_reply_at"`
+
+	// LastReplyText The note thread's latest reply from someone of the agency.
+	LastReplyText *string `json:"last_reply_text"`
+
+	// NoteText The first comment of the note's thread, when there is a note.
+	NoteText *string `json:"note_text"`
+
+	// PendingApproval Whether the answer is a change proposal waiting for review.
+	PendingApproval bool `json:"pending_approval"`
+
+	// ProposedValues For `fix_value`, the new value of each field by field name, masked when the caller cannot see the field.
+	ProposedValues *map[string]*string    `json:"proposed_values"`
+	State          WalkthroughAnswerState `json:"state"`
+}
+
+// WalkthroughAnswerState defines model for WalkthroughAnswerState.
+type WalkthroughAnswerState string
+
+// WalkthroughDeliverableSchema A deliverable run reading the file's table and whether the caller can sign it off now.
+type WalkthroughDeliverableSchema struct {
+	// BlockedReason Why `can_sign_off` is false, the first that applies: `signed_off` (signed off or delivered), `not_rendered` (open or stale), `open_blockers`, `pending_proposals` or `no_permission`; null when it is true.
+	BlockedReason *WalkthroughSignOffBlock `json:"blocked_reason"`
+
+	// CanSignOff Whether nothing on this file holds back the run's sign-off: the run is rendered, the file has no open blocker and no change proposal holding an open issue, and the caller may sign off. The sign-off itself checks the run's whole readiness.
+	CanSignOff bool `json:"can_sign_off"`
+
+	// DeliverableID The deliverable's id.
+	DeliverableID openapi_types.UUID `json:"deliverable_id"`
+
+	// Name The deliverable's name.
+	Name string `json:"name"`
+
+	// RunID The run's id.
+	RunID int `json:"run_id"`
+
+	// State DeliverableRun lifecycle: open -> rendered -> signed_off -> delivered; rendered -> stale -> re-render; pre-sign-off -> cancelled.
+	State DeliverableRunState `json:"state"`
+}
+
+// WalkthroughFieldValueSchema One field of a row with its value.
+type WalkthroughFieldValueSchema struct {
+	// FieldName The field's column name.
+	FieldName string `json:"field_name"`
+
+	// Label The field's display label.
+	Label string `json:"label"`
+
+	// Value The row's value in the field, masked when the caller cannot see it.
+	Value *string `json:"value"`
+}
+
+// WalkthroughItemSchema One issue on one row of the file.
+type WalkthroughItemSchema struct {
+	// Actions The answers the caller may give; empty once the issue is closed on the row.
+	Actions []WalkthroughActionSchema `json:"actions"`
+
+	// AlertItemID The alert's id, for an alert.
+	AlertItemID *int `json:"alert_item_id"`
+
+	// Answer The latest answer, if any.
+	Answer *WalkthroughAnswerSchema `json:"answer"`
+
+	// Answered Whether the issue on this row was answered; false while the latest answer is a rejected or failed change proposal.
+	Answered bool `json:"answered"`
+
+	// CurrentValues For a closed issue, the row's current values of `fields`; null while the issue is open.
+	CurrentValues *[]WalkthroughFieldValueSchema `json:"current_values"`
+
+	// ExcelRow The row's line number in the file, when known.
+	ExcelRow *int `json:"excel_row"`
+
+	// Fields The fields the issue is about, with their values.
+	Fields []WalkthroughFieldValueSchema `json:"fields"`
+
+	// HeldByChangeProposalID The change proposal holding the card's row of the issue, else the one holding the whole issue, if any.
+	HeldByChangeProposalID *openapi_types.UUID `json:"held_by_change_proposal_id"`
+
+	// IdentifyingFields The row's key columns with their values; empty when the table has no key columns.
+	IdentifyingFields []WalkthroughFieldValueSchema `json:"identifying_fields"`
+
+	// Kind Whether the issue is an alert or a warning.
+	Kind WalkthroughItemSchemaKind `json:"kind"`
+
+	// Open Whether the issue is still open on the row.
+	Open bool `json:"open"`
+
+	// Reason What is wrong, in plain words.
+	Reason string `json:"reason"`
+
+	// RowID The id of the row the issue is on.
+	RowID int `json:"row_id"`
+
+	// Severity `blocker` when the issue holds the row back, `warning` when it does not.
+	Severity WalkthroughItemSchemaSeverity `json:"severity"`
+
+	// WarningItemID The warning's id, for a warning.
+	WarningItemID *int `json:"warning_item_id"`
+}
+
+// WalkthroughItemSchemaKind Whether the issue is an alert or a warning.
+type WalkthroughItemSchemaKind string
+
+// WalkthroughItemSchemaSeverity `blocker` when the issue holds the row back, `warning` when it does not.
+type WalkthroughItemSchemaSeverity string
+
+// WalkthroughProgressSchema How far the answers go through the file's blockers.
+type WalkthroughProgressSchema struct {
+	// Answered The blockers answered, open or closed by the answer.
+	Answered int `json:"answered"`
+
+	// OpenWarnings The open warnings of the file, listed or not.
+	OpenWarnings int `json:"open_warnings"`
+
+	// TotalBlockers The open blockers plus the blockers closed by the answers.
+	TotalBlockers int `json:"total_blockers"`
+}
+
+// WalkthroughSignOffBlock defines model for WalkthroughSignOffBlock.
+type WalkthroughSignOffBlock string
 
 // WarningAction Alert actions that can be applied to a warning.
 type WarningAction string
@@ -18751,7 +20224,7 @@ type WarningSchema struct {
 	// BoundaryData The notable field values that may help the user make the right decision when resolving this warning.
 	BoundaryData *DisplayValuesForResponse `json:"boundary_data,omitempty"`
 
-	// ChangeProposal The live change proposal holding this warning, if any.
+	// ChangeProposal The live change proposal holding this whole warning, if any.
 	ChangeProposal *ChangeProposalSummarySchema `json:"change_proposal,omitempty"`
 
 	// Count Approximate number of live destination rows carrying this warning's token, from 1 to ISSUE_ROW_COUNT_CAP while unresolved; the cap means at least that many rows.
@@ -18808,6 +20281,9 @@ type WarningSchema struct {
 	// ResolvedAt When was this warning resolved.
 	ResolvedAt *time.Time `json:"resolved_at"`
 
+	// RowChangeProposals The live change proposals each holding some rows of this issue, oldest first; `change_proposal` holds the whole issue.
+	RowChangeProposals *[]RowChangeProposalSummarySchema `json:"row_change_proposals,omitempty"`
+
 	// RuleInputColumns Sorted dataset columns the warning's dataset rule reads. Null without a dataset rule.
 	RuleInputColumns *[]string `json:"rule_input_columns"`
 
@@ -18830,7 +20306,7 @@ type WarningSchema struct {
 type WarningTinySchema struct {
 	AssignedUser *UserInfoTinySchema `json:"assigned_user,omitempty"`
 
-	// ChangeProposal The live change proposal holding this warning, if any.
+	// ChangeProposal The live change proposal holding this whole warning, if any.
 	ChangeProposal *ChangeProposalSummarySchema `json:"change_proposal,omitempty"`
 
 	// Count Approximate number of live destination rows carrying this warning's token, from 1 to ISSUE_ROW_COUNT_CAP while unresolved; the cap means at least that many rows.
@@ -18852,9 +20328,12 @@ type WarningTinySchema struct {
 	IssueType   IssueTypeEnum `json:"issue_type"`
 
 	// Msg The message to be displayed to the user for this warning.
-	Msg                 string                          `json:"msg"`
-	UserSubmittedIssues *[]UserSubmittedIssueReadSchema `json:"user_submitted_issues,omitempty"`
-	Whodunit            *UserInfoTinySchema             `json:"whodunit,omitempty"`
+	Msg string `json:"msg"`
+
+	// RowChangeProposals The live change proposals each holding some rows of this issue, oldest first; `change_proposal` holds the whole issue.
+	RowChangeProposals  *[]RowChangeProposalSummarySchema `json:"row_change_proposals,omitempty"`
+	UserSubmittedIssues *[]UserSubmittedIssueReadSchema   `json:"user_submitted_issues,omitempty"`
+	Whodunit            *UserInfoTinySchema               `json:"whodunit,omitempty"`
 }
 
 // WarningsListSchema defines model for WarningsListSchema.
@@ -18891,6 +20370,9 @@ type WarningsResolveSchema struct {
 
 	// AnotherFieldNewValue Map the current value of the other field of the warning to this one or overwrite the current value of the other field.
 	AnotherFieldNewValue *string `json:"another_field_new_value"`
+
+	// CommentThreadID A comment thread with a target naming this warning, such as a sender's note, whose direction the change follows; every history item the resolve writes carries it. Any other thread is a 422.
+	CommentThreadID *openapi_types.UUID `json:"comment_thread_id"`
 
 	// FieldNameToValue When more than one field needs to be modified, pass the dictionary of field names to field values, instead of just `new_value`.
 	FieldNameToValue *map[string]string `json:"field_name_to_value"`
@@ -19309,6 +20791,16 @@ type OauthRegisterParams struct {
 	OrgCode *string `form:"org_code,omitempty" json:"org_code,omitempty"`
 }
 
+// UnsnoozeFromLinkParams defines parameters for UnsnoozeFromLink.
+type UnsnoozeFromLinkParams struct {
+	XSnoozeToken *string `json:"X-Snooze-Token,omitempty"`
+}
+
+// SnoozeFromLinkParams defines parameters for SnoozeFromLink.
+type SnoozeFromLinkParams struct {
+	XSnoozeToken *string `json:"X-Snooze-Token,omitempty"`
+}
+
 // ReadEmailConfirmationParams defines parameters for ReadEmailConfirmation.
 type ReadEmailConfirmationParams struct {
 	XConfirmationToken *string `json:"X-Confirmation-Token,omitempty"`
@@ -19426,6 +20918,55 @@ type ApprovePrivilegeRequestParams struct {
 
 // RejectPrivilegeRequestParams defines parameters for RejectPrivilegeRequest.
 type RejectPrivilegeRequestParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// ListOpsInboundEmailsParams defines parameters for ListOpsInboundEmails.
+type ListOpsInboundEmailsParams struct {
+	// OrganizationID Only emails routed to this organization.
+	OrganizationID *openapi_types.UUID `form:"organization_id,omitempty" json:"organization_id,omitempty"`
+
+	// DataSourceModelID Only emails routed to this data source.
+	DataSourceModelID *int `form:"data_source_model_id,omitempty" json:"data_source_model_id,omitempty"`
+
+	// Recipient Envelope recipient, case-insensitive.
+	Recipient *string `form:"recipient,omitempty" json:"recipient,omitempty"`
+
+	// Sender From header address or envelope sender, case-insensitive; `Name <address>` is accepted.
+	Sender *string `form:"sender,omitempty" json:"sender,omitempty"`
+
+	// State Processing state.
+	State *InboundEmailState `form:"state,omitempty" json:"state,omitempty"`
+
+	// Reason Outcome code.
+	Reason *string `form:"reason,omitempty" json:"reason,omitempty"`
+
+	// ReceivedFrom Received at or after; must have a time zone.
+	ReceivedFrom *time.Time `form:"received_from,omitempty" json:"received_from,omitempty"`
+
+	// ReceivedBefore Received before; must have a time zone.
+	ReceivedBefore *time.Time `form:"received_before,omitempty" json:"received_before,omitempty"`
+
+	// Cursor `next_cursor` of the previous page.
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size.
+	Limit        *int    `form:"limit,omitempty" json:"limit,omitempty"`
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetOpsInboundEmailParams defines parameters for GetOpsInboundEmail.
+type GetOpsInboundEmailParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// DownloadOpsInboundEmailAttachmentParams defines parameters for DownloadOpsInboundEmailAttachment.
+type DownloadOpsInboundEmailAttachmentParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// DownloadOpsInboundEmailRawParams defines parameters for DownloadOpsInboundEmailRaw.
+type DownloadOpsInboundEmailRawParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -19573,13 +21114,13 @@ type GetAlertsParams struct {
 	// DatasetTrackedByUser Filter by whether the current user tracks the alert's dataset. True = only tracked, False = only untracked, None = all.
 	DatasetTrackedByUser *bool `form:"dataset_tracked_by_user,omitempty" json:"dataset_tracked_by_user,omitempty"`
 
-	// HasChangeProposal Limit the results to issues held (true) or not held (false) by a live change proposal.
+	// HasChangeProposal Limit the results to issues a live change proposal holds whole or by some of their rows (true), or to issues no live change proposal holds in any way (false).
 	HasChangeProposal *bool `form:"has_change_proposal,omitempty" json:"has_change_proposal,omitempty"`
 
-	// ChangeProposalState Limit the results to issues held by a change proposal in one of these states.
+	// ChangeProposalState Limit the results to issues held whole or by some of their rows by a change proposal in one of these states.
 	ChangeProposalState *[]ChangeProposalState `form:"change_proposal_state,omitempty" json:"change_proposal_state,omitempty"`
 
-	// DatasetRuleID Limit the results to the alerts of this dataset rule. With resolved=false they are the alerts a dataset_rule_patch proposal on the rule may address, less those of a locked series period, which alert lists hide. Lifts the is_row_level default and, on the organization list, the resolve_after_migration default.
+	// DatasetRuleID Limit the results to the alerts of this dataset rule. With resolved=false they are the alerts a dataset_rule_patch proposal on the rule may address. Lifts the is_row_level default and, on the organization list, the resolve_after_migration default.
 	DatasetRuleID *openapi_types.UUID `form:"dataset_rule_id,omitempty" json:"dataset_rule_id,omitempty"`
 	OauthSession  *string             `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
@@ -19673,8 +21214,11 @@ type GetOneBackupSettingsModelParams struct {
 
 // ListChangeProposalsParams defines parameters for ListChangeProposals.
 type ListChangeProposalsParams struct {
-	State          *[]ChangeProposalState `form:"state,omitempty" json:"state,omitempty"`
-	DatasetID      *int                   `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
+	State     *[]ChangeProposalState `form:"state,omitempty" json:"state,omitempty"`
+	DatasetID *int                   `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
+
+	// SeriesID Keeps the proposals on the tables of this table series.
+	SeriesID       *openapi_types.UUID    `form:"series_id,omitempty" json:"series_id,omitempty"`
 	Operation      *ChangeReviewOperation `form:"operation,omitempty" json:"operation,omitempty"`
 	ReviewableByMe *bool                  `form:"reviewable_by_me,omitempty" json:"reviewable_by_me,omitempty"`
 	AuthoredByMe   *bool                  `form:"authored_by_me,omitempty" json:"authored_by_me,omitempty"`
@@ -20261,6 +21805,16 @@ type WaiveSubmissionParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
+// DismissReportUpdateParams defines parameters for DismissReportUpdate.
+type DismissReportUpdateParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// SendReportUpdateEmailParams defines parameters for SendReportUpdateEmail.
+type SendReportUpdateEmailParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
 // ReprocessAllBadRowsForDataSourceViewParams defines parameters for ReprocessAllBadRowsForDataSourceView.
 type ReprocessAllBadRowsForDataSourceViewParams struct {
 	// DatasetID Target table for this source action. Required for a table series cloud source.
@@ -20635,6 +22189,13 @@ type GetDataParamsAlertItemID0 = int
 // GetDataParamsAlertItemID1 defines parameters for GetData.
 type GetDataParamsAlertItemID1 = string
 
+// GetDataQualityParams defines parameters for GetDataQuality.
+type GetDataQualityParams struct {
+	// DataSourceModelID Scope to this data source; omit for the whole table.
+	DataSourceModelID *int    `form:"data_source_model_id,omitempty" json:"data_source_model_id,omitempty"`
+	OauthSession      *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
 // DeleteDatasetDataReviewPolicyParams defines parameters for DeleteDatasetDataReviewPolicy.
 type DeleteDatasetDataReviewPolicyParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -20848,6 +22409,11 @@ type CountRowsKeptByDatasetRuleFilterParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
+// ValidateDatasetRuleParams defines parameters for ValidateDatasetRule.
+type ValidateDatasetRuleParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
 // DeleteAllBadRowsInDatasetViewParams defines parameters for DeleteAllBadRowsInDatasetView.
 type DeleteAllBadRowsInDatasetViewParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -20875,14 +22441,17 @@ type ListDeletedRowsViewParams struct {
 
 // GetDryRunJobsParams defines parameters for GetDryRunJobs.
 type GetDryRunJobsParams struct {
-	Start        *int                 `form:"start,omitempty" json:"start,omitempty"`
-	End          *int                 `form:"end,omitempty" json:"end,omitempty"`
-	Page         *int                 `form:"page,omitempty" json:"page,omitempty"`
-	OrderBy      *DryRunJobOrderBy    `form:"order_by,omitempty" json:"order_by,omitempty"`
-	Reverse      *bool                `form:"reverse,omitempty" json:"reverse,omitempty"`
-	Limit        *int                 `form:"limit,omitempty" json:"limit,omitempty"`
-	State        *[]IngestionJobState `form:"state,omitempty" json:"state,omitempty"`
-	OauthSession *string              `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+	Start   *int                 `form:"start,omitempty" json:"start,omitempty"`
+	End     *int                 `form:"end,omitempty" json:"end,omitempty"`
+	Page    *int                 `form:"page,omitempty" json:"page,omitempty"`
+	OrderBy *DryRunJobOrderBy    `form:"order_by,omitempty" json:"order_by,omitempty"`
+	Reverse *bool                `form:"reverse,omitempty" json:"reverse,omitempty"`
+	Limit   *int                 `form:"limit,omitempty" json:"limit,omitempty"`
+	State   *[]IngestionJobState `form:"state,omitempty" json:"state,omitempty"`
+
+	// RuleName Lists only the runs of a rule whose name contains this text, ignoring case.
+	RuleName     *string `form:"rule_name,omitempty" json:"rule_name,omitempty"`
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
 // GetDuplicateGroupsParams defines parameters for GetDuplicateGroups.
@@ -21380,6 +22949,16 @@ type SubmitUserSubmittedWarningsParams struct {
 
 // RetractUserSubmittedWarningsParams defines parameters for RetractUserSubmittedWarnings.
 type RetractUserSubmittedWarningsParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetMyDeadlineSnoozesParams defines parameters for GetMyDeadlineSnoozes.
+type GetMyDeadlineSnoozesParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// ClearMyDeadlineSnoozeParams defines parameters for ClearMyDeadlineSnooze.
+type ClearMyDeadlineSnoozeParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -22448,9 +24027,12 @@ type GetRuleRevisionDatasetMatchesParams struct {
 
 // GetOneRuleRevisionDetailsParams defines parameters for GetOneRuleRevisionDetails.
 type GetOneRuleRevisionDetailsParams struct {
-	// DatasetID A table of the organization. When given, the response carries field_column_candidates.
-	DatasetID    *int    `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
-	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+	// DatasetID A table of the organization. When given, the response carries field_column_candidates for that table.
+	DatasetID *int `form:"dataset_id,omitempty" json:"dataset_id,omitempty"`
+
+	// UpgradedFrom A table rule of dataset_id, of this revision's rule family, that this revision would replace. field_column_candidates then binds each field to the column that rule maps it to, when that column is still in the table.
+	UpgradedFrom *openapi_types.UUID `form:"upgraded_from,omitempty" json:"upgraded_from,omitempty"`
+	OauthSession *string             `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
 // InstantiateRuleParams defines parameters for InstantiateRule.
@@ -22673,6 +24255,22 @@ type ListStoredItemSkippedTotalLinesParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
+// GetSenderWalkthroughParams defines parameters for GetSenderWalkthrough.
+type GetSenderWalkthroughParams struct {
+	IncludeWarnings *bool `form:"include_warnings,omitempty" json:"include_warnings,omitempty"`
+	IncludeDecided  *bool `form:"include_decided,omitempty" json:"include_decided,omitempty"`
+	UnansweredOnly  *bool `form:"unanswered_only,omitempty" json:"unanswered_only,omitempty"`
+
+	// AnswersOf Whose answers the cards carry: the caller's, or every external user's (`senders`).
+	AnswersOf    *GetSenderWalkthroughParamsAnswersOf `form:"answers_of,omitempty" json:"answers_of,omitempty"`
+	Offset       *int                                 `form:"offset,omitempty" json:"offset,omitempty"`
+	Limit        *int                                 `form:"limit,omitempty" json:"limit,omitempty"`
+	OauthSession *string                              `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// GetSenderWalkthroughParamsAnswersOf defines parameters for GetSenderWalkthrough.
+type GetSenderWalkthroughParamsAnswersOf string
+
 // GetSubmissionsSummaryParams defines parameters for GetSubmissionsSummary.
 type GetSubmissionsSummaryParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
@@ -22776,6 +24374,11 @@ type GetTableSeriesRuleApprovalParams struct {
 
 // ApproveTableSeriesRulesParams defines parameters for ApproveTableSeriesRules.
 type ApproveTableSeriesRulesParams struct {
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+}
+
+// RequestTableSeriesRuleApprovalParams defines parameters for RequestTableSeriesRuleApproval.
+type RequestTableSeriesRuleApprovalParams struct {
 	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
@@ -23015,13 +24618,13 @@ type GetThirdPartyAlertsParams struct {
 	// DatasetTrackedByUser Filter by whether the current user tracks the alert's dataset. True = only tracked, False = only untracked, None = all.
 	DatasetTrackedByUser *bool `form:"dataset_tracked_by_user,omitempty" json:"dataset_tracked_by_user,omitempty"`
 
-	// HasChangeProposal Limit the results to issues held (true) or not held (false) by a live change proposal.
+	// HasChangeProposal Limit the results to issues a live change proposal holds whole or by some of their rows (true), or to issues no live change proposal holds in any way (false).
 	HasChangeProposal *bool `form:"has_change_proposal,omitempty" json:"has_change_proposal,omitempty"`
 
-	// ChangeProposalState Limit the results to issues held by a change proposal in one of these states.
+	// ChangeProposalState Limit the results to issues held whole or by some of their rows by a change proposal in one of these states.
 	ChangeProposalState *[]ChangeProposalState `form:"change_proposal_state,omitempty" json:"change_proposal_state,omitempty"`
 
-	// DatasetRuleID Limit the results to the alerts of this dataset rule. With resolved=false they are the alerts a dataset_rule_patch proposal on the rule may address, less those of a locked series period, which alert lists hide. Lifts the is_row_level default and, on the organization list, the resolve_after_migration default.
+	// DatasetRuleID Limit the results to the alerts of this dataset rule. With resolved=false they are the alerts a dataset_rule_patch proposal on the rule may address. Lifts the is_row_level default and, on the organization list, the resolve_after_migration default.
 	DatasetRuleID *openapi_types.UUID `form:"dataset_rule_id,omitempty" json:"dataset_rule_id,omitempty"`
 	OauthSession  *string             `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
@@ -23270,14 +24873,17 @@ type DeleteThirdPartyRowsInDatasetParams struct {
 
 // GetThirdPartyDryRunJobsParams defines parameters for GetThirdPartyDryRunJobs.
 type GetThirdPartyDryRunJobsParams struct {
-	Start        *int                 `form:"start,omitempty" json:"start,omitempty"`
-	End          *int                 `form:"end,omitempty" json:"end,omitempty"`
-	Page         *int                 `form:"page,omitempty" json:"page,omitempty"`
-	OrderBy      *DryRunJobOrderBy    `form:"order_by,omitempty" json:"order_by,omitempty"`
-	Reverse      *bool                `form:"reverse,omitempty" json:"reverse,omitempty"`
-	Limit        *int                 `form:"limit,omitempty" json:"limit,omitempty"`
-	State        *[]IngestionJobState `form:"state,omitempty" json:"state,omitempty"`
-	OauthSession *string              `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
+	Start   *int                 `form:"start,omitempty" json:"start,omitempty"`
+	End     *int                 `form:"end,omitempty" json:"end,omitempty"`
+	Page    *int                 `form:"page,omitempty" json:"page,omitempty"`
+	OrderBy *DryRunJobOrderBy    `form:"order_by,omitempty" json:"order_by,omitempty"`
+	Reverse *bool                `form:"reverse,omitempty" json:"reverse,omitempty"`
+	Limit   *int                 `form:"limit,omitempty" json:"limit,omitempty"`
+	State   *[]IngestionJobState `form:"state,omitempty" json:"state,omitempty"`
+
+	// RuleName Lists only the runs of a rule whose name contains this text, ignoring case.
+	RuleName     *string `form:"rule_name,omitempty" json:"rule_name,omitempty"`
+	OauthSession *string `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
 
 // ModifyThirdPartyCleanCellParams defines parameters for ModifyThirdPartyCleanCell.
@@ -23410,10 +25016,10 @@ type GetThirdPartyWarningsParams struct {
 	// DataSourceModelID Limit the results to a specific data source.
 	DataSourceModelID *int `form:"data_source_model_id,omitempty" json:"data_source_model_id,omitempty"`
 
-	// HasChangeProposal Limit the results to issues held (true) or not held (false) by a live change proposal.
+	// HasChangeProposal Limit the results to issues a live change proposal holds whole or by some of their rows (true), or to issues no live change proposal holds in any way (false).
 	HasChangeProposal *bool `form:"has_change_proposal,omitempty" json:"has_change_proposal,omitempty"`
 
-	// ChangeProposalState Limit the results to issues held by a change proposal in one of these states.
+	// ChangeProposalState Limit the results to issues held whole or by some of their rows by a change proposal in one of these states.
 	ChangeProposalState *[]ChangeProposalState `form:"change_proposal_state,omitempty" json:"change_proposal_state,omitempty"`
 	OauthSession        *string                `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
@@ -23685,10 +25291,10 @@ type GetWarningsParams struct {
 	// DataSourceModelID Limit the results to a specific data source.
 	DataSourceModelID *int `form:"data_source_model_id,omitempty" json:"data_source_model_id,omitempty"`
 
-	// HasChangeProposal Limit the results to issues held (true) or not held (false) by a live change proposal.
+	// HasChangeProposal Limit the results to issues a live change proposal holds whole or by some of their rows (true), or to issues no live change proposal holds in any way (false).
 	HasChangeProposal *bool `form:"has_change_proposal,omitempty" json:"has_change_proposal,omitempty"`
 
-	// ChangeProposalState Limit the results to issues held by a change proposal in one of these states.
+	// ChangeProposalState Limit the results to issues held whole or by some of their rows by a change proposal in one of these states.
 	ChangeProposalState *[]ChangeProposalState `form:"change_proposal_state,omitempty" json:"change_proposal_state,omitempty"`
 	OauthSession        *string                `form:"oauth_session,omitempty" json:"oauth_session,omitempty"`
 }
@@ -24334,6 +25940,9 @@ type PatchTableSeriesMemberJSONRequestBody = TableSeriesMemberPatchRequestSchema
 
 // ApproveTableSeriesRulesJSONRequestBody defines body for ApproveTableSeriesRules for application/json ContentType.
 type ApproveTableSeriesRulesJSONRequestBody = SeriesRuleApprovalRequestSchema
+
+// RequestTableSeriesRuleApprovalJSONRequestBody defines body for RequestTableSeriesRuleApproval for application/json ContentType.
+type RequestTableSeriesRuleApprovalJSONRequestBody = SeriesRuleApprovalAskSchema
 
 // TrackTableSeriesJSONRequestBody defines body for TrackTableSeries for application/json ContentType.
 type TrackTableSeriesJSONRequestBody = UserTrackedDatasetRequestSchema
@@ -28152,6 +29761,68 @@ func (t *RuleRevisionSmallSchema_AffectedColumnTypes_AdditionalProperties) Unmar
 	return err
 }
 
+// AsFileReportUnsendable returns the union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal as a FileReportUnsendable
+func (t SubmissionIssuesReportTargetSchema_RecipientRefusal) AsFileReportUnsendable() (FileReportUnsendable, error) {
+	var body FileReportUnsendable
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromFileReportUnsendable overwrites any union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal as the provided FileReportUnsendable
+func (t *SubmissionIssuesReportTargetSchema_RecipientRefusal) FromFileReportUnsendable(v FileReportUnsendable) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeFileReportUnsendable performs a merge with any union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal, using the provided FileReportUnsendable
+func (t *SubmissionIssuesReportTargetSchema_RecipientRefusal) MergeFileReportUnsendable(v FileReportUnsendable) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOutboundEmailSkipReason returns the union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal as a OutboundEmailSkipReason
+func (t SubmissionIssuesReportTargetSchema_RecipientRefusal) AsOutboundEmailSkipReason() (OutboundEmailSkipReason, error) {
+	var body OutboundEmailSkipReason
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOutboundEmailSkipReason overwrites any union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal as the provided OutboundEmailSkipReason
+func (t *SubmissionIssuesReportTargetSchema_RecipientRefusal) FromOutboundEmailSkipReason(v OutboundEmailSkipReason) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOutboundEmailSkipReason performs a merge with any union data inside the SubmissionIssuesReportTargetSchema_RecipientRefusal, using the provided OutboundEmailSkipReason
+func (t *SubmissionIssuesReportTargetSchema_RecipientRefusal) MergeOutboundEmailSkipReason(v OutboundEmailSkipReason) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SubmissionIssuesReportTargetSchema_RecipientRefusal) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SubmissionIssuesReportTargetSchema_RecipientRefusal) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsTablesOverviewTableSchema returns the union data inside the TablesOverviewListSchema_Results_Item as a TablesOverviewTableSchema
 func (t TablesOverviewListSchema_Results_Item) AsTablesOverviewTableSchema() (TablesOverviewTableSchema, error) {
 	var body TablesOverviewTableSchema
@@ -28374,6 +30045,12 @@ type ClientInterface interface {
 	// OauthRegister request
 	OauthRegister(ctx context.Context, params *OauthRegisterParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// UnsnoozeFromLink request
+	UnsnoozeFromLink(ctx context.Context, params *UnsnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SnoozeFromLink request
+	SnoozeFromLink(ctx context.Context, params *SnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ReadEmailConfirmation request
 	ReadEmailConfirmation(ctx context.Context, params *ReadEmailConfirmationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -28444,6 +30121,18 @@ type ClientInterface interface {
 	RejectPrivilegeRequestWithBody(ctx context.Context, organizationID openapi_types.UUID, requestID openapi_types.UUID, params *RejectPrivilegeRequestParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	RejectPrivilegeRequest(ctx context.Context, organizationID openapi_types.UUID, requestID openapi_types.UUID, params *RejectPrivilegeRequestParams, body RejectPrivilegeRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListOpsInboundEmails request
+	ListOpsInboundEmails(ctx context.Context, currentOrgID openapi_types.UUID, params *ListOpsInboundEmailsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOpsInboundEmail request
+	GetOpsInboundEmail(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *GetOpsInboundEmailParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DownloadOpsInboundEmailAttachment request
+	DownloadOpsInboundEmailAttachment(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, partIndex int, params *DownloadOpsInboundEmailAttachmentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DownloadOpsInboundEmailRaw request
+	DownloadOpsInboundEmailRaw(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *DownloadOpsInboundEmailRawParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetSoftDeletedTables request
 	GetSoftDeletedTables(ctx context.Context, currentOrgID openapi_types.UUID, params *GetSoftDeletedTablesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -28901,6 +30590,12 @@ type ClientInterface interface {
 
 	WaiveSubmission(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, periodKey string, params *WaiveSubmissionParams, body WaiveSubmissionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DismissReportUpdate request
+	DismissReportUpdate(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *DismissReportUpdateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SendReportUpdateEmail request
+	SendReportUpdateEmail(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *SendReportUpdateEmailParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ReprocessAllBadRowsForDataSourceView request
 	ReprocessAllBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -29060,6 +30755,9 @@ type ClientInterface interface {
 	// GetData request
 	GetData(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetDataQuality request
+	GetDataQuality(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataQualityParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteDatasetDataReviewPolicy request
 	DeleteDatasetDataReviewPolicy(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteDatasetDataReviewPolicyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -29120,6 +30818,9 @@ type ClientInterface interface {
 
 	// CountRowsKeptByDatasetRuleFilter request
 	CountRowsKeptByDatasetRuleFilter(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *CountRowsKeptByDatasetRuleFilterParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ValidateDatasetRule request
+	ValidateDatasetRule(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *ValidateDatasetRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteAllBadRowsInDatasetViewWithBody request with any body
 	DeleteAllBadRowsInDatasetViewWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteAllBadRowsInDatasetViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -29474,6 +31175,12 @@ type ClientInterface interface {
 	RetractUserSubmittedWarningsWithBody(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RetractUserSubmittedWarningsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	RetractUserSubmittedWarnings(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RetractUserSubmittedWarningsParams, body RetractUserSubmittedWarningsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMyDeadlineSnoozes request
+	GetMyDeadlineSnoozes(ctx context.Context, organizationID openapi_types.UUID, params *GetMyDeadlineSnoozesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ClearMyDeadlineSnooze request
+	ClearMyDeadlineSnooze(ctx context.Context, organizationID openapi_types.UUID, snoozeID int, params *ClearMyDeadlineSnoozeParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteDeliverableRevision request
 	DeleteDeliverableRevision(ctx context.Context, organizationID openapi_types.UUID, revisionID openapi_types.UUID, params *DeleteDeliverableRevisionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -30111,6 +31818,9 @@ type ClientInterface interface {
 	// ListStoredItemSkippedTotalLines request
 	ListStoredItemSkippedTotalLines(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *ListStoredItemSkippedTotalLinesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetSenderWalkthrough request
+	GetSenderWalkthrough(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *GetSenderWalkthroughParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetSubmissionsSummary request
 	GetSubmissionsSummary(ctx context.Context, organizationID openapi_types.UUID, params *GetSubmissionsSummaryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -30188,6 +31898,11 @@ type ClientInterface interface {
 	ApproveTableSeriesRulesWithBody(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *ApproveTableSeriesRulesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	ApproveTableSeriesRules(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *ApproveTableSeriesRulesParams, body ApproveTableSeriesRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RequestTableSeriesRuleApprovalWithBody request with any body
+	RequestTableSeriesRuleApprovalWithBody(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	RequestTableSeriesRuleApproval(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, body RequestTableSeriesRuleApprovalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetSeriesSubmissionBoard request
 	GetSeriesSubmissionBoard(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *GetSeriesSubmissionBoardParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -30600,6 +32315,30 @@ func (c *Client) OauthRegister(ctx context.Context, params *OauthRegisterParams,
 	return c.Client.Do(req)
 }
 
+func (c *Client) UnsnoozeFromLink(ctx context.Context, params *UnsnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUnsnoozeFromLinkRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SnoozeFromLink(ctx context.Context, params *SnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSnoozeFromLinkRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ReadEmailConfirmation(ctx context.Context, params *ReadEmailConfirmationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReadEmailConfirmationRequest(c.Server, params)
 	if err != nil {
@@ -30902,6 +32641,54 @@ func (c *Client) RejectPrivilegeRequestWithBody(ctx context.Context, organizatio
 
 func (c *Client) RejectPrivilegeRequest(ctx context.Context, organizationID openapi_types.UUID, requestID openapi_types.UUID, params *RejectPrivilegeRequestParams, body RejectPrivilegeRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRejectPrivilegeRequestRequest(c.Server, organizationID, requestID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ListOpsInboundEmails(ctx context.Context, currentOrgID openapi_types.UUID, params *ListOpsInboundEmailsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListOpsInboundEmailsRequest(c.Server, currentOrgID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOpsInboundEmail(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *GetOpsInboundEmailParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOpsInboundEmailRequest(c.Server, currentOrgID, inboundEmailID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DownloadOpsInboundEmailAttachment(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, partIndex int, params *DownloadOpsInboundEmailAttachmentParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDownloadOpsInboundEmailAttachmentRequest(c.Server, currentOrgID, inboundEmailID, partIndex, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DownloadOpsInboundEmailRaw(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *DownloadOpsInboundEmailRawParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDownloadOpsInboundEmailRawRequest(c.Server, currentOrgID, inboundEmailID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -32952,6 +34739,30 @@ func (c *Client) WaiveSubmission(ctx context.Context, organizationID openapi_typ
 	return c.Client.Do(req)
 }
 
+func (c *Client) DismissReportUpdate(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *DismissReportUpdateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDismissReportUpdateRequest(c.Server, organizationID, dataSourceModelID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) SendReportUpdateEmail(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *SendReportUpdateEmailParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSendReportUpdateEmailRequest(c.Server, organizationID, dataSourceModelID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) ReprocessAllBadRowsForDataSourceView(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReprocessAllBadRowsForDataSourceViewRequest(c.Server, organizationID, dataSourceModelID, params)
 	if err != nil {
@@ -33660,6 +35471,18 @@ func (c *Client) GetData(ctx context.Context, organizationID openapi_types.UUID,
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetDataQuality(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataQualityParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDataQualityRequest(c.Server, organizationID, datasetID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteDatasetDataReviewPolicy(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteDatasetDataReviewPolicyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteDatasetDataReviewPolicyRequest(c.Server, organizationID, datasetID, params)
 	if err != nil {
@@ -33914,6 +35737,18 @@ func (c *Client) ReorderDatasetRule(ctx context.Context, organizationID openapi_
 
 func (c *Client) CountRowsKeptByDatasetRuleFilter(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *CountRowsKeptByDatasetRuleFilterParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCountRowsKeptByDatasetRuleFilterRequest(c.Server, organizationID, datasetID, datasetRuleID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ValidateDatasetRule(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *ValidateDatasetRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewValidateDatasetRuleRequest(c.Server, organizationID, datasetID, datasetRuleID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -35522,6 +37357,30 @@ func (c *Client) RetractUserSubmittedWarningsWithBody(ctx context.Context, organ
 
 func (c *Client) RetractUserSubmittedWarnings(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RetractUserSubmittedWarningsParams, body RetractUserSubmittedWarningsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRetractUserSubmittedWarningsRequest(c.Server, organizationID, datasetID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetMyDeadlineSnoozes(ctx context.Context, organizationID openapi_types.UUID, params *GetMyDeadlineSnoozesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMyDeadlineSnoozesRequest(c.Server, organizationID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ClearMyDeadlineSnooze(ctx context.Context, organizationID openapi_types.UUID, snoozeID int, params *ClearMyDeadlineSnoozeParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewClearMyDeadlineSnoozeRequest(c.Server, organizationID, snoozeID, params)
 	if err != nil {
 		return nil, err
 	}
@@ -38340,6 +40199,18 @@ func (c *Client) ListStoredItemSkippedTotalLines(ctx context.Context, organizati
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetSenderWalkthrough(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *GetSenderWalkthroughParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSenderWalkthroughRequest(c.Server, organizationID, storedItemID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetSubmissionsSummary(ctx context.Context, organizationID openapi_types.UUID, params *GetSubmissionsSummaryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSubmissionsSummaryRequest(c.Server, organizationID, params)
 	if err != nil {
@@ -38678,6 +40549,30 @@ func (c *Client) ApproveTableSeriesRulesWithBody(ctx context.Context, organizati
 
 func (c *Client) ApproveTableSeriesRules(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *ApproveTableSeriesRulesParams, body ApproveTableSeriesRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewApproveTableSeriesRulesRequest(c.Server, organizationID, seriesID, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RequestTableSeriesRuleApprovalWithBody(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRequestTableSeriesRuleApprovalRequestWithBody(c.Server, organizationID, seriesID, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) RequestTableSeriesRuleApproval(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, body RequestTableSeriesRuleApprovalJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRequestTableSeriesRuleApprovalRequest(c.Server, organizationID, seriesID, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -40481,6 +42376,90 @@ func NewOauthRegisterRequest(server string, params *OauthRegisterParams) (*http.
 	return req, nil
 }
 
+// NewUnsnoozeFromLinkRequest generates requests for UnsnoozeFromLink
+func NewUnsnoozeFromLinkRequest(server string, params *UnsnoozeFromLinkParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/deadline-snooze-links")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XSnoozeToken != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithLocation("simple", false, "X-Snooze-Token", runtime.ParamLocationHeader, *params.XSnoozeToken)
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Snooze-Token", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewSnoozeFromLinkRequest generates requests for SnoozeFromLink
+func NewSnoozeFromLinkRequest(server string, params *SnoozeFromLinkParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/deadline-snooze-links")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XSnoozeToken != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithLocation("simple", false, "X-Snooze-Token", runtime.ParamLocationHeader, *params.XSnoozeToken)
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Snooze-Token", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
 // NewReadEmailConfirmationRequest generates requests for ReadEmailConfirmation
 func NewReadEmailConfirmationRequest(server string, params *ReadEmailConfirmationParams) (*http.Request, error) {
 	var err error
@@ -41792,6 +43771,404 @@ func NewRejectPrivilegeRequestRequestWithBody(server string, organizationID open
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewListOpsInboundEmailsRequest generates requests for ListOpsInboundEmails
+func NewListOpsInboundEmailsRequest(server string, currentOrgID openapi_types.UUID, params *ListOpsInboundEmailsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "current_org_id", runtime.ParamLocationPath, currentOrgID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/ops/inbound-emails", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization_id", runtime.ParamLocationQuery, *params.OrganizationID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.DataSourceModelID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_source_model_id", runtime.ParamLocationQuery, *params.DataSourceModelID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Recipient != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "recipient", runtime.ParamLocationQuery, *params.Recipient); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Sender != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "sender", runtime.ParamLocationQuery, *params.Sender); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.State != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "state", runtime.ParamLocationQuery, *params.State); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Reason != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "reason", runtime.ParamLocationQuery, *params.Reason); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ReceivedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "received_from", runtime.ParamLocationQuery, *params.ReceivedFrom); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ReceivedBefore != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "received_before", runtime.ParamLocationQuery, *params.ReceivedBefore); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "cursor", runtime.ParamLocationQuery, *params.Cursor); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetOpsInboundEmailRequest generates requests for GetOpsInboundEmail
+func NewGetOpsInboundEmailRequest(server string, currentOrgID openapi_types.UUID, inboundEmailID int, params *GetOpsInboundEmailParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "current_org_id", runtime.ParamLocationPath, currentOrgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "inbound_email_id", runtime.ParamLocationPath, inboundEmailID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/ops/inbound-emails/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewDownloadOpsInboundEmailAttachmentRequest generates requests for DownloadOpsInboundEmailAttachment
+func NewDownloadOpsInboundEmailAttachmentRequest(server string, currentOrgID openapi_types.UUID, inboundEmailID int, partIndex int, params *DownloadOpsInboundEmailAttachmentParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "current_org_id", runtime.ParamLocationPath, currentOrgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "inbound_email_id", runtime.ParamLocationPath, inboundEmailID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "part_index", runtime.ParamLocationPath, partIndex)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/ops/inbound-emails/%s/attachments/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewDownloadOpsInboundEmailRawRequest generates requests for DownloadOpsInboundEmailRaw
+func NewDownloadOpsInboundEmailRawRequest(server string, currentOrgID openapi_types.UUID, inboundEmailID int, params *DownloadOpsInboundEmailRawParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "current_org_id", runtime.ParamLocationPath, currentOrgID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "inbound_email_id", runtime.ParamLocationPath, inboundEmailID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/ops/inbound-emails/%s/raw", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if params != nil {
 
@@ -44082,6 +46459,22 @@ func NewListChangeProposalsRequest(server string, organizationID openapi_types.U
 		if params.DatasetID != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dataset_id", runtime.ParamLocationQuery, *params.DatasetID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.SeriesID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "series_id", runtime.ParamLocationQuery, *params.SeriesID); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -50983,6 +53376,136 @@ func NewWaiveSubmissionRequestWithBody(server string, organizationID openapi_typ
 	return req, nil
 }
 
+// NewDismissReportUpdateRequest generates requests for DismissReportUpdate
+func NewDismissReportUpdateRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *DismissReportUpdateParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/data-sources/%s/report-updates/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewSendReportUpdateEmailRequest generates requests for SendReportUpdateEmail
+func NewSendReportUpdateEmailRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *SendReportUpdateEmailParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "data_source_model_id", runtime.ParamLocationPath, dataSourceModelID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/data-sources/%s/report-updates/%s", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
 // NewReprocessAllBadRowsForDataSourceViewRequest generates requests for ReprocessAllBadRowsForDataSourceView
 func NewReprocessAllBadRowsForDataSourceViewRequest(server string, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams) (*http.Request, error) {
 	var err error
@@ -54789,6 +57312,86 @@ func NewGetDataRequest(server string, organizationID openapi_types.UUID, dataset
 	return req, nil
 }
 
+// NewGetDataQualityRequest generates requests for GetDataQuality
+func NewGetDataQualityRequest(server string, organizationID openapi_types.UUID, datasetID int, params *GetDataQualityParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/data-quality", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DataSourceModelID != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "data_source_model_id", runtime.ParamLocationQuery, *params.DataSourceModelID); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
 // NewDeleteDatasetDataReviewPolicyRequest generates requests for DeleteDatasetDataReviewPolicy
 func NewDeleteDatasetDataReviewPolicyRequest(server string, organizationID openapi_types.UUID, datasetID int, params *DeleteDatasetDataReviewPolicyParams) (*http.Request, error) {
 	var err error
@@ -56833,6 +59436,71 @@ func NewCountRowsKeptByDatasetRuleFilterRequest(server string, organizationID op
 	return req, nil
 }
 
+// NewValidateDatasetRuleRequest generates requests for ValidateDatasetRule
+func NewValidateDatasetRuleRequest(server string, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *ValidateDatasetRuleParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "dataset_id", runtime.ParamLocationPath, datasetID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithLocation("simple", false, "dataset_rule_id", runtime.ParamLocationPath, datasetRuleID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/datasets/%s/dataset-rules/%s/validate", pathParam0, pathParam1, pathParam2)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
 // NewDeleteAllBadRowsInDatasetViewRequest calls the generic DeleteAllBadRowsInDatasetView builder with application/json body
 func NewDeleteAllBadRowsInDatasetViewRequest(server string, organizationID openapi_types.UUID, datasetID int, params *DeleteAllBadRowsInDatasetViewParams, body DeleteAllBadRowsInDatasetViewJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -57292,6 +59960,22 @@ func NewGetDryRunJobsRequest(server string, organizationID openapi_types.UUID, d
 		if params.State != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "state", runtime.ParamLocationQuery, *params.State); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RuleName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "rule_name", runtime.ParamLocationQuery, *params.RuleName); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -63920,6 +66604,115 @@ func NewRetractUserSubmittedWarningsRequestWithBody(server string, organizationI
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewGetMyDeadlineSnoozesRequest generates requests for GetMyDeadlineSnoozes
+func NewGetMyDeadlineSnoozesRequest(server string, organizationID openapi_types.UUID, params *GetMyDeadlineSnoozesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/deadline-snoozes", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewClearMyDeadlineSnoozeRequest generates requests for ClearMyDeadlineSnooze
+func NewClearMyDeadlineSnoozeRequest(server string, organizationID openapi_types.UUID, snoozeID int, params *ClearMyDeadlineSnoozeParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "snooze_id", runtime.ParamLocationPath, snoozeID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/deadline-snoozes/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if params != nil {
 
@@ -74809,6 +77602,22 @@ func NewGetOneRuleRevisionDetailsRequest(server string, organizationID openapi_t
 
 		}
 
+		if params.UpgradedFrom != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "upgraded_from", runtime.ParamLocationQuery, *params.UpgradedFrom); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		queryURL.RawQuery = queryValues.Encode()
 	}
 
@@ -77404,6 +80213,166 @@ func NewListStoredItemSkippedTotalLinesRequest(server string, organizationID ope
 	return req, nil
 }
 
+// NewGetSenderWalkthroughRequest generates requests for GetSenderWalkthrough
+func NewGetSenderWalkthroughRequest(server string, organizationID openapi_types.UUID, storedItemID int, params *GetSenderWalkthroughParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "stored_item_id", runtime.ParamLocationPath, storedItemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/stored-items/%s/walkthrough", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.IncludeWarnings != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "include_warnings", runtime.ParamLocationQuery, *params.IncludeWarnings); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.IncludeDecided != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "include_decided", runtime.ParamLocationQuery, *params.IncludeDecided); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.UnansweredOnly != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "unanswered_only", runtime.ParamLocationQuery, *params.UnansweredOnly); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnswersOf != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "answers_of", runtime.ParamLocationQuery, *params.AnswersOf); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
 // NewGetSubmissionsSummaryRequest generates requests for GetSubmissionsSummary
 func NewGetSubmissionsSummaryRequest(server string, organizationID openapi_types.UUID, params *GetSubmissionsSummaryParams) (*http.Request, error) {
 	var err error
@@ -78676,6 +81645,77 @@ func NewApproveTableSeriesRulesRequestWithBody(server string, organizationID ope
 	}
 
 	operationPath := fmt.Sprintf("/api/orgs/%s/table-series/%s/rule-set-approval", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.OauthSession != nil {
+			var cookieParam0 string
+
+			cookieParam0, err = runtime.StyleParamWithLocation("simple", true, "oauth_session", runtime.ParamLocationCookie, *params.OauthSession)
+			if err != nil {
+				return nil, err
+			}
+
+			cookie0 := &http.Cookie{
+				Name:  "oauth_session",
+				Value: cookieParam0,
+			}
+			req.AddCookie(cookie0)
+		}
+	}
+	return req, nil
+}
+
+// NewRequestTableSeriesRuleApprovalRequest calls the generic RequestTableSeriesRuleApproval builder with application/json body
+func NewRequestTableSeriesRuleApprovalRequest(server string, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, body RequestTableSeriesRuleApprovalJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRequestTableSeriesRuleApprovalRequestWithBody(server, organizationID, seriesID, params, "application/json", bodyReader)
+}
+
+// NewRequestTableSeriesRuleApprovalRequestWithBody generates requests for RequestTableSeriesRuleApproval with any type of body
+func NewRequestTableSeriesRuleApprovalRequestWithBody(server string, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "organization_id", runtime.ParamLocationPath, organizationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "series_id", runtime.ParamLocationPath, seriesID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/orgs/%s/table-series/%s/rule-set-approval/requests", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -82916,6 +85956,22 @@ func NewGetThirdPartyDryRunJobsRequest(server string, organizationID openapi_typ
 		if params.State != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "state", runtime.ParamLocationQuery, *params.State); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RuleName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "rule_name", runtime.ParamLocationQuery, *params.RuleName); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -87396,6 +90452,12 @@ type ClientWithResponsesInterface interface {
 	// OauthRegisterWithResponse request
 	OauthRegisterWithResponse(ctx context.Context, params *OauthRegisterParams, reqEditors ...RequestEditorFn) (*OauthRegisterResponse, error)
 
+	// UnsnoozeFromLinkWithResponse request
+	UnsnoozeFromLinkWithResponse(ctx context.Context, params *UnsnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*UnsnoozeFromLinkResponse, error)
+
+	// SnoozeFromLinkWithResponse request
+	SnoozeFromLinkWithResponse(ctx context.Context, params *SnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*SnoozeFromLinkResponse, error)
+
 	// ReadEmailConfirmationWithResponse request
 	ReadEmailConfirmationWithResponse(ctx context.Context, params *ReadEmailConfirmationParams, reqEditors ...RequestEditorFn) (*ReadEmailConfirmationResponse, error)
 
@@ -87466,6 +90528,18 @@ type ClientWithResponsesInterface interface {
 	RejectPrivilegeRequestWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, requestID openapi_types.UUID, params *RejectPrivilegeRequestParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RejectPrivilegeRequestResponse, error)
 
 	RejectPrivilegeRequestWithResponse(ctx context.Context, organizationID openapi_types.UUID, requestID openapi_types.UUID, params *RejectPrivilegeRequestParams, body RejectPrivilegeRequestJSONRequestBody, reqEditors ...RequestEditorFn) (*RejectPrivilegeRequestResponse, error)
+
+	// ListOpsInboundEmailsWithResponse request
+	ListOpsInboundEmailsWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, params *ListOpsInboundEmailsParams, reqEditors ...RequestEditorFn) (*ListOpsInboundEmailsResponse, error)
+
+	// GetOpsInboundEmailWithResponse request
+	GetOpsInboundEmailWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *GetOpsInboundEmailParams, reqEditors ...RequestEditorFn) (*GetOpsInboundEmailResponse, error)
+
+	// DownloadOpsInboundEmailAttachmentWithResponse request
+	DownloadOpsInboundEmailAttachmentWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, partIndex int, params *DownloadOpsInboundEmailAttachmentParams, reqEditors ...RequestEditorFn) (*DownloadOpsInboundEmailAttachmentResponse, error)
+
+	// DownloadOpsInboundEmailRawWithResponse request
+	DownloadOpsInboundEmailRawWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *DownloadOpsInboundEmailRawParams, reqEditors ...RequestEditorFn) (*DownloadOpsInboundEmailRawResponse, error)
 
 	// GetSoftDeletedTablesWithResponse request
 	GetSoftDeletedTablesWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, params *GetSoftDeletedTablesParams, reqEditors ...RequestEditorFn) (*GetSoftDeletedTablesResponse, error)
@@ -87923,6 +90997,12 @@ type ClientWithResponsesInterface interface {
 
 	WaiveSubmissionWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, periodKey string, params *WaiveSubmissionParams, body WaiveSubmissionJSONRequestBody, reqEditors ...RequestEditorFn) (*WaiveSubmissionResponse, error)
 
+	// DismissReportUpdateWithResponse request
+	DismissReportUpdateWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *DismissReportUpdateParams, reqEditors ...RequestEditorFn) (*DismissReportUpdateResponse, error)
+
+	// SendReportUpdateEmailWithResponse request
+	SendReportUpdateEmailWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *SendReportUpdateEmailParams, reqEditors ...RequestEditorFn) (*SendReportUpdateEmailResponse, error)
+
 	// ReprocessAllBadRowsForDataSourceViewWithResponse request
 	ReprocessAllBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDataSourceViewResponse, error)
 
@@ -88082,6 +91162,9 @@ type ClientWithResponsesInterface interface {
 	// GetDataWithResponse request
 	GetDataWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataParams, reqEditors ...RequestEditorFn) (*GetDataResponse, error)
 
+	// GetDataQualityWithResponse request
+	GetDataQualityWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataQualityParams, reqEditors ...RequestEditorFn) (*GetDataQualityResponse, error)
+
 	// DeleteDatasetDataReviewPolicyWithResponse request
 	DeleteDatasetDataReviewPolicyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteDatasetDataReviewPolicyParams, reqEditors ...RequestEditorFn) (*DeleteDatasetDataReviewPolicyResponse, error)
 
@@ -88142,6 +91225,9 @@ type ClientWithResponsesInterface interface {
 
 	// CountRowsKeptByDatasetRuleFilterWithResponse request
 	CountRowsKeptByDatasetRuleFilterWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *CountRowsKeptByDatasetRuleFilterParams, reqEditors ...RequestEditorFn) (*CountRowsKeptByDatasetRuleFilterResponse, error)
+
+	// ValidateDatasetRuleWithResponse request
+	ValidateDatasetRuleWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *ValidateDatasetRuleParams, reqEditors ...RequestEditorFn) (*ValidateDatasetRuleResponse, error)
 
 	// DeleteAllBadRowsInDatasetViewWithBodyWithResponse request with any body
 	DeleteAllBadRowsInDatasetViewWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteAllBadRowsInDatasetViewParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteAllBadRowsInDatasetViewResponse, error)
@@ -88496,6 +91582,12 @@ type ClientWithResponsesInterface interface {
 	RetractUserSubmittedWarningsWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RetractUserSubmittedWarningsParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RetractUserSubmittedWarningsResponse, error)
 
 	RetractUserSubmittedWarningsWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *RetractUserSubmittedWarningsParams, body RetractUserSubmittedWarningsJSONRequestBody, reqEditors ...RequestEditorFn) (*RetractUserSubmittedWarningsResponse, error)
+
+	// GetMyDeadlineSnoozesWithResponse request
+	GetMyDeadlineSnoozesWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetMyDeadlineSnoozesParams, reqEditors ...RequestEditorFn) (*GetMyDeadlineSnoozesResponse, error)
+
+	// ClearMyDeadlineSnoozeWithResponse request
+	ClearMyDeadlineSnoozeWithResponse(ctx context.Context, organizationID openapi_types.UUID, snoozeID int, params *ClearMyDeadlineSnoozeParams, reqEditors ...RequestEditorFn) (*ClearMyDeadlineSnoozeResponse, error)
 
 	// DeleteDeliverableRevisionWithResponse request
 	DeleteDeliverableRevisionWithResponse(ctx context.Context, organizationID openapi_types.UUID, revisionID openapi_types.UUID, params *DeleteDeliverableRevisionParams, reqEditors ...RequestEditorFn) (*DeleteDeliverableRevisionResponse, error)
@@ -89133,6 +92225,9 @@ type ClientWithResponsesInterface interface {
 	// ListStoredItemSkippedTotalLinesWithResponse request
 	ListStoredItemSkippedTotalLinesWithResponse(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *ListStoredItemSkippedTotalLinesParams, reqEditors ...RequestEditorFn) (*ListStoredItemSkippedTotalLinesResponse, error)
 
+	// GetSenderWalkthroughWithResponse request
+	GetSenderWalkthroughWithResponse(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *GetSenderWalkthroughParams, reqEditors ...RequestEditorFn) (*GetSenderWalkthroughResponse, error)
+
 	// GetSubmissionsSummaryWithResponse request
 	GetSubmissionsSummaryWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetSubmissionsSummaryParams, reqEditors ...RequestEditorFn) (*GetSubmissionsSummaryResponse, error)
 
@@ -89210,6 +92305,11 @@ type ClientWithResponsesInterface interface {
 	ApproveTableSeriesRulesWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *ApproveTableSeriesRulesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ApproveTableSeriesRulesResponse, error)
 
 	ApproveTableSeriesRulesWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *ApproveTableSeriesRulesParams, body ApproveTableSeriesRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*ApproveTableSeriesRulesResponse, error)
+
+	// RequestTableSeriesRuleApprovalWithBodyWithResponse request with any body
+	RequestTableSeriesRuleApprovalWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RequestTableSeriesRuleApprovalResponse, error)
+
+	RequestTableSeriesRuleApprovalWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, body RequestTableSeriesRuleApprovalJSONRequestBody, reqEditors ...RequestEditorFn) (*RequestTableSeriesRuleApprovalResponse, error)
 
 	// GetSeriesSubmissionBoardWithResponse request
 	GetSeriesSubmissionBoardWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *GetSeriesSubmissionBoardParams, reqEditors ...RequestEditorFn) (*GetSeriesSubmissionBoardResponse, error)
@@ -89668,6 +92768,57 @@ func (r OauthRegisterResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r OauthRegisterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UnsnoozeFromLinkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r UnsnoozeFromLinkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UnsnoozeFromLinkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SnoozeFromLinkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DeadlineSnoozeSchema
+	JSON404      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r SnoozeFromLinkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SnoozeFromLinkResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -90135,6 +93286,96 @@ func (r RejectPrivilegeRequestResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RejectPrivilegeRequestResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ListOpsInboundEmailsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *InboundEmailListSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r ListOpsInboundEmailsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListOpsInboundEmailsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOpsInboundEmailResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *InboundEmailDetailSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOpsInboundEmailResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOpsInboundEmailResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DownloadOpsInboundEmailAttachmentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DownloadOpsInboundEmailAttachmentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DownloadOpsInboundEmailAttachmentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DownloadOpsInboundEmailRawResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DownloadOpsInboundEmailRawResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DownloadOpsInboundEmailRawResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -93023,6 +96264,66 @@ func (r WaiveSubmissionResponse) StatusCode() int {
 	return 0
 }
 
+type DismissReportUpdateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON403      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON404 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r DismissReportUpdateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DismissReportUpdateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type SendReportUpdateEmailResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON202      *ReportUpdateSendResultSchema
+	JSON403      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON404 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON409 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r SendReportUpdateEmailResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SendReportUpdateEmailResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type ReprocessAllBadRowsForDataSourceViewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -94016,6 +97317,35 @@ func (r GetDataResponse) StatusCode() int {
 	return 0
 }
 
+type GetDataQualityResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DataQualityAnalytics
+	JSON403      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON404 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDataQualityResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDataQualityResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type DeleteDatasetDataReviewPolicyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -94426,6 +97756,32 @@ func (r CountRowsKeptByDatasetRuleFilterResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r CountRowsKeptByDatasetRuleFilterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ValidateDatasetRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DatasetRuleDetailSchema
+	JSON409      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r ValidateDatasetRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ValidateDatasetRuleResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -96699,6 +100055,54 @@ func (r RetractUserSubmittedWarningsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r RetractUserSubmittedWarningsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetMyDeadlineSnoozesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *DeadlineSnoozeListSchema
+	JSON422      *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMyDeadlineSnoozesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMyDeadlineSnoozesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ClearMyDeadlineSnoozeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON404      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r ClearMyDeadlineSnoozeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ClearMyDeadlineSnoozeResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -99796,7 +103200,12 @@ type GetOneRuleRevisionDetailsResponse struct {
 	JSON404 *struct {
 		Detail APIError `json:"detail"`
 	}
-	JSON422 *HTTPValidationError
+	JSON409 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *struct {
+		Detail APIError `json:"detail"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -99819,14 +103228,16 @@ type InstantiateRuleResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *DatasetRuleDetailSchema
-	JSON202      *DatasetRuleSuggestionSchema
+	JSON202      *InstantiateRuleSuggestionSchema
 	JSON403      *struct {
 		Detail APIError `json:"detail"`
 	}
 	JSON409 *struct {
 		Detail APIError `json:"detail"`
 	}
-	JSON422 *HTTPValidationError
+	JSON422 *struct {
+		Detail APIError `json:"detail"`
+	}
 }
 
 // Status returns HTTPResponse.Status
@@ -100683,6 +104094,35 @@ func (r ListStoredItemSkippedTotalLinesResponse) StatusCode() int {
 	return 0
 }
 
+type GetSenderWalkthroughResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SenderWalkthroughResponseSchema
+	JSON403      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON404 *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSenderWalkthroughResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSenderWalkthroughResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetSubmissionsSummaryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -101181,6 +104621,32 @@ func (r ApproveTableSeriesRulesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ApproveTableSeriesRulesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type RequestTableSeriesRuleApprovalResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *SeriesRuleApprovalAskResultSchema
+	JSON409      *struct {
+		Detail APIError `json:"detail"`
+	}
+	JSON422 *HTTPValidationError
+}
+
+// Status returns HTTPResponse.Status
+func (r RequestTableSeriesRuleApprovalResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RequestTableSeriesRuleApprovalResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -103223,6 +106689,24 @@ func (c *ClientWithResponses) OauthRegisterWithResponse(ctx context.Context, par
 	return ParseOauthRegisterResponse(rsp)
 }
 
+// UnsnoozeFromLinkWithResponse request returning *UnsnoozeFromLinkResponse
+func (c *ClientWithResponses) UnsnoozeFromLinkWithResponse(ctx context.Context, params *UnsnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*UnsnoozeFromLinkResponse, error) {
+	rsp, err := c.UnsnoozeFromLink(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUnsnoozeFromLinkResponse(rsp)
+}
+
+// SnoozeFromLinkWithResponse request returning *SnoozeFromLinkResponse
+func (c *ClientWithResponses) SnoozeFromLinkWithResponse(ctx context.Context, params *SnoozeFromLinkParams, reqEditors ...RequestEditorFn) (*SnoozeFromLinkResponse, error) {
+	rsp, err := c.SnoozeFromLink(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSnoozeFromLinkResponse(rsp)
+}
+
 // ReadEmailConfirmationWithResponse request returning *ReadEmailConfirmationResponse
 func (c *ClientWithResponses) ReadEmailConfirmationWithResponse(ctx context.Context, params *ReadEmailConfirmationParams, reqEditors ...RequestEditorFn) (*ReadEmailConfirmationResponse, error) {
 	rsp, err := c.ReadEmailConfirmation(ctx, params, reqEditors...)
@@ -103448,6 +106932,42 @@ func (c *ClientWithResponses) RejectPrivilegeRequestWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseRejectPrivilegeRequestResponse(rsp)
+}
+
+// ListOpsInboundEmailsWithResponse request returning *ListOpsInboundEmailsResponse
+func (c *ClientWithResponses) ListOpsInboundEmailsWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, params *ListOpsInboundEmailsParams, reqEditors ...RequestEditorFn) (*ListOpsInboundEmailsResponse, error) {
+	rsp, err := c.ListOpsInboundEmails(ctx, currentOrgID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListOpsInboundEmailsResponse(rsp)
+}
+
+// GetOpsInboundEmailWithResponse request returning *GetOpsInboundEmailResponse
+func (c *ClientWithResponses) GetOpsInboundEmailWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *GetOpsInboundEmailParams, reqEditors ...RequestEditorFn) (*GetOpsInboundEmailResponse, error) {
+	rsp, err := c.GetOpsInboundEmail(ctx, currentOrgID, inboundEmailID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOpsInboundEmailResponse(rsp)
+}
+
+// DownloadOpsInboundEmailAttachmentWithResponse request returning *DownloadOpsInboundEmailAttachmentResponse
+func (c *ClientWithResponses) DownloadOpsInboundEmailAttachmentWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, partIndex int, params *DownloadOpsInboundEmailAttachmentParams, reqEditors ...RequestEditorFn) (*DownloadOpsInboundEmailAttachmentResponse, error) {
+	rsp, err := c.DownloadOpsInboundEmailAttachment(ctx, currentOrgID, inboundEmailID, partIndex, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDownloadOpsInboundEmailAttachmentResponse(rsp)
+}
+
+// DownloadOpsInboundEmailRawWithResponse request returning *DownloadOpsInboundEmailRawResponse
+func (c *ClientWithResponses) DownloadOpsInboundEmailRawWithResponse(ctx context.Context, currentOrgID openapi_types.UUID, inboundEmailID int, params *DownloadOpsInboundEmailRawParams, reqEditors ...RequestEditorFn) (*DownloadOpsInboundEmailRawResponse, error) {
+	rsp, err := c.DownloadOpsInboundEmailRaw(ctx, currentOrgID, inboundEmailID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDownloadOpsInboundEmailRawResponse(rsp)
 }
 
 // GetSoftDeletedTablesWithResponse request returning *GetSoftDeletedTablesResponse
@@ -104926,6 +108446,24 @@ func (c *ClientWithResponses) WaiveSubmissionWithResponse(ctx context.Context, o
 	return ParseWaiveSubmissionResponse(rsp)
 }
 
+// DismissReportUpdateWithResponse request returning *DismissReportUpdateResponse
+func (c *ClientWithResponses) DismissReportUpdateWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *DismissReportUpdateParams, reqEditors ...RequestEditorFn) (*DismissReportUpdateResponse, error) {
+	rsp, err := c.DismissReportUpdate(ctx, organizationID, dataSourceModelID, datasetID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDismissReportUpdateResponse(rsp)
+}
+
+// SendReportUpdateEmailWithResponse request returning *SendReportUpdateEmailResponse
+func (c *ClientWithResponses) SendReportUpdateEmailWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, datasetID int, params *SendReportUpdateEmailParams, reqEditors ...RequestEditorFn) (*SendReportUpdateEmailResponse, error) {
+	rsp, err := c.SendReportUpdateEmail(ctx, organizationID, dataSourceModelID, datasetID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSendReportUpdateEmailResponse(rsp)
+}
+
 // ReprocessAllBadRowsForDataSourceViewWithResponse request returning *ReprocessAllBadRowsForDataSourceViewResponse
 func (c *ClientWithResponses) ReprocessAllBadRowsForDataSourceViewWithResponse(ctx context.Context, organizationID openapi_types.UUID, dataSourceModelID int, params *ReprocessAllBadRowsForDataSourceViewParams, reqEditors ...RequestEditorFn) (*ReprocessAllBadRowsForDataSourceViewResponse, error) {
 	rsp, err := c.ReprocessAllBadRowsForDataSourceView(ctx, organizationID, dataSourceModelID, params, reqEditors...)
@@ -105439,6 +108977,15 @@ func (c *ClientWithResponses) GetDataWithResponse(ctx context.Context, organizat
 	return ParseGetDataResponse(rsp)
 }
 
+// GetDataQualityWithResponse request returning *GetDataQualityResponse
+func (c *ClientWithResponses) GetDataQualityWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *GetDataQualityParams, reqEditors ...RequestEditorFn) (*GetDataQualityResponse, error) {
+	rsp, err := c.GetDataQuality(ctx, organizationID, datasetID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDataQualityResponse(rsp)
+}
+
 // DeleteDatasetDataReviewPolicyWithResponse request returning *DeleteDatasetDataReviewPolicyResponse
 func (c *ClientWithResponses) DeleteDatasetDataReviewPolicyWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, params *DeleteDatasetDataReviewPolicyParams, reqEditors ...RequestEditorFn) (*DeleteDatasetDataReviewPolicyResponse, error) {
 	rsp, err := c.DeleteDatasetDataReviewPolicy(ctx, organizationID, datasetID, params, reqEditors...)
@@ -105630,6 +109177,15 @@ func (c *ClientWithResponses) CountRowsKeptByDatasetRuleFilterWithResponse(ctx c
 		return nil, err
 	}
 	return ParseCountRowsKeptByDatasetRuleFilterResponse(rsp)
+}
+
+// ValidateDatasetRuleWithResponse request returning *ValidateDatasetRuleResponse
+func (c *ClientWithResponses) ValidateDatasetRuleWithResponse(ctx context.Context, organizationID openapi_types.UUID, datasetID int, datasetRuleID openapi_types.UUID, params *ValidateDatasetRuleParams, reqEditors ...RequestEditorFn) (*ValidateDatasetRuleResponse, error) {
+	rsp, err := c.ValidateDatasetRule(ctx, organizationID, datasetID, datasetRuleID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseValidateDatasetRuleResponse(rsp)
 }
 
 // DeleteAllBadRowsInDatasetViewWithBodyWithResponse request with arbitrary body returning *DeleteAllBadRowsInDatasetViewResponse
@@ -106788,6 +110344,24 @@ func (c *ClientWithResponses) RetractUserSubmittedWarningsWithResponse(ctx conte
 		return nil, err
 	}
 	return ParseRetractUserSubmittedWarningsResponse(rsp)
+}
+
+// GetMyDeadlineSnoozesWithResponse request returning *GetMyDeadlineSnoozesResponse
+func (c *ClientWithResponses) GetMyDeadlineSnoozesWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetMyDeadlineSnoozesParams, reqEditors ...RequestEditorFn) (*GetMyDeadlineSnoozesResponse, error) {
+	rsp, err := c.GetMyDeadlineSnoozes(ctx, organizationID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMyDeadlineSnoozesResponse(rsp)
+}
+
+// ClearMyDeadlineSnoozeWithResponse request returning *ClearMyDeadlineSnoozeResponse
+func (c *ClientWithResponses) ClearMyDeadlineSnoozeWithResponse(ctx context.Context, organizationID openapi_types.UUID, snoozeID int, params *ClearMyDeadlineSnoozeParams, reqEditors ...RequestEditorFn) (*ClearMyDeadlineSnoozeResponse, error) {
+	rsp, err := c.ClearMyDeadlineSnooze(ctx, organizationID, snoozeID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseClearMyDeadlineSnoozeResponse(rsp)
 }
 
 // DeleteDeliverableRevisionWithResponse request returning *DeleteDeliverableRevisionResponse
@@ -108830,6 +112404,15 @@ func (c *ClientWithResponses) ListStoredItemSkippedTotalLinesWithResponse(ctx co
 	return ParseListStoredItemSkippedTotalLinesResponse(rsp)
 }
 
+// GetSenderWalkthroughWithResponse request returning *GetSenderWalkthroughResponse
+func (c *ClientWithResponses) GetSenderWalkthroughWithResponse(ctx context.Context, organizationID openapi_types.UUID, storedItemID int, params *GetSenderWalkthroughParams, reqEditors ...RequestEditorFn) (*GetSenderWalkthroughResponse, error) {
+	rsp, err := c.GetSenderWalkthrough(ctx, organizationID, storedItemID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSenderWalkthroughResponse(rsp)
+}
+
 // GetSubmissionsSummaryWithResponse request returning *GetSubmissionsSummaryResponse
 func (c *ClientWithResponses) GetSubmissionsSummaryWithResponse(ctx context.Context, organizationID openapi_types.UUID, params *GetSubmissionsSummaryParams, reqEditors ...RequestEditorFn) (*GetSubmissionsSummaryResponse, error) {
 	rsp, err := c.GetSubmissionsSummary(ctx, organizationID, params, reqEditors...)
@@ -109080,6 +112663,23 @@ func (c *ClientWithResponses) ApproveTableSeriesRulesWithResponse(ctx context.Co
 		return nil, err
 	}
 	return ParseApproveTableSeriesRulesResponse(rsp)
+}
+
+// RequestTableSeriesRuleApprovalWithBodyWithResponse request with arbitrary body returning *RequestTableSeriesRuleApprovalResponse
+func (c *ClientWithResponses) RequestTableSeriesRuleApprovalWithBodyWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RequestTableSeriesRuleApprovalResponse, error) {
+	rsp, err := c.RequestTableSeriesRuleApprovalWithBody(ctx, organizationID, seriesID, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRequestTableSeriesRuleApprovalResponse(rsp)
+}
+
+func (c *ClientWithResponses) RequestTableSeriesRuleApprovalWithResponse(ctx context.Context, organizationID openapi_types.UUID, seriesID openapi_types.UUID, params *RequestTableSeriesRuleApprovalParams, body RequestTableSeriesRuleApprovalJSONRequestBody, reqEditors ...RequestEditorFn) (*RequestTableSeriesRuleApprovalResponse, error) {
+	rsp, err := c.RequestTableSeriesRuleApproval(ctx, organizationID, seriesID, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRequestTableSeriesRuleApprovalResponse(rsp)
 }
 
 // GetSeriesSubmissionBoardWithResponse request returning *GetSeriesSubmissionBoardResponse
@@ -110280,6 +113880,83 @@ func ParseOauthRegisterResponse(rsp *http.Response) (*OauthRegisterResponse, err
 	return response, nil
 }
 
+// ParseUnsnoozeFromLinkResponse parses an HTTP response from a UnsnoozeFromLinkWithResponse call
+func ParseUnsnoozeFromLinkResponse(rsp *http.Response) (*UnsnoozeFromLinkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UnsnoozeFromLinkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSnoozeFromLinkResponse parses an HTTP response from a SnoozeFromLinkWithResponse call
+func ParseSnoozeFromLinkResponse(rsp *http.Response) (*SnoozeFromLinkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SnoozeFromLinkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeadlineSnoozeSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseReadEmailConfirmationResponse parses an HTTP response from a ReadEmailConfirmationWithResponse call
 func ParseReadEmailConfirmationResponse(rsp *http.Response) (*ReadEmailConfirmationResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -110973,6 +114650,124 @@ func ParseRejectPrivilegeRequestResponse(rsp *http.Response) (*RejectPrivilegeRe
 		}
 		response.JSON200 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListOpsInboundEmailsResponse parses an HTTP response from a ListOpsInboundEmailsWithResponse call
+func ParseListOpsInboundEmailsResponse(rsp *http.Response) (*ListOpsInboundEmailsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListOpsInboundEmailsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InboundEmailListSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOpsInboundEmailResponse parses an HTTP response from a GetOpsInboundEmailWithResponse call
+func ParseGetOpsInboundEmailResponse(rsp *http.Response) (*GetOpsInboundEmailResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOpsInboundEmailResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest InboundEmailDetailSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDownloadOpsInboundEmailAttachmentResponse parses an HTTP response from a DownloadOpsInboundEmailAttachmentWithResponse call
+func ParseDownloadOpsInboundEmailAttachmentResponse(rsp *http.Response) (*DownloadOpsInboundEmailAttachmentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DownloadOpsInboundEmailAttachmentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDownloadOpsInboundEmailRawResponse parses an HTTP response from a DownloadOpsInboundEmailRawWithResponse call
+func ParseDownloadOpsInboundEmailRawResponse(rsp *http.Response) (*DownloadOpsInboundEmailRawResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DownloadOpsInboundEmailRawResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest HTTPValidationError
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -115402,6 +119197,110 @@ func ParseWaiveSubmissionResponse(rsp *http.Response) (*WaiveSubmissionResponse,
 	return response, nil
 }
 
+// ParseDismissReportUpdateResponse parses an HTTP response from a DismissReportUpdateWithResponse call
+func ParseDismissReportUpdateResponse(rsp *http.Response) (*DismissReportUpdateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DismissReportUpdateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSendReportUpdateEmailResponse parses an HTTP response from a SendReportUpdateEmailWithResponse call
+func ParseSendReportUpdateEmailResponse(rsp *http.Response) (*SendReportUpdateEmailResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SendReportUpdateEmailResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
+		var dest ReportUpdateSendResultSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON202 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseReprocessAllBadRowsForDataSourceViewResponse parses an HTTP response from a ReprocessAllBadRowsForDataSourceViewWithResponse call
 func ParseReprocessAllBadRowsForDataSourceViewResponse(rsp *http.Response) (*ReprocessAllBadRowsForDataSourceViewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -116901,6 +120800,57 @@ func ParseGetDataResponse(rsp *http.Response) (*GetDataResponse, error) {
 	return response, nil
 }
 
+// ParseGetDataQualityResponse parses an HTTP response from a GetDataQualityWithResponse call
+func ParseGetDataQualityResponse(rsp *http.Response) (*GetDataQualityResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDataQualityResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DataQualityAnalytics
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDeleteDatasetDataReviewPolicyResponse parses an HTTP response from a DeleteDatasetDataReviewPolicyWithResponse call
 func ParseDeleteDatasetDataReviewPolicyResponse(rsp *http.Response) (*DeleteDatasetDataReviewPolicyResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -117515,6 +121465,48 @@ func ParseCountRowsKeptByDatasetRuleFilterResponse(rsp *http.Response) (*CountRo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest RowFilterCountSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseValidateDatasetRuleResponse parses an HTTP response from a ValidateDatasetRuleWithResponse call
+func ParseValidateDatasetRuleResponse(rsp *http.Response) (*ValidateDatasetRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ValidateDatasetRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DatasetRuleDetailSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -121171,6 +125163,74 @@ func ParseRetractUserSubmittedWarningsResponse(rsp *http.Response) (*RetractUser
 			return nil, err
 		}
 		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMyDeadlineSnoozesResponse parses an HTTP response from a GetMyDeadlineSnoozesWithResponse call
+func ParseGetMyDeadlineSnoozesResponse(rsp *http.Response) (*GetMyDeadlineSnoozesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMyDeadlineSnoozesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DeadlineSnoozeListSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseClearMyDeadlineSnoozeResponse parses an HTTP response from a ClearMyDeadlineSnoozeWithResponse call
+func ParseClearMyDeadlineSnoozeResponse(rsp *http.Response) (*ClearMyDeadlineSnoozeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ClearMyDeadlineSnoozeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest HTTPValidationError
@@ -125690,8 +129750,19 @@ func ParseGetOneRuleRevisionDetailsResponse(rsp *http.Response) (*GetOneRuleRevi
 		}
 		response.JSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -125724,7 +129795,7 @@ func ParseInstantiateRuleResponse(rsp *http.Response) (*InstantiateRuleResponse,
 		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
-		var dest DatasetRuleSuggestionSchema
+		var dest InstantiateRuleSuggestionSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -125749,7 +129820,9 @@ func ParseInstantiateRuleResponse(rsp *http.Response) (*InstantiateRuleResponse,
 		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest HTTPValidationError
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -127046,6 +131119,57 @@ func ParseListStoredItemSkippedTotalLinesResponse(rsp *http.Response) (*ListStor
 	return response, nil
 }
 
+// ParseGetSenderWalkthroughResponse parses an HTTP response from a GetSenderWalkthroughWithResponse call
+func ParseGetSenderWalkthroughResponse(rsp *http.Response) (*GetSenderWalkthroughResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSenderWalkthroughResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SenderWalkthroughResponseSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetSubmissionsSummaryResponse parses an HTTP response from a GetSubmissionsSummaryWithResponse call
 func ParseGetSubmissionsSummaryResponse(rsp *http.Response) (*GetSubmissionsSummaryResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -127785,6 +131909,48 @@ func ParseApproveTableSeriesRulesResponse(rsp *http.Response) (*ApproveTableSeri
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest HTTPValidationError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRequestTableSeriesRuleApprovalResponse parses an HTTP response from a RequestTableSeriesRuleApprovalWithResponse call
+func ParseRequestTableSeriesRuleApprovalResponse(rsp *http.Response) (*RequestTableSeriesRuleApprovalResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RequestTableSeriesRuleApprovalResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SeriesRuleApprovalAskResultSchema
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest struct {
+			Detail APIError `json:"detail"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest HTTPValidationError

@@ -3,6 +3,17 @@
 User-facing changes in each qctl release. A release `X.Y.Z` supports the
 Qluster server minor `X.Y`.
 
+## 2.140.0
+
+For Qluster server 2.140.
+
+- make release accepts an SSH-cloned mirror
+- make release drafts a missing changelog section instead of refusing
+- TableRuleTemplate: declarative diff/apply of a report's rules on a table
+- TableRule create relies on server auto-mapping and prints resolved bindings
+- Refresh Go dependencies and security fixes
+- apply -f TableSeries: refuse a plan that touches a locked member before any write
+
 ## 2.136.0
 
 First public release of qctl, the Qluster command-line interface.

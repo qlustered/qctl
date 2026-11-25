@@ -36,7 +36,7 @@ func TestRowsSeriesSourceTargetsSelectedPeriod(t *testing.T) {
 		selector          []string
 		population        string
 	}{
-		{"delete-quarantined", "delete-rows", testSignatureBody, []string{"--signature", "deadbeef"}, "true"},
+		{"delete-quarantined", "delete-rows", testSignatureBody, []string{"--signature", "deadbeef", "--exclude-from-future-uploads"}, "true"},
 		{"delete-quarantined", "delete-all-bad-rows", testCommentBody, []string{"--all"}, ""},
 		{"reprocess-quarantined", "reprocess-all-bad-rows", "", []string{"--all"}, ""},
 		{"hold", "update-keep-in-quarantine", `{"ids":[11],"quarantine_hold":"hold"}`, []string{"--row-id", "11"}, ""},

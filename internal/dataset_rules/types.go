@@ -34,6 +34,9 @@ type (
 // of a 202 PATCH response and of the rule-suggestions endpoints.
 type Suggestion = api.DatasetRuleSuggestionSchema
 
+// InstantiateSuggestion is the typed body of a 202 instantiate response.
+type InstantiateSuggestion = api.InstantiateRuleSuggestionSchema
+
 // TableRuleMetadata holds metadata for a table-rule resource
 type TableRuleMetadata struct {
 	ID           string `yaml:"id" json:"id"`
@@ -340,4 +343,12 @@ func (m *TableRuleApplyManifest) UnmarshalJSON(data []byte) error {
 	}
 	m.RowFilterSet = row_filters.HasJSONField(data, "spec", "row_filter")
 	return nil
+}
+
+// AwaitsMigrationReview reports a pending_validation rule whose validation
+// passed and that waits only for its draft migration to be applied.
+func AwaitsMigrationReview(rule DatasetRuleTiny) bool {
+	return rule.State == api.DatasetRuleStatePendingValidation &&
+		rule.ValidationState != nil && *rule.ValidationState == api.ValidationEvidenceKindPassed &&
+		rule.PendingMigrationModelID != nil && !rule.ValidationBlocksEnable
 }

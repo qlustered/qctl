@@ -68,11 +68,17 @@ func RuleParams(p *Proposal) (map[string]interface{}, error) {
 	return params, nil
 }
 
-// PayloadManifest decodes the payload strictly into the AlertResolution or
-// WarningResolution document for the proposal's target, returning it and its
-// kind.
+// PayloadManifest decodes the payload's non-null keys strictly into the
+// AlertResolution or WarningResolution document for the proposal's target,
+// returning it and its kind.
 func PayloadManifest(p *Proposal) (interface{}, string, error) {
-	raw, err := json.Marshal(p.Payload)
+	set := make(map[string]interface{}, len(p.Payload))
+	for key, value := range p.Payload {
+		if value != nil {
+			set[key] = value
+		}
+	}
+	raw, err := json.Marshal(set)
 	if err != nil {
 		return nil, "", fmt.Errorf("payload is not JSON: %w", err)
 	}

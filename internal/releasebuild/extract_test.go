@@ -54,13 +54,16 @@ func TestExtractTarWritesFilesDirsAndSymlinks(t *testing.T) {
 	if err != nil || string(got) != "package main\n" {
 		t.Fatalf("symlinked file: %q, %v", got, err)
 	}
+	// The process umask may clear group and other bits, so compare the owner
+	// bits exactly and require that nothing beyond the requested mode is set.
 	for name, want := range map[string]os.FileMode{"cmd/qctl/main.go": 0o644, "scripts/run.sh": 0o755} {
 		info, err := os.Stat(filepath.Join(dir, name))
 		if err != nil {
 			t.Fatalf("stat %s: %v", name, err)
 		}
-		if info.Mode().Perm() != want {
-			t.Errorf("%s mode = %v, want %v", name, info.Mode().Perm(), want)
+		got := info.Mode().Perm()
+		if got&0o700 != want&0o700 || got&^want != 0 {
+			t.Errorf("%s mode = %v, want %v less umask bits", name, got, want)
 		}
 	}
 }

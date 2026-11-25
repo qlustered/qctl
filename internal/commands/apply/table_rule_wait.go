@@ -73,7 +73,7 @@ func writeNothingToWaitFor(w io.Writer, why string) {
 
 // writeStagedNothingToWaitFor is writeNothingToWaitFor for a staged
 // instantiate; it does nothing when wait is nil.
-func writeStagedNothingToWaitFor(w io.Writer, staged *dataset_rules.Suggestion, wait *tableRuleWait) {
+func writeStagedNothingToWaitFor(w io.Writer, staged *dataset_rules.InstantiateSuggestion, wait *tableRuleWait) {
 	if wait == nil {
 		return
 	}
@@ -223,42 +223,12 @@ func validationFailedNotification(token string, rule *dataset_rules.DatasetRuleD
 	return ""
 }
 
-// migrationAlertLimit is the page size of the needs_review_migration lookup.
-const migrationAlertLimit = 100
-
-// findMigrationAlert returns the id of the unresolved needs_review_migration
-// alert on datasetID whose migration_model_id is migrationID, and false when
-// no alert on the listing's first page matches or the listing fails.
-func findMigrationAlert(token string, datasetID, migrationID int, client *alerts.Client) (int, bool) {
-	resolved := false
-	issueType := api.AlertTypeNeedsReviewMigration
-	page, err := client.GetAlerts(token, alerts.GetAlertsParams{
-		DatasetID: &datasetID,
-		IssueType: &issueType,
-		Resolved:  &resolved,
-		Limit:     migrationAlertLimit,
-	})
-	if err != nil {
-		return 0, false
-	}
-	for _, tiny := range page.Results {
-		alert, err := client.GetAlert(token, tiny.ID)
-		if err != nil {
-			continue
-		}
-		if alert.MigrationModelID != nil && *alert.MigrationModelID == migrationID {
-			return alert.ID, true
-		}
-	}
-	return 0, false
-}
-
 // renderValidatedMigrationFollowUp prints the draft's review alert or its lookup,
 // with unlock guidance when the table's period is locked.
 func renderValidatedMigrationFollowUp(out io.Writer, token string, rule *dataset_rules.DatasetRuleDetail, wait *tableRuleWait) {
 	migrationID := *rule.PendingMigrationModelID
 	applyMigration := string(api.AlertActionApplyMigration)
-	alertID, found := findMigrationAlert(token, rule.DatasetID, migrationID, wait.alerts)
+	alertID, found := wait.alerts.FindMigrationReviewAlert(token, rule.DatasetID, migrationID)
 	if !found {
 		if table, err := wait.datasets.GetDataset(token, rule.DatasetID); err == nil {
 			if locked := datasets.LockedPeriodOf(table); locked != nil {

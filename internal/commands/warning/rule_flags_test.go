@@ -16,7 +16,7 @@ import (
 // table 42, offering actions, whose rule writes region and segment.
 func ruleWarning(actions ...api.WarningAction) warnings.WarningFull {
 	w := anomalyWarning(actions...)
-	w.IssueType = api.RuleValidation
+	w.IssueType = api.IssueTypeEnumRuleValidation
 	outputs := []string{"region", "segment"}
 	w.RuleOutputColumns = &outputs
 	ruleID := uuid.MustParse("aaaa1111-0000-0000-0000-000000000001")

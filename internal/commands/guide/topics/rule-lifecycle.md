@@ -1,11 +1,12 @@
 # A rule from source file to enabled on a table
 
-    qctl submit rules -f rules.py --yes                          # 1. into the catalog
+    qctl submit rules -f rules.py --yes                          # 1. into the catalog (ops)
     qctl get rule my_rule                                        # 2. its revisions
     qctl create dry-run-job -f spec.yaml --table orders          # 3. try it on real rows
     qctl review request my_rule --release 1.0.0 --dry-run-job 512  # 4. only if review is required
     qctl enable rule my_rule --release 1.0.0                     # 5. only if submit left it draft
-    qctl apply -f table-rule.yaml --yes                          # 6. attach it to a table
+    qctl diff -f monthly-orders.yaml --table orders              # 6. preview the report's rules on a table
+    qctl apply -f monthly-orders.yaml --table orders --yes       #    and attach them
     qctl set-default rule my_rule --release 1.0.0                # 7. optional
     qctl get rule-upgrades my_rule                               # 8. tables still on the old release
 
@@ -17,8 +18,10 @@ the guide that covers it in depth.
 
     qctl submit rules -f rules.py --yes
 
-Adds the rule to your organization's catalog. Authoring, file constraints,
-and the SDK: `qctl guide submit-rules`.
+Adds the rule to your organization's catalog. Only Qluster operations staff
+(the `ops` role) can submit; any other role gets a 403, so hand the file to
+Qluster and start at step 2. Authoring, file constraints, and the SDK:
+`qctl guide submit-rules`.
 
 ## 2. Find the revision
 
@@ -64,12 +67,16 @@ final approval enables it for you once that dry-run requirement is met.
 
 ## 6. Attach it to a table
 
-    qctl apply -f table-rule.yaml --yes
+    qctl diff -f monthly-orders.yaml --table orders
+    qctl apply -f monthly-orders.yaml --table orders --yes
 
 Enabling a rule only makes it *eligible* to run — it does nothing until
-it's instantiated on a table. Manifest shape, patch vs. instantiate mode,
-and what happens when a patch gets staged: `qctl guide instantiate-rule`.
-Resolving a staged change: `qctl guide manage-suggestions`.
+it's instantiated on a table. A report's rules go on each of its tables
+through one `kind: TableRuleTemplate` file that pins each rule's release and
+names no table; a single rule on a single table can also be a `kind:
+TableRule` manifest. Both, unmapped fields, and what happens when a patch
+gets staged: `qctl guide instantiate-rule`. Resolving a staged change:
+`qctl guide manage-suggestions`.
 
 ## 7. Make it the default
 
@@ -92,10 +99,17 @@ to the users who dismissed it:
 
     qctl rule-upgrade notify my_rule --yes
 
-Upgrading an instance is step 6 again, with the new revision and
-`spec.upgradedFrom` set to the old instance's id
-(`qctl get rule-upgrades my_rule --columns table,rule,id`); the old instance
-is retired when the replacement is enabled. Full detail:
+To upgrade a report's tables, change `release:` in its TableRuleTemplate,
+commit it, and run step 6 again on each table:
+
+    qctl diff -f monthly-orders.yaml --table orders              # the entry plans replaced
+    qctl apply -f monthly-orders.yaml --table orders --yes --wait
+
+The replacement keeps the instance name and the column mapping, and the old
+instance is retired when the replacement is enabled. A rule that is on a
+table without a template is upgraded with a `kind: TableRule` manifest for the
+new revision whose `spec.upgradedFrom` is the old instance's id
+(`qctl get rule-upgrades my_rule --columns table,rule,id`). Full detail:
 `qctl guide instantiate-rule` and `qctl explain rule-upgrade`.
 
 ## See also

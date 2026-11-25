@@ -124,7 +124,11 @@ func TestEveryWarningRequiredFieldIsSuppliable(t *testing.T) {
 		for _, group := range fields.OneOf {
 			names = append(names, group...)
 		}
-		names = append(names, fields.Optional...)
+		for _, name := range fields.Optional {
+			if !warningResolutionFieldDenylist[name] {
+				names = append(names, name)
+			}
+		}
 		for _, name := range names {
 			if !mapped[name] {
 				t.Errorf("action %q reads %q, which WarningResolutionSpec cannot supply", action, name)
@@ -163,6 +167,18 @@ func TestSkeletonRoundTripsAndRefusesUnedited(t *testing.T) {
 	}
 	if err := res.Spec.Validate(); err == nil {
 		t.Error("an unedited skeleton must be refused, not sent")
+	}
+}
+
+// A denylisted key is not offered, since ParseResolution refuses it.
+func TestSkeletonOmitsDenylistedOptionalKeys(t *testing.T) {
+	for action, fields := range api.WarningActionFields {
+		out := Skeleton(&WarningFull{ID: 55}, action)
+		for _, name := range fields.Optional {
+			if warningResolutionFieldDenylist[name] && strings.Contains(out, name+":") {
+				t.Errorf("%s skeleton offers denylisted %s:\n%s", action, name, out)
+			}
+		}
 	}
 }
 

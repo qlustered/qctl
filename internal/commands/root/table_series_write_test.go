@@ -43,6 +43,7 @@ func resetSeriesWriteFlags(t *testing.T) {
 func seriesWriteSetup(t *testing.T, spec string) (*testutil.MockAPIServer, string) {
 	t.Helper()
 	mock := tableSeriesTestServer(t)
+	registerSeriesList(t, mock, unlockedSeriesTestRecord)
 	resetSeriesWriteFlags(t)
 	t.Cleanup(func() { resetSeriesWriteFlags(t) })
 	cfg, err := config.Load()
@@ -85,7 +86,7 @@ func TestTableSeriesApplyCreateAndMoveIntoNewSeries(t *testing.T) {
 		t.Run(map[bool]string{false: "add", true: "move"}[moving], func(t *testing.T) {
 			mock, path := seriesWriteSetup(t, "  description: Reports\n  members:\n    - table: 42\n      period_key: Q1\n")
 			var series table_series.Series
-			if err := json.Unmarshal([]byte(seriesTestRecord), &series); err != nil {
+			if err := json.Unmarshal([]byte(unlockedSeriesTestRecord), &series); err != nil {
 				t.Fatal(err)
 			}
 			mock.RegisterHandler("GET", seriesTestPath, func(w http.ResponseWriter, _ *http.Request) {
@@ -321,6 +322,29 @@ func TestTableSeriesDiffShowsRequestsAndErrorsUseTypedExitCodes(t *testing.T) {
 				if len(seriesMutationRequests(mock)) != 1 {
 					t.Fatalf("apply continued after failure: %v", mock.Requests())
 				}
+			}
+		})
+	}
+}
+
+func TestTableSeriesPlanTouchingALockedPeriodRefusesBeforeAnyWrite(t *testing.T) {
+	for _, verb := range []string{"apply", "diff"} {
+		t.Run(verb, func(t *testing.T) {
+			mock, path := seriesWriteSetup(t, "  members:\n    - table: 42\n      period_key: 2026-10\n")
+			registerSeriesList(t, mock, seriesTestRecord)
+			args := []string{verb, "-f", path}
+			if verb == "apply" {
+				args = append(args, "--yes")
+			}
+			out, err := runRoot(t, args...)
+			if code := qerrors.GetExitCode(err); code != qerrors.ExitBadUsage {
+				t.Fatalf("exit = %d, error = %v", code, err)
+			}
+			if !strings.Contains(err.Error(), "qctl table-series unlock "+seriesTestID+" --period 2026-09") {
+				t.Errorf("error = %v", err)
+			}
+			if out != "" || len(seriesMutationRequests(mock)) != 0 {
+				t.Fatalf("out = %q, requests = %v", out, mock.Requests())
 			}
 		})
 	}

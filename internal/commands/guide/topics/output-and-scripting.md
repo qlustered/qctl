@@ -116,10 +116,13 @@ Write only what the user asked for: preview first (`--dry-run`, `--check`,
     qctl diff -f table-rule.yaml
 
 It currently supports exactly these manifest kinds from
-`diff.diffKinds`: `Deliverable`, `LinkedTable`, `StandardField`, `Table`, `TableKind`, `TableRule`, `TableSchema`, `TableSeries`.
+`diff.diffKinds`: `Deliverable`, `LinkedTable`, `StandardField`, `Table`, `TableKind`, `TableRule`, `TableRuleTemplate`, `TableSchema`, `TableSeries`.
 `TableRule` only in patch mode (`metadata.id` set). It prints the changed
 fields and the exact request body `apply -f` would send or, for a kind apply
 writes in several requests, each request in order, and writes nothing.
+`TableRuleTemplate` is the exception: it takes `--table` or `--table-id`, the
+server stores each preview as a rule merge, and it exits 2 while an item is a
+conflict; `qctl diff --help` has the rest.
 A file of several `---` documents exits 2: split it and diff each one. Branch
 on its exit code as shown under Exit codes.
 

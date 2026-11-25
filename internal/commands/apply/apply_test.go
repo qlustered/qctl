@@ -211,7 +211,7 @@ func TestApplyLongListsValidKinds(t *testing.T) {
 		t.Fatalf("apply Long missing the 'Valid kinds:' line; got:\n%s", long)
 	}
 	gotKinds := strings.Split(strings.TrimPrefix(kindsLine, "Valid kinds: "), ", ")
-	wantKinds := []string{"BackupSettings", "ChangeReviewPolicy", "CloudSource", "DataReviewPolicy", "Deliverable", "Destination", "LinkedTable", "NotificationPreferences", "Rule", "RuleReviewPolicy", "StandardField", "Table", "TableKind", "TableRule", "TableSchema", "TableSeries"}
+	wantKinds := []string{"BackupSettings", "ChangeReviewPolicy", "CloudSource", "DataReviewPolicy", "Deliverable", "Destination", "LinkedTable", "NotificationPreferences", "Rule", "RuleReviewPolicy", "StandardField", "Table", "TableKind", "TableRule", "TableRuleTemplate", "TableSchema", "TableSeries"}
 	if len(gotKinds) != len(wantKinds) {
 		t.Fatalf("got %d kinds, want %d; line: %q", len(gotKinds), len(wantKinds), kindsLine)
 	}

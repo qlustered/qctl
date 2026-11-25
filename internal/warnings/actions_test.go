@@ -20,7 +20,7 @@ func warningOffering(actions ...api.WarningAction) *WarningFull {
 		DatasetID:          42,
 		DatasetName:        "orders",
 		SettingsModelID:    100,
-		IssueType:          api.Anomaly,
+		IssueType:          api.IssueTypeEnumAnomaly,
 		Msg:                "Value looks anomalous",
 		Count:              1,
 		Resolved:           &resolved,
@@ -200,7 +200,7 @@ func TestYesFlagOnlyForAPromptingActionWithoutATerminal(t *testing.T) {
 // with the command that shows its group; the body's group id wins over the
 // search by row.
 func TestValidateOfferedRoutesADuplicateGroupWarningToItsGroup(t *testing.T) {
-	for _, issueType := range []api.IssueTypeEnum{api.RepeatedKey, api.IdenticalRows, api.PersonMarkedDuplicate} {
+	for _, issueType := range []api.IssueTypeEnum{api.IssueTypeEnumRepeatedKey, api.IssueTypeEnumIdenticalRows, api.IssueTypeEnumPersonMarkedDuplicate} {
 		w := warningOffering()
 		w.IssueType = issueType
 		err := ValidateOffered(w, "map_value")
@@ -215,7 +215,7 @@ func TestValidateOfferedRoutesADuplicateGroupWarningToItsGroup(t *testing.T) {
 
 	group := uuid.MustParse("6f1c2d3e-4b5a-4c6d-8e7f-901234567890")
 	w := warningOffering()
-	w.IssueType = api.PersonMarkedDuplicate
+	w.IssueType = api.IssueTypeEnumPersonMarkedDuplicate
 	w.Body = &api.AlertBodySchema{GroupID: &group}
 	want := "qctl describe duplicate-group " + group.String() + " --table-id 42"
 	if err := ValidateOffered(w, "map_value"); err == nil || !strings.Contains(err.Error(), want) {

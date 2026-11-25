@@ -65,6 +65,7 @@ var genericKinds = map[string]applyFunc{
 	"Table":                   applyTable,
 	"TableKind":               applyTableKind,
 	"TableRule":               applyTableRuleYAML,
+	"TableRuleTemplate":       applyTableRuleTemplate,
 	"TableSchema":             applyTableSchema,
 	"TableSeries":             applyTableSeries,
 }
@@ -95,6 +96,9 @@ func genericApply(cmd *cobra.Command, filePath string) error {
 		return err
 	}
 	if err := refuseValidateOnlyBesideOtherKinds(cmd, filePath, docs); err != nil {
+		return err
+	}
+	if err := refuseTemplateMisuse(cmd, filePath, docs); err != nil {
 		return err
 	}
 	return applyDocuments(cmd, docs, resolveGenericKind)

@@ -46,7 +46,7 @@ func describeWarningFixture(resolved bool, actions ...api.WarningAction) warning
 		DatasetID:          42,
 		DatasetName:        "orders",
 		SettingsModelID:    100,
-		IssueType:          api.Anomaly,
+		IssueType:          api.IssueTypeEnumAnomaly,
 		Msg:                "Value looks anomalous",
 		Count:              1,
 		Resolved:           &resolved,

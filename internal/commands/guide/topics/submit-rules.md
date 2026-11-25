@@ -8,6 +8,12 @@ parsed server-side and only the extracted rule *versions* are kept.
 Submitting adds a rule to the catalog. Attaching one to a table is a separate
 step — see `qctl guide instantiate-rule`.
 
+**Only Qluster operations staff submit rule code.** `submit rules`, its
+`--check` and `delete rules -f` need the `ops` role; any other role, `admin`
+included, gets a 403 (exit 4). If you are not ops, write the file and hand it
+to Qluster; enabling, dry runs and attaching a submitted revision to a table
+do not need the `ops` role.
+
 ## 1. Write a rule file
 
 Each rule is a class subclassing `Rule` from the `qluster_sdk.rule` SDK. It
@@ -89,8 +95,8 @@ qctl submit rules -f rules.py --check
 qctl submit rules -f rules.py --yes
 ```
 
-Run `--check` until it passes, then submit with `--yes` — only the files the
-user asked you to submit.
+With the `ops` role, run `--check` until it passes, then submit with `--yes`
+— only the files the user asked you to submit.
 
 - Only `.py` files are accepted (YAML rule manifests go through `qctl apply -f`).
 - The file is parsed **server-side**. qctl caps each file at 500,000 Unicode code points; server preflight also caps it at 500,000 UTF-8 bytes.
@@ -200,7 +206,7 @@ Add `--release <version>` to disambiguate when a rule has multiple releases.
   changed. Immutable fields (such as the rule code) are rejected with a hint to
   re-submit.
 - To remove rules, pass the Python file to `qctl delete rules -f rules.py`
-  (it un-submits the versions found in that file).
+  (it un-submits the versions found in that file; `ops` role only).
 
 ## Next step
 

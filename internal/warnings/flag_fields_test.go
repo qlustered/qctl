@@ -13,7 +13,7 @@ import (
 // rule writes region and segment.
 func ruleWarningOffering(actions ...api.WarningAction) *WarningFull {
 	w := warningOffering(actions...)
-	w.IssueType = api.RuleValidation
+	w.IssueType = api.IssueTypeEnumRuleValidation
 	outputs := []string{"region", "segment"}
 	w.RuleOutputColumns = &outputs
 	inputs := []string{"country"}

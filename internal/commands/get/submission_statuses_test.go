@@ -29,37 +29,54 @@ const submissionCountsJSON = `{"expected":1,"late":1,"on_hold":1,"received_not_l
 const submissionLateRow = `{"data_source_model_id":42,"period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30",
  "dataset_id":7,"status":"expected","is_locked":false,"pending_file":null,"not_loaded_file":null,"declaration":null,
  "broker_name":"Acme Brokers","board_status":"late","broker_due":"2026-10-10","days_late":6,
- "last_reminded_at":"2026-10-12T09:00:00Z","latest_file":null,"file_count":0,"bad_row_count":null}`
+ "last_reminded_at":"2026-10-12T09:00:00Z","latest_file":null,"file_count":0,"bad_row_count":null,
+ "issues_report_sent_at":null,"issues_report_waiting_reason":null,"issues_report_target":null,"waiting_file":null}`
 
 const submissionHeldRow = `{"data_source_model_id":43,"period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30",
  "dataset_id":7,"status":"received_not_loaded","is_locked":false,
  "pending_file":null,"not_loaded_file":{"stored_item_id":901,"file_name":"held.csv","created_at":"2026-10-03T08:00:00Z","alert_item_id":812,
-  "fix_owner":"broker_file","is_on_hold":true,"hold_reasons":["row_drop","period_mismatch"]},
+  "fix_owner":"broker_file","is_on_hold":true,"hold_reasons":["row_drop","period_mismatch"],"channel":"email","sender":null,
+  "sender_ask":{"asked_at":"2026-10-04T08:00:00Z","email":"ops@bolt.example","user_id":"bbbbbbbb-cccc-4ddd-8eee-ffffffffffff"},"waiting_on":"broker"},
  "declaration":null,"broker_name":"Bolt Re","board_status":"on_hold","broker_due":"2026-10-15","days_late":1,
- "last_reminded_at":null,"latest_file":{"stored_item_id":900,"file_name":"older.csv","created_at":"2026-10-01T08:00:00Z"},
- "file_count":2,"bad_row_count":null}`
+ "last_reminded_at":null,"latest_file":{"stored_item_id":900,"file_name":"older.csv","created_at":"2026-10-01T08:00:00Z","channel":"portal","sender":null},
+ "file_count":2,"bad_row_count":null,"issues_report_sent_at":null,"issues_report_waiting_reason":"approval_required",
+ "issues_report_target":{"stored_item_id":900,"file_name":"older.csv","broker_fixable_row_count":2,
+  "recipient":{"id":"bbbbbbbb-cccc-4ddd-8eee-ffffffffffff","email":"ops@bolt.example","first_name":"Olive","last_name":"Bolt"},
+  "recipient_refusal":null,"report_refusal":null},"waiting_file":null}`
 
 const submissionCleanRow = `{"data_source_model_id":44,"period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30",
  "dataset_id":7,"status":"clean","is_locked":false,"pending_file":null,"not_loaded_file":null,"declaration":null,
  "broker_name":"Cove Partners","board_status":"clean","broker_due":"2026-10-10","days_late":null,
- "last_reminded_at":null,"latest_file":{"stored_item_id":950,"file_name":"cove-sept.csv","created_at":"2026-10-02T08:00:00Z"},
- "file_count":1,"bad_row_count":0}`
+ "last_reminded_at":null,"latest_file":{"stored_item_id":950,"file_name":"cove-sept.csv","created_at":"2026-10-02T08:00:00Z","channel":"email",
+  "sender":{"id":"cccccccc-dddd-4eee-8fff-000000000000","email":"files@cove.example","first_name":"Cora","last_name":"Vale"}},
+ "file_count":1,"bad_row_count":0,"issues_report_sent_at":"2026-10-02T09:00:00Z","issues_report_waiting_reason":null,
+ "issues_report_target":{"stored_item_id":950,"file_name":"cove-sept.csv","broker_fixable_row_count":0,
+  "recipient":{"id":"cccccccc-dddd-4eee-8fff-000000000000","email":"files@cove.example","first_name":"Cora","last_name":"Vale"},
+  "recipient_refusal":null,"report_refusal":null},"waiting_file":null}`
 
 var submissionBoardJSON = `{"series_id":"` + submissionSeriesID + `","series_name":"Monthly bordereau","frequency":"monthly","files_waiting_for_period":[],
  "period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30","broker_due":"2026-10-10",
  "mga_deadline":"2026-10-20","is_locked":true,"counts":` + submissionCountsJSON + `,
- "rows":[` + submissionLateRow + `,` + submissionHeldRow + `,` + submissionCleanRow + `]}`
+ "rows":[` + submissionLateRow + `,` + submissionHeldRow + `,` + submissionCleanRow + `],
+ "open_files":[{"stored_item_id":960,"file_name":"acme-oct.csv","created_at":"2026-11-02T08:00:00Z","alert_item_id":null,
+  "fix_owner":null,"is_on_hold":false,"hold_reasons":[],"channel":"portal","sender":null,"sender_ask":null,
+  "data_source_model_id":42,"broker_name":"Acme Brokers","period_key":"2026-10","waiting_on":"qluster"}],
+ "change_proposals_awaiting_review":2,
+ "deliverables":[{"deliverable_id":"dddddddd-eeee-4fff-8000-111111111111","name":"Monthly bordereau pack","receiver_label":"Lloyd's",
+  "due":"2026-10-23","at_risk":"2026-10-20","state":"signed_off","signed_off_run_id":31,"signed_off_at":"2026-10-21T10:00:00Z"}]}`
 
 const submissionIntakeJSON = `[` +
 	`{"data_source_model_id":42,"period_key":"2026-10","period_start":"2026-10-01","period_end":"2026-10-31",
  "dataset_id":null,"status":"expected","is_locked":false,"pending_file":null,"not_loaded_file":null,"declaration":null,
  "broker_name":"Acme Brokers","board_status":"expected","broker_due":"2026-11-10","days_late":null,
- "last_reminded_at":null,"latest_file":null,"file_count":0,"bad_row_count":null},` +
+ "last_reminded_at":null,"latest_file":null,"file_count":0,"bad_row_count":null,
+ "issues_report_sent_at":null,"issues_report_waiting_reason":null,"issues_report_target":null,"waiting_file":null},` +
 	`{"data_source_model_id":42,"period_key":"2026-08","period_start":"2026-08-01","period_end":"2026-08-31",
  "dataset_id":6,"status":"waived","is_locked":true,"pending_file":null,"not_loaded_file":null,
  "declaration":{"id":5,"kind":"waived","declared_at":"2026-09-12T10:00:00Z","declared_by_id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee","reason":"Broker closed"},
  "broker_name":"Acme Brokers","board_status":"waived","broker_due":"2026-09-10","days_late":null,
- "last_reminded_at":null,"latest_file":null,"file_count":0,"bad_row_count":null}]`
+ "last_reminded_at":null,"latest_file":null,"file_count":0,"bad_row_count":null,
+ "issues_report_sent_at":null,"issues_report_waiting_reason":null,"issues_report_target":null,"waiting_file":null}]`
 
 var submissionSeriesCountsJSON = `[{"series_id":"` + submissionSeriesID + `","series_name":"Monthly bordereau",
  "period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30","broker_due":"2026-10-10",
@@ -412,7 +429,7 @@ var submissionEmptyBoardJSON = `{"series_id":"` + submissionSeriesID + `","serie
  "period_key":"2026-09","period_start":"2026-09-01","period_end":"2026-09-30","broker_due":"2026-10-10",
  "mga_deadline":"2026-10-20","is_locked":false,
  "counts":{"expected":0,"late":0,"on_hold":0,"received_not_loaded":0,"received":0,"clean":0,"nil":0,"waived":0,"total":0},
- "rows":[]}`
+ "rows":[],"open_files":[],"change_proposals_awaiting_review":0,"deliverables":[]}`
 
 // A board with no row still names its series and period in a table, keeps
 // rows: [] in JSON, and prints no reference under -o name.

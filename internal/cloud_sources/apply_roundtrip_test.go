@@ -113,6 +113,7 @@ func rtLiveBody(sourceType DataSourceType) map[string]any {
 		"start_period_key":                nil,
 		"end_period_key":                  nil,
 		"broker_due_days":                 nil,
+		"export_request_days":             nil,
 		"preload_row_drop_share":          0.2,
 		"source_time_zone":                "UTC",
 
@@ -197,6 +198,7 @@ func rtCases() []rtCase {
 	series["table_series_id"] = "5f0c7d1e-9a43-4b8e-8d2a-3c6f1e2b7a90"
 	series["routing_mode"] = "file_name"
 	series["routing_pattern"] = "orders_{period}.csv"
+	series["export_request_days"] = 0
 	series["period_delta_cursors"] = []map[string]any{
 		{"dataset_id": 11, "period_key": "2026-09", "settings_model_id": 12, "delta_applied_cursor": 118},
 		{"dataset_id": 13, "period_key": "2026-10", "settings_model_id": 14, "delta_applied_cursor": nil},

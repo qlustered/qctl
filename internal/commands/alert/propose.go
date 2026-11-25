@@ -44,9 +44,10 @@ table's key choice as resolve's do (spec.key_columns and spec.no_key_columns
 with -f), and qctl checks it against the table's key step the same way.
 
 The proposal is submitted for review unless you pass --draft. A submitted
-proposal holds the alert and every --also-alert/--also-warning issue: another
-proposal naming one of them is refused with 409 CHANGE_PROPOSAL_ACTIVE, and
-qctl names the holder. A file of several documents makes one proposal per
+proposal holds the alert and every --also-alert/--also-warning issue, except
+that an ignore_rule_for_row or overwrite_value payload naming ids holds only
+those rows of the alert: another proposal naming a held issue or row is
+refused with 409 CHANGE_PROPOSAL_ACTIVE, and qctl names the holder. A file of several documents makes one proposal per
 document, so --also-alert and --also-warning need a file of one.
 
 --depends-on <proposal-id> makes approving it wait until that draft,

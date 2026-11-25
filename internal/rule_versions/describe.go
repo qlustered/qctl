@@ -16,6 +16,13 @@ const codePreviewLines = 15
 // view of a rule revision. This is intentionally NOT a manifest — users
 // should use "get rule -o yaml" for machine-readable output.
 func FormatDescribe(detail *RuleRevisionFull, showCode bool) string {
+	return FormatDescribeForTable(detail, showCode, "")
+}
+
+// FormatDescribeForTable is FormatDescribe plus a "Table bindings" section
+// rendering detail.FieldColumnCandidates under the heading table, when table
+// is not empty.
+func FormatDescribeForTable(detail *RuleRevisionFull, showCode bool, table string) string {
 	var b strings.Builder
 
 	// Identity
@@ -55,6 +62,11 @@ func FormatDescribe(detail *RuleRevisionFull, showCode bool) string {
 	fmt.Fprintf(&b, "  Affected:        %s\n", joinOrDash(detail.AffectedColumns))
 	formatFieldConcepts(&b, detail)
 	formatAcceptedColumnTypes(&b, detail)
+
+	if table != "" {
+		b.WriteString("\n")
+		formatTableBindings(&b, detail, table)
+	}
 
 	// Param Schema
 	b.WriteString("\n")

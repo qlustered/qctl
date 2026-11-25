@@ -183,7 +183,7 @@ func runListWithMarkedMessage(t *testing.T, resource string, args ...string) str
 	})
 	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/warnings", func(w http.ResponseWriter, _ *http.Request) {
 		testutil.RespondJSON(w, http.StatusOK, api.WarningsListSchema{
-			Results: []api.WarningTinySchema{{ID: 55, DatasetID: "42", DatasetName: "orders", IssueType: api.Anomaly, Count: 1, Msg: markedMessage}},
+			Results: []api.WarningTinySchema{{ID: 55, DatasetID: "42", DatasetName: "orders", IssueType: api.IssueTypeEnumAnomaly, Count: 1, Msg: markedMessage}},
 			Page:    one, TotalRows: one,
 		})
 	})

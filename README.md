@@ -12,7 +12,7 @@ following kubectl's conventions: `get`, `describe`, `apply -f <manifest>`,
 
 ## Install
 
-qctl needs Go 1.25.4 or later.
+qctl needs Go 1.26.11 or later.
 
 ```bash
 go install github.com/qlustered/qctl/cmd/qctl@latest

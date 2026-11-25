@@ -23,7 +23,7 @@ const (
 // which stops before the breadcrumbs.
 func TestGuideQuoteTableRuleStagedInstantiate(t *testing.T) {
 	var out strings.Builder
-	renderStagedInstantiate(&out, &dataset_rules.Suggestion{
+	renderStagedInstantiate(&out, &dataset_rules.InstantiateSuggestion{
 		ID:           uuid.MustParse(guideQuoteSuggestionID),
 		InstanceName: "Split Name",
 		State:        api.SuggestionStatePending,

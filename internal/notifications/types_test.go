@@ -80,20 +80,23 @@ func TestTypesCoversTheGeneratedEnum(t *testing.T) {
 // TestNeedsYouMirrorsTheBackendSet pins atlas NEEDS_YOU_NOTIFICATION_TYPES.
 func TestNeedsYouMirrorsTheBackendSet(t *testing.T) {
 	want := map[string]bool{
-		"comment_mentioned":          true,
-		"review_requested":           true,
-		"review_assigned":            true,
-		"data_review_requested":      true,
-		"data_review_assigned":       true,
-		"data_review_group_assigned": true,
-		"file_ready_to_download":     true,
-		"email_undeliverable":        true,
-		"series_escalation":          true,
-		"support_request":            true,
-		"change_proposal_submitted":  true,
-		"pii_access_requested":       true,
-		"series_rule_approval_stale": true,
-		"file_needs_decision":        true,
+		"comment_mentioned":              true,
+		"review_requested":               true,
+		"review_assigned":                true,
+		"data_review_requested":          true,
+		"data_review_assigned":           true,
+		"data_review_group_assigned":     true,
+		"file_ready_to_download":         true,
+		"email_undeliverable":            true,
+		"series_escalation":              true,
+		"support_request":                true,
+		"change_proposal_submitted":      true,
+		"pii_access_requested":           true,
+		"series_rule_approval_stale":     true,
+		"series_rule_approval_requested": true,
+		"file_needs_decision":            true,
+		"deliverable_at_risk":            true,
+		"issues_report_counts_changed":   true,
 	}
 	for _, tp := range Types {
 		if got := IsNeedsYou(tp); got != want[string(tp)] {

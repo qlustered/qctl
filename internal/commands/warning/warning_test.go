@@ -157,7 +157,7 @@ func userSubmittedWarning() api.WarningSchema {
 		ID:          8817,
 		DatasetID:   42,
 		DatasetName: "orders",
-		IssueType:   api.UserSubmitted,
+		IssueType:   api.IssueTypeEnumUserSubmitted,
 		Msg:         "looks off",
 		Count:       2,
 		Resolved:    &resolved,
@@ -243,7 +243,7 @@ func TestWarningRetractLearnsTheTableFromTheWarning(t *testing.T) {
 func TestWarningRetractRefusesARuleWarning(t *testing.T) {
 	mock := newWarningTestEnv(t)
 	warning := userSubmittedWarning()
-	warning.IssueType = api.Anomaly
+	warning.IssueType = api.IssueTypeEnumAnomaly
 	registerGetWarning8817(mock, warning)
 	// No body to inspect: the point of this test is that the DELETE never fires.
 	deletes := registerWarningRetract(mock, new(map[string]interface{}),

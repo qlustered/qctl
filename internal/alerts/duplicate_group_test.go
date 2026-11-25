@@ -92,7 +92,7 @@ func TestFooterRoutesANotLoadedAlertToItsGroupAndADelete(t *testing.T) {
 	for _, line := range []string{
 		"see the duplicate group's decision: qctl get duplicate-groups --table-id 10 --row-id <a not-loaded row's id>\n",
 		"resolving this alert\n  does not load them",
-		"or delete them: qctl rows delete-quarantined --table-id 10 --signature <a not-loaded row's signature> --reason <why>\n",
+		"or delete them: qctl rows delete-quarantined --table-id 10 --signature <a not-loaded row's signature> --exclude-from-future-uploads=<true|false> --reason <why>\n",
 	} {
 		if !strings.Contains(out, line) {
 			t.Errorf("footer lacks %q:\n%s", line, out)

@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/qlustered/qctl/internal/aliasstore"
 	"github.com/qlustered/qctl/internal/config"
 	"github.com/qlustered/qctl/internal/testutil"
@@ -587,5 +589,39 @@ func TestResolveRuleFullDoesNotUseAnotherOrgsCache(t *testing.T) {
 	}
 	if _, err := c.ResolveRuleFull("token", "def8757c", ""); err == nil {
 		t.Error("ResolveRuleFull resolved a short ID cached under a different org")
+	}
+}
+
+func TestGetRuleRevisionBindingPreviewSendsDatasetIDAndUpgradedFrom(t *testing.T) {
+	mock := newClientTestEnv(t)
+	const revID = "def8757c-1111-4222-8333-444444444444"
+	const predecessorID = "def8757c-1111-4222-8333-555555555555"
+	var query url.Values
+	mock.RegisterHandler("GET", "/api/orgs/"+testOrgID+"/rule-revisions/"+revID+"/details",
+		func(w http.ResponseWriter, r *http.Request) {
+			query = r.URL.Query()
+			testutil.RespondJSON(w, http.StatusOK, map[string]interface{}{"id": revID})
+		})
+
+	client, err := NewClient(mock.Server.URL, testOrgID, 0)
+	if err != nil {
+		t.Fatalf("NewClient: %v", err)
+	}
+	predecessor := uuid.MustParse(predecessorID)
+	if _, err := client.GetRuleRevisionBindingPreview("test-token", revID, 42, &predecessor); err != nil {
+		t.Fatalf("GetRuleRevisionBindingPreview: %v", err)
+	}
+	if got := query.Get("dataset_id"); got != "42" {
+		t.Errorf("dataset_id = %q, want 42", got)
+	}
+	if got := query.Get("upgraded_from"); got != predecessorID {
+		t.Errorf("upgraded_from = %q, want %s", got, predecessorID)
+	}
+
+	if _, err := client.GetRuleRevisionBindingPreview("test-token", revID, 42, nil); err != nil {
+		t.Fatalf("GetRuleRevisionBindingPreview without upgradedFrom: %v", err)
+	}
+	if query.Has("upgraded_from") {
+		t.Errorf("upgraded_from = %q sent for a nil upgradedFrom", query.Get("upgraded_from"))
 	}
 }

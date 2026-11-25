@@ -14,6 +14,19 @@ import (
 // these assertions pass vacuously.
 var escSeq = "\x1b" + "[31m"
 
+// asInstantiateSuggestion copies the fields the staged-instantiate renderers
+// read from a PATCH suggestion fixture into a 202 instantiate body.
+func asInstantiateSuggestion(s *dataset_rules.Suggestion) *dataset_rules.InstantiateSuggestion {
+	return &dataset_rules.InstantiateSuggestion{
+		ID:                s.ID,
+		InstanceName:      s.InstanceName,
+		State:             s.State,
+		Action:            s.Action,
+		DatasetID:         s.DatasetID,
+		RuleColumnMapping: s.RuleColumnMapping,
+	}
+}
+
 func stagedSuggestion() *dataset_rules.Suggestion {
 	return &dataset_rules.Suggestion{
 		ID:           uuid.MustParse("3f2a0000-1111-2222-3333-444444444444"),
@@ -40,7 +53,7 @@ func TestStagedOutcomeRenderersSanitizeServerText(t *testing.T) {
 			renderCandidateOutcome(out, nil, []string{"params"}, stagedSuggestion(), 7)
 		}},
 		{"staged instantiate", func(out *strings.Builder) {
-			renderStagedInstantiate(out, stagedSuggestion(), 7)
+			renderStagedInstantiate(out, asInstantiateSuggestion(stagedSuggestion()), 7)
 		}},
 	}
 
@@ -78,7 +91,7 @@ func TestStagedOutcomeRenderersQuoteInstanceNamesOnce(t *testing.T) {
 			renderCandidateOutcome(out, nil, []string{"params"}, s, 7)
 		}, "staged as a revalidation candidate"},
 		{"staged instantiate", func(out *strings.Builder, s *dataset_rules.Suggestion) {
-			renderStagedInstantiate(out, s, 7)
+			renderStagedInstantiate(out, asInstantiateSuggestion(s), 7)
 		}, "staged for review"},
 	}
 	for _, tc := range cases {
@@ -104,8 +117,11 @@ func TestRenderInstantiateConfirmationSanitizesServerText(t *testing.T) {
 	manifest.Spec.InstanceName = &name
 
 	var out strings.Builder
+	rev := sampleRuleRevisionFull(nil)
+	rev.InputColumns = []string{"input"}
+	bindings := newInstantiateBindings(manifest, &rev, map[string]string{"input": "col" + escSeq})
 	renderInstantiateConfirmation(&out, "org-1", "Acme"+escSeq, manifestDoc{Source: "rule.yaml"},
-		manifest, nil, map[string]string{"input": "col" + escSeq}, false, "")
+		manifest, &rev, bindings, "")
 
 	got := out.String()
 	if strings.Contains(got, "\x1b") {

@@ -184,10 +184,13 @@ func (e RuleMergeResolutionEntry) editFields() []string {
 }
 
 // ToRequest validates the spec and maps each entry, in order, onto the item of
-// items whose source rule sourceRule resolves its rule to. It refuses, exit 2,
-// an entry whose rule has no item, two entries on one item, and a choice or
-// target_rule the item's action does not take; target_rule is resolved with
-// targetRule. A resolver's error is returned wrapped, keeping its exit code.
+// items whose source rule sourceRule resolves its rule to. With a nil
+// sourceRule, items are a rule template merge's: an entry's rule must equal an
+// item's template_key, and a conflict item takes only its TemplateChoices. It
+// refuses, exit 2, an entry whose rule has no item, two entries on one item,
+// and a choice or target_rule the item does not take; target_rule is resolved
+// with targetRule. A resolver's error is returned wrapped, keeping its exit
+// code.
 func (s RuleMergeResolutionSpec) ToRequest(items []api.RuleMergeItemSchema, sourceRule, targetRule RuleResolver) ([]Resolution, error) {
 	if err := s.Validate(); err != nil {
 		return nil, err
@@ -195,19 +198,32 @@ func (s RuleMergeResolutionSpec) ToRequest(items []api.RuleMergeItemSchema, sour
 	out := make([]Resolution, 0, len(s.Resolutions))
 	entryForItem := map[int]int{}
 	for i, entry := range s.Resolutions {
-		sourceID, err := sourceRule(entry.Rule)
-		if err != nil {
-			return nil, fmt.Errorf("spec.resolutions[%d] (rule %q): %w", i, entry.Rule, err)
-		}
-		item, ok := itemForSourceRule(items, sourceID)
-		if !ok {
-			return nil, qerrors.NewBadUsagef("spec.resolutions[%d]: rule %q has no item in this merge", i, entry.Rule)
+		var item api.RuleMergeItemSchema
+		if sourceRule == nil {
+			var err error
+			if item, err = templateItemFor(i, entry, items); err != nil {
+				return nil, err
+			}
+		} else {
+			sourceID, err := sourceRule(entry.Rule)
+			if err != nil {
+				return nil, fmt.Errorf("spec.resolutions[%d] (rule %q): %w", i, entry.Rule, err)
+			}
+			var ok bool
+			if item, ok = itemForSourceRule(items, sourceID); !ok {
+				return nil, qerrors.NewBadUsagef("spec.resolutions[%d]: rule %q has no item in this merge", i, entry.Rule)
+			}
 		}
 		if j, ok := entryForItem[item.ID]; ok {
 			return nil, qerrors.NewBadUsagef("spec.resolutions[%d] and spec.resolutions[%d] both resolve rule %q (item %d)",
 				j, i, entry.Rule, item.ID)
 		}
 		entryForItem[item.ID] = i
+		if sourceRule == nil {
+			if err := entry.checkTemplateChoice(i, item); err != nil {
+				return nil, err
+			}
+		}
 		if err := entry.checkChoiceFits(i, item); err != nil {
 			return nil, err
 		}
@@ -335,7 +351,11 @@ func UnresolvedConflicts(items []api.RuleMergeItemSchema, resolutions []Resoluti
 // sourceRuleName and targetRuleName name a rule by UUID; nil or an empty name
 // falls back to the UUID. Rule names are written as YAML scalars, and every
 // server string inside a comment goes through pkgmanifest.CommentSafe.
+// Items of a rule template merge get TemplateSkeleton's document instead.
 func Skeleton(items []api.RuleMergeItemSchema, sourceRuleName, targetRuleName func(id string) string) string {
+	if slices.ContainsFunc(items, isTemplateItem) {
+		return TemplateSkeleton(items, targetRuleName)
+	}
 	choices := strings.Join(api.EnumValues[api.DatasetCopyConflictChoice](), ", ")
 	var b strings.Builder
 	b.WriteString("# Set choice on every entry (and target_rule where there is one), then run\n")

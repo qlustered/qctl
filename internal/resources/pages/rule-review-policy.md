@@ -4,7 +4,7 @@ aliases:
 kind: RuleReviewPolicy
 schema: manifest:rule-review-policy
 guide: request-review
-signature: 80b5eee
+signature: 04a3082
 ---
 
 ## USAGE

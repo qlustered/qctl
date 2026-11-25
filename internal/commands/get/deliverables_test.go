@@ -26,7 +26,7 @@ const deliverablesBody = `{
       "id": "dddd0000-1111-2222-3333-000000000001",
       "name": "Monthly Bordereau", "slug": "monthly-bordereau",
       "receiver_label": "Acme Re", "filename_pattern": "bdx-{period}.xlsx",
-      "period_param": "period", "archived_at": null,
+      "period_param": "period", "due_days": 5, "archived_at": null,
       "created_at": "2025-06-01T10:00:00Z", "updated_at": "2025-06-15T10:00:00Z",
       "enabled_revision_id": "eeee0000-1111-2222-3333-000000000001",
       "latest_run": {
@@ -42,7 +42,7 @@ const deliverablesBody = `{
       "id": "dddd0000-1111-2222-3333-000000000002",
       "name": "Quarterly Pack", "slug": "quarterly-pack",
       "receiver_label": "", "filename_pattern": "pack.xlsx",
-      "period_param": null, "archived_at": "2025-06-20T09:00:00Z",
+      "period_param": null, "due_days": null, "archived_at": "2025-06-20T09:00:00Z",
       "created_at": "2025-05-01T10:00:00Z", "updated_at": "2025-06-20T09:00:00Z",
       "enabled_revision_id": null, "latest_run": null
     }

@@ -119,8 +119,7 @@ whatever the count. --yes writes in a single request and shows no preview.
 Match mode is the 2x2 of --regex and --case-sensitive: neither is a
 case-insensitive substring (the backend default), --case-sensitive alone a
 case-sensitive substring, --regex alone a case-insensitive regular expression,
-and both a case-sensitive one. The web UI cannot express that third
-combination; qctl can.
+and both a case-sensitive one.
 
 The two substring modes take Excel's wildcards: * matches any run of
 characters, ? exactly one, and ~ before *, ? or ~ finds that character itself.
@@ -247,24 +246,16 @@ func searchReplaceFlags(cmd *cobra.Command) (searchReplaceTerms, error) {
 // Neither flag is therefore the schema's own default,
 // contains_case_insensitive (SearchAndReplaceRequestSchema.match_mode,
 // capi/capi/schemas/data_schema.py).
-//
-// regex_case_insensitive is the one the web UI cannot reach, and the
-// divergence is deliberate rather than an oversight: deriveMatchMode returns
-// REGEX the moment the regex toggle is on and never consults match-case
-// (cosmosview src/common/search-bar/searchReplace.util.ts), so the grid
-// has no way to ask for a case-insensitive pattern. Two orthogonal flags is the
-// kubectl-shaped answer and it costs the backend nothing — the value has been
-// on the enum and in the flag map since the route shipped.
 func matchMode(regex, caseSensitive bool) api.SearchMatchMode {
 	switch {
 	case regex && caseSensitive:
-		return api.SearchMatchModeRegex
+		return api.Regex
 	case regex:
-		return api.SearchMatchModeRegexCaseInsensitive
+		return api.RegexCaseInsensitive
 	case caseSensitive:
-		return api.SearchMatchModeContains
+		return api.Contains
 	default:
-		return api.SearchMatchModeContainsCaseInsensitive
+		return api.ContainsCaseInsensitive
 	}
 }
 

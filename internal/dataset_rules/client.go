@@ -51,6 +51,11 @@ type GetDatasetRulesParams struct {
 
 // GetDatasetRules retrieves the list of dataset rules for a table
 func (c *Client) GetDatasetRules(accessToken string, datasetID int, params GetDatasetRulesParams) (*DatasetRuleList, error) {
+	return c.GetDatasetRulesContext(context.Background(), accessToken, datasetID, params)
+}
+
+// GetDatasetRulesContext is GetDatasetRules with ctx controlling the request.
+func (c *Client) GetDatasetRulesContext(ctx context.Context, accessToken string, datasetID int, params GetDatasetRulesParams) (*DatasetRuleList, error) {
 	apiClient, err := client.New(client.Config{
 		BaseURL:     c.baseURL,
 		AccessToken: accessToken,
@@ -81,7 +86,7 @@ func (c *Client) GetDatasetRules(accessToken string, datasetID int, params GetDa
 		apiParams.Reverse = &notReversed
 	}
 
-	resp, err := apiClient.API.GetDatasetRulesListWithResponse(context.Background(), c.organizationID, datasetID, apiParams)
+	resp, err := apiClient.API.GetDatasetRulesListWithResponse(ctx, c.organizationID, datasetID, apiParams)
 	if err != nil {
 		return nil, apiClient.HandleError(err, "request failed")
 	}
@@ -100,7 +105,7 @@ func (c *Client) GetDatasetRules(accessToken string, datasetID int, params GetDa
 // getAllDatasetRules retrieves every table-rule page matching params. The
 // table-rule list uses ordered pagination, where Atlas reports TotalRows but
 // does not populate Next, so exhaustive callers advance Page by count.
-func (c *Client) getAllDatasetRules(accessToken string, datasetID int, params GetDatasetRulesParams) ([]DatasetRuleTiny, error) {
+func (c *Client) getAllDatasetRules(ctx context.Context, accessToken string, datasetID int, params GetDatasetRulesParams) ([]DatasetRuleTiny, error) {
 	if params.Limit <= 0 {
 		params.Limit = 1000
 	}
@@ -112,7 +117,7 @@ func (c *Client) getAllDatasetRules(accessToken string, datasetID int, params Ge
 	var rules []DatasetRuleTiny
 	for page := 1; ; page++ {
 		params.Page = page
-		resp, err := c.GetDatasetRules(accessToken, datasetID, params)
+		resp, err := c.GetDatasetRulesContext(ctx, accessToken, datasetID, params)
 		if err != nil {
 			return nil, fmt.Errorf("failed to fetch table rules page %d: %w", page, err)
 		}
@@ -134,7 +139,13 @@ func (c *Client) getAllDatasetRules(accessToken string, datasetID int, params Ge
 // every page. Soft-deleted rules are included: the list route applies no state
 // filter, and they still hold (and shift) positions.
 func (c *Client) ListAllDatasetRules(accessToken string, datasetID int) ([]DatasetRuleTiny, error) {
-	return c.getAllDatasetRules(accessToken, datasetID, GetDatasetRulesParams{OrderBy: "position"})
+	return c.ListAllDatasetRulesContext(context.Background(), accessToken, datasetID)
+}
+
+// ListAllDatasetRulesContext is ListAllDatasetRules with ctx controlling
+// each page's request.
+func (c *Client) ListAllDatasetRulesContext(ctx context.Context, accessToken string, datasetID int) ([]DatasetRuleTiny, error) {
+	return c.getAllDatasetRules(ctx, accessToken, datasetID, GetDatasetRulesParams{OrderBy: "position"})
 }
 
 // ReorderDatasetRule sends one rule to newPosition, a STORED 1-based position
@@ -255,7 +266,7 @@ func (c *Client) ResolveDatasetRuleID(accessToken string, datasetID int, input s
 	}
 
 	// UUID-like short ID: list all and prefix-match
-	rules, err := c.getAllDatasetRules(accessToken, datasetID, GetDatasetRulesParams{Limit: 1000})
+	rules, err := c.getAllDatasetRules(context.Background(), accessToken, datasetID, GetDatasetRulesParams{Limit: 1000})
 	if err != nil {
 		return "", fmt.Errorf("failed to list table rules for resolution: %w", err)
 	}
@@ -330,7 +341,7 @@ func (c *Client) PatchDatasetRule(accessToken string, datasetID int, datasetRule
 // instantiation as a rule suggestion instead of creating the rule).
 type InstantiateOutcome struct {
 	Created *DatasetRuleDetail
-	Staged  *Suggestion
+	Staged  *InstantiateSuggestion
 }
 
 // InstantiateRule instantiates a rule revision onto a dataset. A 201 creates

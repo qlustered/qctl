@@ -31,6 +31,9 @@ const (
 	// OperationDataReviewApprove governs data review approvals and every
 	// duplicate-group reviewer route; none of them has a proposal path.
 	OperationDataReviewApprove = "data_review_approve"
+	// OperationRuleMergeApply governs applying a rule merge, which no change
+	// proposal can carry.
+	OperationRuleMergeApply = "rule_merge_apply"
 )
 
 // organizationOperations are the operations governed by the organization's
@@ -155,7 +158,7 @@ func changeProposalRequiredHint(e *OperationalError) string {
 	case OperationDatasetRulePatch:
 		return "Propose the params change for review instead: " +
 			"`qctl table-rule propose <rule> --table-id <id> --set-param <key>=<value>`."
-	case OperationDataReviewApprove:
+	case OperationDataReviewApprove, OperationRuleMergeApply:
 		return "This change has no proposal path: someone whose role the policy lists must make it. " +
 			changeReviewPolicyPointer(OperationDataReviewApprove)
 	}

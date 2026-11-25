@@ -4,7 +4,7 @@ aliases:
 kind: ChangeReviewPolicy
 schema: manifest:change-review-policy
 guide: propose-changes
-signature: cec0d0a
+signature: 39e10b1
 ---
 
 ## USAGE

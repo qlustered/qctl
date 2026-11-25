@@ -153,6 +153,8 @@ const (
 // below refuses unrecognized "table"-ish placeholders instead of skipping them.
 var tableScopedCommands = map[string]tableSelectorMode{
 	"qctl get error-incidents": selectorFlagsOnly,
+	"qctl diff":                selectorFlagsOnly, // no positional; the target of a TableRuleTemplate
+	"qctl apply":               selectorFlagsOnly, // no positional; the target of a TableRuleTemplate
 	// The table is the object being named and the slot is free.
 	"qctl get table-members":                 selectorPositional,
 	"qctl table-member leave":                selectorPositional,
@@ -258,6 +260,7 @@ var tableScopedCommands = map[string]tableSelectorMode{
 	"qctl describe duplicate-group":        selectorFlagsOnly, // <group uuid>
 	"qctl describe row":                    selectorFlagsOnly, // <row id>
 	"qctl describe rule-merge":             selectorFlagsOnly, // <merge id>
+	"qctl describe rule":                   selectorFlagsOnly, // <rule name or id>
 	"qctl get table-rule":                  selectorFlagsOnly, // <rule name or r-* alias>
 	"qctl describe table-rule":             selectorFlagsOnly, // <rule name or r-* alias>
 	"qctl table-rule recheck-clean-rows":   selectorFlagsOnly,
@@ -623,7 +626,7 @@ func prepareTableSelectorProbe(t *testing.T, n catalog.Node, probeFile, manifest
 		setTableProbeFlag(t, n.Cmd, "to-id", tableProbeUUID)
 		setTableProbeFlag(t, n.Cmd, "reason", "probe")
 	case "qctl get table-rule", "qctl describe table-rule", "qctl table-rule recheck-clean-rows",
-		"qctl table-rule test-filter":
+		"qctl table-rule test-filter", "qctl describe rule":
 		args = []string{"rule-name"}
 	case "qctl table-rule move":
 		args = []string{"rule-name"}
@@ -640,6 +643,14 @@ func prepareTableSelectorProbe(t *testing.T, n catalog.Node, probeFile, manifest
 		args = []string{"rule-name"}
 	case "qctl upload file":
 		args = []string{probeFile}
+	case "qctl diff", "qctl apply":
+		template := t.TempDir() + "/rule-template.yaml"
+		body := "apiVersion: qluster.ai/v1\nkind: TableRuleTemplate\nmetadata: {name: probe}\n" +
+			"spec:\n  rules:\n    - {rule: probe-rule, release: 1.0.0}\n"
+		if err := os.WriteFile(template, []byte(body), 0o600); err != nil {
+			t.Fatalf("write template probe: %v", err)
+		}
+		setTableProbeFlag(t, n.Cmd, "filename", template)
 	case "qctl create dry-run-job":
 		setTableProbeFlag(t, n.Cmd, "file", manifestFile)
 	case "qctl deliverable test-filter":

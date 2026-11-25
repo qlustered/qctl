@@ -24,7 +24,7 @@ func waitMerge(state api.DatasetCopyState, items ...api.RuleMergeItemSchema) *ap
 	return &api.RuleMergeSchema{
 		ID:              41,
 		CreatedAt:       time.Date(2026, 9, 25, 10, 0, 0, 0, time.UTC),
-		SourceDatasetID: 7,
+		SourceDatasetID: new(int(7)),
 		TargetDatasetID: 12,
 		State:           state,
 		Items:           items,
@@ -480,4 +480,30 @@ func equalWaitDurations(a, b []time.Duration) bool {
 		}
 	}
 	return true
+}
+
+// Until ends the wait at the first merge it reports true for, before the
+// merge settles; without it the same polls run on to the settled one.
+func TestWait_UntilEndsTheWaitEarly(t *testing.T) {
+	stubClock(t)
+	waiting := waitMerge(api.DatasetCopyStateApplying, waitItem(1, api.DatasetCopyItemActionCreated, "Waiting for validation."))
+	onlyReview := waitMerge(api.DatasetCopyStateApplying, waitItem(1, api.DatasetCopyItemActionCreated, draftMigrationNote))
+	applied := waitMerge(api.DatasetCopyStateApplied)
+
+	poll, polls := serveSequence(waiting, onlyReview, applied)
+	got, err := Wait(context.Background(), poll, 41, WaitOptions{
+		Timeout: time.Hour,
+		Until:   func(m *api.RuleMergeSchema) bool { return m == onlyReview },
+	})
+	if err != nil {
+		t.Fatalf("Wait: %v", err)
+	}
+	if got != onlyReview || polls() != 2 {
+		t.Errorf("Wait ended at %+v after %d polls, want the second poll's merge", got, polls())
+	}
+
+	poll, polls = serveSequence(waiting, onlyReview, applied)
+	if got, err := Wait(context.Background(), poll, 41, WaitOptions{Timeout: time.Hour}); err != nil || got != applied || polls() != 3 {
+		t.Errorf("without Until: Wait = %+v, %v after %d polls, want the applied merge after 3", got, err, polls())
+	}
 }

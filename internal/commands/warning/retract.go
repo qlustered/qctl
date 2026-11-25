@@ -86,7 +86,7 @@ row, and moves the prose to stderr; -o name prints warning/<id>.`,
 			if err != nil {
 				return fmt.Errorf("failed to get warning %d: %w", warningID, err)
 			}
-			if warning.IssueType != api.UserSubmitted {
+			if warning.IssueType != api.IssueTypeEnumUserSubmitted {
 				return qerrors.NewBadUsagef(
 					"warning %d is a %s warning raised by a table rule, not one a human submitted — "+
 						"there is nothing to retract.\n"+

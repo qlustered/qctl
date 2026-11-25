@@ -26,9 +26,12 @@ qctl alert propose -f fix.yaml --also-alert 10     # the filled-in manifest, als
 `propose` sends exactly the body `resolve` would send and checks it the same
 way first. The proposal goes straight to review (`pending_review`) and holds
 its alert or warning, and every one it also resolves, until it is decided;
-`--draft` keeps it a draft that holds nothing until you submit it. Another
-proposal that names a held issue is refused with 409 `CHANGE_PROPOSAL_ACTIVE`,
-and qctl names the holder.
+`--draft` keeps it a draft that holds nothing until you submit it. A
+row-scoped payload (`ignore_rule_for_row` or `overwrite_value`, and on a
+warning `overwrite_rule_outputs`, naming `ids`) holds only those rows of its
+target, so another row of the same issue can take a proposal of its own.
+Another proposal that names a held issue or row is refused with 409
+`CHANGE_PROPOSAL_ACTIVE`, and qctl names the holder.
 
 Two proposals of one table can touch the same rows, file or column. To make
 one wait for the other, name it: `--depends-on <proposal-id>` on `propose` or

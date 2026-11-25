@@ -31,6 +31,7 @@ type CloudSourceFields struct {
 	EncodingProbably            *string    `yaml:"encoding_probably,omitempty" json:"encoding_probably,omitempty"`
 	EndPeriodKey                *string    `yaml:"end_period_key,omitempty" json:"end_period_key,omitempty"`
 	ExcelSheetName              *string    `yaml:"excel_sheet_name,omitempty" json:"excel_sheet_name,omitempty"`
+	ExportRequestDays           *int       `yaml:"export_request_days,omitempty" json:"export_request_days,omitempty"`
 	FilePassword                *string    `yaml:"file_password,omitempty" json:"file_password,omitempty"`
 	GpgPassphrase               *string    `yaml:"gpg_passphrase,omitempty" json:"gpg_passphrase,omitempty"`
 	GpgPrivateKey               *string    `yaml:"gpg_private_key,omitempty" json:"gpg_private_key,omitempty"`

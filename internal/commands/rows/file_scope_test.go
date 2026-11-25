@@ -18,7 +18,7 @@ func TestFileScopeRejectsAnotherTablesFileBeforeConfirmation(t *testing.T) {
 					read := record(mock, "GET", "/api/orgs/"+testOrgID+"/stored-items/3", `{"id":3,"dataset_id":99}`)
 					write := record(mock, "POST", "/api/orgs/"+testOrgID+"/stored-items/3/delete-rows", `{"result":"ok"}`)
 					args := append([]string{"rows", verb, "--reason", testReason}, tableArgs...)
-					args = append(args, "--file-id", "3", "--signature", "deadbeef")
+					args = append(args, "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads")
 					if yes {
 						args = append(args, "--yes")
 					}
@@ -58,7 +58,7 @@ func TestFileScopeMetadataFailuresStopDeletion(t *testing.T) {
 					fmt.Fprint(w, tc.body)
 				})
 				write := record(mock, "POST", "/api/orgs/"+testOrgID+"/stored-items/3/delete-rows", `{"result":"ok"}`)
-				out, stderr, err := runRows(t, "rows", verb, "--reason", testReason, "--table-id", "42", "--file-id", "3", "--signature", "deadbeef", "--yes")
+				out, stderr, err := runRows(t, "rows", verb, "--reason", testReason, "--table-id", "42", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 				if qerrors.GetExitCode(err) != tc.code || !strings.Contains(err.Error(), "cannot verify table for file 3") {
 					t.Fatalf("err = %v, want metadata failure with exit %d", err, tc.code)
 				}
@@ -82,7 +82,7 @@ func TestSharedFileScopeRejectsAnotherTablesFileBeforeConfirmation(t *testing.T)
 				mock := newRowsTestEnv(t)
 				read := record(mock, "GET", sharedFileReadPath, `{"id":3,"dataset_id":99,"file_name":"a.csv","data_source_model_id":7,"created_at":"2026-11-01T00:00:00Z"}`)
 				write := record(mock, "POST", sharedFileDeletePath, `{"result":"ok"}`)
-				args := []string{"rows", verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef"}
+				args := []string{"rows", verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads"}
 				if yes {
 					args = append(args, "--yes")
 				}
@@ -108,7 +108,7 @@ func TestSharedFileScopeDeletesMatchingTablesFile(t *testing.T) {
 			mock := newRowsTestEnv(t)
 			read := record(mock, "GET", sharedFileReadPath, `{"id":3,"dataset_id":42,"file_name":"a.csv","data_source_model_id":7,"created_at":"2026-11-01T00:00:00Z"}`)
 			write := record(mock, "POST", sharedFileDeletePath, `{"result":"ok"}`)
-			out, stderr, err := runRows(t, "rows", tc.verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--yes")
+			out, stderr, err := runRows(t, "rows", tc.verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 			if err != nil {
 				t.Fatalf("%v\n%s", err, stderr)
 			}
@@ -150,7 +150,7 @@ func TestSharedFileScopeReadFailuresStopDeletion(t *testing.T) {
 					fmt.Fprint(w, tc.body)
 				})
 				write := record(mock, "POST", sharedFileDeletePath, `{"result":"ok"}`)
-				out, stderr, err := runRows(t, "rows", verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--yes")
+				out, stderr, err := runRows(t, "rows", verb, "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 				if qerrors.GetExitCode(err) != tc.code || !strings.Contains(err.Error(), "cannot verify table for file 3") {
 					t.Fatalf("err = %v, want read failure with exit %d", err, tc.code)
 				}
@@ -175,7 +175,7 @@ func TestSharedFileScopeDeleteRefusalIsReported(t *testing.T) {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprint(w, `{"detail":"File id 3 not found in table 42"}`)
 	})
-	out, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--yes")
+	out, _, err := runRows(t, "rows", "delete-quarantined", "--reason", testReason, "42", "--shared", "--file-id", "3", "--signature", "deadbeef", "--exclude-from-future-uploads", "--yes")
 	if qerrors.GetExitCode(err) != 3 || !strings.Contains(err.Error(), "File id 3 not found in table 42") {
 		t.Fatalf("err = %v, want the server's 404 with exit 3", err)
 	}

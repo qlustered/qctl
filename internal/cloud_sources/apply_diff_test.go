@@ -497,7 +497,7 @@ func TestDiffSideEffects(t *testing.T) {
 func TestDiffClearedWhenOmittedKeys(t *testing.T) {
 	want := []string{
 		"broker_due_days", "csv_delimiter", "csv_escapechar", "csv_quotechar", "end_period_key",
-		"routing_column", "routing_pattern", "start_period_key",
+		"export_request_days", "routing_column", "routing_pattern", "start_period_key",
 	}
 	if got := ClearedWhenOmittedKeys(); !slices.Equal(got, want) {
 		t.Errorf("ClearedWhenOmittedKeys() = %v, want %v.\n"+

@@ -4,7 +4,7 @@ aliases:
 kind: DataReviewPolicy
 schema: manifest:data-review-policy
 guide: data-review-policy
-signature: c04b98b
+signature: e2acbe5
 ---
 
 ## USAGE

@@ -44,7 +44,7 @@ var expectedOrder = []string{
 	// apply class (the page declares a manifest kind)
 	"backup-settings", "change-review-policy", "cloud-source", "data-review-policy", "deliverable", "destination", "linked-table",
 	"notification-preference",
-	"rule", "rule-review-policy", "standard-field", "table", "table-kind", "table-rule", "table-schema", "table-series",
+	"rule", "rule-review-policy", "standard-field", "table", "table-kind", "table-rule", "table-rule-template", "table-schema", "table-series",
 	// create class
 	"composite-dry-run-job", "deliverable-run", "dry-run-job",
 	// read-only and meta

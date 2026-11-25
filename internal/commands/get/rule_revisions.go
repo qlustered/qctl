@@ -108,9 +108,9 @@ func NewRuleRevisionsCommand() *cobra.Command {
 
 // ruleMatchBuckets maps each --match value to the bucket it requests.
 var ruleMatchBuckets = map[string]api.RuleMatchBucket{
-	"standard-field":    api.Concept,
-	string(api.Concept): api.Concept,
-	string(api.Generic): api.Generic,
+	"standard-field":                   api.RuleMatchBucketConcept,
+	string(api.RuleMatchBucketConcept): api.RuleMatchBucketConcept,
+	string(api.RuleMatchBucketGeneric): api.RuleMatchBucketGeneric,
 }
 
 type ruleRevisionMatchQuery struct {
@@ -133,7 +133,7 @@ func parseRuleRevisionMatchQuery(cmd *cobra.Command) (ruleRevisionMatchQuery, er
 	if !ok {
 		return ruleRevisionMatchQuery{}, qerrors.NewBadUsagef("invalid --match %q: choose standard-field or generic", match)
 	}
-	if bucket == api.Generic && cmd.Flags().Changed("table-kind") {
+	if bucket == api.RuleMatchBucketGeneric && cmd.Flags().Changed("table-kind") {
 		return ruleRevisionMatchQuery{}, qerrors.NewBadUsage("--match generic cannot be combined with --table-kind")
 	}
 	search, err := parseSearchFlag(cmd)
@@ -337,7 +337,7 @@ func parseRuleRevisionFilters(cmd *cobra.Command, params *rule_versions.GetRuleR
 			return qerrors.NewBadUsagef("invalid value %q for --only-default: must be true or false", val)
 		}
 		params.OnlyDefault = &b
-	} else if params.StateFilter != nil && *params.StateFilter != string(api.Enabled) {
+	} else if params.StateFilter != nil && *params.StateFilter != string(api.RuleStateEnabled) {
 		b := false
 		params.OnlyDefault = &b
 	}

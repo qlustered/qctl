@@ -61,22 +61,24 @@ func TestApplyTableRuleInstantiate_RoleColumnBindings(t *testing.T) {
 			wantError: "requires 0 (none)",
 		},
 		{
-			name: "omitted mapping defaults every required role", validates: []string{"value", "*"},
+			name: "omitted mapping leaves every role to the server", validates: []string{"value", "*"},
 			corrects: []string{"fixed", "value"}, enriches: []string{"extra"},
-			want: map[string]string{"value": "value", "fixed": "fixed", "extra": "extra"},
 		},
 		{
-			name: "empty mapping defaults roles but leaves optional roles unbound", inputs: []string{"input", "note"},
+			name: "empty mapping sends no mapping", inputs: []string{"input", "note"},
 			validates: []string{"checked"}, corrects: []string{"fixed"}, enriches: []string{"extra"},
 			optional: []string{"note", "extra"}, spec: "  column_mapping: {}\n",
-			want: map[string]string{"input": "input", "note": "note", "checked": "checked", "fixed": "fixed"},
 		},
 		{
-			name: "explicit mapping names all missing required roles once", inputs: []string{"input"},
+			name: "preview-unbound required roles are refused, optional ones are not", inputs: []string{"input"},
 			validates: []string{"checked", "*"}, corrects: []string{"fixed", "checked"},
 			enriches: []string{"extra", "note"}, optional: []string{"note"},
+			candidates: []api.RuleFieldColumnCandidatesSchema{
+				unboundCandidate("input", true), unboundCandidate("checked", true), unboundCandidate("fixed", true),
+				unboundCandidate("extra", true), unboundCandidate("note", false),
+			},
 			spec:      "  force: true\n  column_mapping:\n    input: source\n",
-			wantError: "missing: [checked, fixed, extra]",
+			wantError: "Unresolved rule fields:\n  checked (required): unbound\n  extra (required): unbound\n  fixed (required): unbound\n",
 		},
 		{
 			name: "explicit mapping can omit optional roles", inputs: []string{"input"},
@@ -96,24 +98,23 @@ func TestApplyTableRuleInstantiate_RoleColumnBindings(t *testing.T) {
 			want: map[string]string{"input": "source"},
 		},
 		{
-			name: "default excludes produced roles and leaves concept fills to server", inputs: []string{"input"},
+			name: "omitted mapping with produced roles sends no mapping", inputs: []string{"input"},
 			validates: []string{"checked"}, corrects: []string{"fixed"}, enriches: []string{"extra"},
 			candidates: []api.RuleFieldColumnCandidatesSchema{
 				conceptCandidate("checked", "check", "checked_column"),
 				conceptCandidate("extra", "extra", "existing_extra"),
 			},
 			spec: "  produced_fields:\n    - rule_field_name: extra\n      dataset_field_name: new_extra\n      field_schema: {type: String}\n",
-			want: map[string]string{"input": "input", "fixed": "fixed"},
 		},
 		{
 			name: "output-only produced rule sends no mapping", enriches: []string{"extra"},
 			spec: "  produced_fields:\n    - rule_field_name: extra\n      dataset_field_name: new_extra\n      field_schema: {type: String}\n",
 		},
 		{
-			name: "ambiguous concept leaves required role missing", inputs: []string{"input"},
+			name: "ambiguous concept is left to the server", inputs: []string{"input"},
 			validates:  []string{"checked"},
 			candidates: []api.RuleFieldColumnCandidatesSchema{conceptCandidate("checked", "check", "one", "two")},
-			spec:       "  column_mapping:\n    input: source\n", wantError: "missing: [checked]",
+			spec:       "  column_mapping:\n    input: source\n", want: map[string]string{"input": "source"},
 		},
 	}
 	for _, tc := range cases {
@@ -156,18 +157,5 @@ func TestApplyTableRuleInstantiate_RoleColumnBindings(t *testing.T) {
 				t.Errorf("request mapping = %v, want %v", got, tc.want)
 			}
 		})
-	}
-}
-
-func TestConceptSuggestionsWithoutConcept(t *testing.T) {
-	revision := sampleRuleRevisionFull(nil)
-	revision.InputColumns = []string{"email"}
-	column := "customer_email"
-	revision.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{{
-		RuleFieldName: "email", SuggestedColumn: &column,
-	}}
-	suggested, fills := conceptSuggestions(nil, &revision, nil)
-	if suggested["email"] != "customer_email" || len(fills) != 0 {
-		t.Fatalf("suggested=%v fills=%v, want suggested column without a standard-field fill", suggested, fills)
 	}
 }

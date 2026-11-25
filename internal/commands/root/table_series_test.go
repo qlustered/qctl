@@ -25,6 +25,7 @@ const seriesTestRecord = `{
   "name":"Monthly bordereau", "description":"Carrier reports",
   "frequency":"monthly", "first_period_key":null,
   "period_column":"report_month", "period_column_kind":"period_key",
+  "receive_notifications":true, "follow_email":true, "follow_slack":false,
   "created_at":"2026-08-01T12:00:00Z", "updated_at":"2026-10-01T12:00:00Z",
   "members":[
     {"series_id":"11111111-2222-3333-4444-555555555555",
@@ -39,12 +40,32 @@ const seriesTestRecord = `{
   ]
 }`
 
+// unlockedSeriesTestRecord is seriesTestRecord with every period unlocked.
+var unlockedSeriesTestRecord = strings.Replace(seriesTestRecord, `"is_locked":true, "locked_at":"2026-10-02T09:00:00Z",
+     "locked_by":{"id":"bbbbbbbb-2222-3333-4444-555555555555","first_name":"Ada","last_name":"Lovelace","email":"ada@example.com"},`,
+	`"is_locked":false, "locked_at":null,`, 1)
+
+// registerSeriesList serves record and emptySeriesTestRecord as the series list.
+func registerSeriesList(t *testing.T, mock *testutil.MockAPIServer, record string) {
+	t.Helper()
+	mock.RegisterHandler("GET", seriesTestPath, func(w http.ResponseWriter, r *http.Request) {
+		if got := r.Header.Get("Authorization"); got != "Bearer series-token" {
+			t.Errorf("Authorization = %q", got)
+		}
+		if r.URL.RawQuery != "" {
+			t.Errorf("unexpected list query: %s", r.URL.RawQuery)
+		}
+		testutil.RespondJSON(w, http.StatusOK, []json.RawMessage{json.RawMessage(record), json.RawMessage(emptySeriesTestRecord)})
+	})
+}
+
 const emptySeriesTestRecord = `{
   "id":"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "organization_id":"550e8400-e29b-41d4-a716-446655440000",
   "name":"Unused series", "description":null,
   "frequency":"monthly", "first_period_key":null,
   "period_column":null, "period_column_kind":null,
+  "receive_notifications":false, "follow_email":null, "follow_slack":null,
   "created_at":"2026-08-01T12:00:00Z", "updated_at":"2026-10-01T12:00:00Z",
   "members":[]
 }`
@@ -108,15 +129,7 @@ func tableSeriesTestServer(t *testing.T) *testutil.MockAPIServer {
 		resetPersistentFlag(t, cmd, flag, f.DefValue)
 		t.Cleanup(func() { resetPersistentFlag(t, cmd, flag, f.DefValue) })
 	}
-	mock.RegisterHandler("GET", seriesTestPath, func(w http.ResponseWriter, r *http.Request) {
-		if got := r.Header.Get("Authorization"); got != "Bearer series-token" {
-			t.Errorf("Authorization = %q", got)
-		}
-		if r.URL.RawQuery != "" {
-			t.Errorf("unexpected list query: %s", r.URL.RawQuery)
-		}
-		testutil.RespondJSON(w, http.StatusOK, []json.RawMessage{json.RawMessage(seriesTestRecord), json.RawMessage(emptySeriesTestRecord)})
-	})
+	registerSeriesList(t, mock, seriesTestRecord)
 	mock.RegisterHandler("GET", seriesTestPath+"/"+seriesTestID, func(w http.ResponseWriter, _ *http.Request) {
 		testutil.RespondJSON(w, http.StatusOK, json.RawMessage(seriesTestRecord))
 	})

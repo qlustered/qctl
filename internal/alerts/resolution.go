@@ -34,6 +34,9 @@ const AlertResolutionKind = "AlertResolution"
 var resolutionFieldDenylist = map[string]bool{
 	// action is handled outside the field map.
 	"action": true,
+	// comment_thread_id must name a thread whose target is this alert (any
+	// other is a 422), and no qctl command creates such a thread.
+	"comment_thread_id": true,
 }
 
 // CantSniffHeaderParamsSpec is the manifest form of api.CantSniffHeaderParams:
@@ -278,9 +281,9 @@ func (s AlertResolutionSpec) ToRequest() api.AlertResolveSchema {
 }
 
 // Skeleton renders the manifest for one action of one alert: an envelope, the
-// action, its required and one-of keys emitted BARE, its optional keys
-// commented out, and a comment block carrying everything the alert already
-// knows.
+// action, its required and one-of keys emitted BARE, the optional keys a
+// manifest can set commented out, and a comment block carrying everything the
+// alert already knows.
 //
 // Nothing is guessed, and new_value in particular is never prefilled from the
 // alert's field_value: handle_one_value_mapping (atlas
@@ -355,7 +358,7 @@ func skeleton(a *AlertFull, action string, detail *datasets.TableSchemaDetail, n
 		}
 	}
 	for _, name := range fields.Optional {
-		if keyStep != keyStepUnread && keyFields[name] {
+		if resolutionFieldDenylist[name] || keyStep != keyStepUnread && keyFields[name] {
 			continue
 		}
 		fmt.Fprintf(&b, "  # %s:\n", name)

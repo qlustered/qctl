@@ -104,7 +104,7 @@ func anomalyAlert(actions ...api.AlertAction) alerts.AlertFull {
 func anomalyWarning(actions ...api.WarningAction) warnings.WarningFull {
 	resolved := false
 	return warnings.WarningFull{
-		ID: 55, DatasetID: 42, DatasetName: "orders", IssueType: api.Anomaly,
+		ID: 55, DatasetID: 42, DatasetName: "orders", IssueType: api.IssueTypeEnumAnomaly,
 		Resolved: &resolved, WarningActionsList: &actions,
 	}
 }
@@ -320,6 +320,9 @@ func TestProposeErrorsKeepTheirExitCodes(t *testing.T) {
 		"held issue": {http.StatusConflict, apiError("CHANGE_PROPOSAL_ACTIVE", "These issues are held.",
 			map[string]interface{}{"active_change_proposal_ids": []string{holderID}, "alert_item_ids": []int{9}}),
 			qerrors.ExitBadUsage, "qctl describe change-proposal " + holderID},
+		"held rows": {http.StatusConflict, apiError("CHANGE_PROPOSAL_ACTIVE", "These rows are held.",
+			map[string]interface{}{"active_change_proposal_ids": []string{holderID}, "alert_item_ids": []int{9}, "row_ids": []int{3, 7}}),
+			qerrors.ExitBadUsage, "or its rows 3, 7; withdraw it"},
 		"already resolved": {http.StatusUnprocessableEntity, apiError("", "The target issue is already resolved.", nil),
 			qerrors.ExitBadUsage, "already resolved"},
 	} {

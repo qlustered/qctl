@@ -48,8 +48,8 @@ type RowDisplay struct {
 }
 
 // Rows returns one table row per board row, in the given order. FILE is the
-// file that has not loaded while the status is on_hold or
-// received_not_loaded, else the newest counted file.
+// row's unloaded file while the status is on_hold or received_not_loaded,
+// else the newest counted file.
 func Rows(items []Row) []RowDisplay {
 	rows := make([]RowDisplay, 0, len(items))
 	for _, item := range items {
@@ -78,7 +78,7 @@ func Rows(items []Row) []RowDisplay {
 		if name, id, ok := rowFile(item); ok {
 			row.File, row.FileID = name, strconv.Itoa(id)
 		}
-		if f := item.NotLoadedFile; f != nil {
+		if f := unloadedFile(item); f != nil {
 			row.AlertID = intText(f.AlertItemID)
 			if f.FixOwner != nil {
 				row.FixOwner = string(*f.FixOwner)
@@ -101,13 +101,22 @@ func Rows(items []Row) []RowDisplay {
 func rowFile(item Row) (string, int, bool) {
 	unloaded := item.BoardStatus == api.SubmissionBoardStatusOnHold ||
 		item.BoardStatus == api.SubmissionBoardStatusReceivedNotLoaded
-	if unloaded && item.NotLoadedFile != nil {
-		return item.NotLoadedFile.FileName, item.NotLoadedFile.StoredItemID, true
+	if f := unloadedFile(item); unloaded && f != nil {
+		return f.FileName, f.StoredItemID, true
 	}
 	if item.LatestFile != nil {
 		return item.LatestFile.FileName, item.LatestFile.StoredItemID, true
 	}
 	return "", 0, false
+}
+
+// unloadedFile is item's file waiting for its period, else its file that has
+// not loaded, else nil.
+func unloadedFile(item Row) *api.SubmissionBoardNotLoadedFileSchema {
+	if item.WaitingFile != nil {
+		return item.WaitingFile
+	}
+	return item.NotLoadedFile
 }
 
 // CountsDisplay is one series' counts table row.
@@ -198,7 +207,7 @@ func AlertIDs(items []Row) []int {
 	var ids []int
 	seen := map[int]bool{}
 	for _, item := range items {
-		if f := item.NotLoadedFile; f != nil && f.AlertItemID != nil && !seen[*f.AlertItemID] {
+		if f := unloadedFile(item); f != nil && f.AlertItemID != nil && !seen[*f.AlertItemID] {
 			seen[*f.AlertItemID] = true
 			ids = append(ids, *f.AlertItemID)
 		}
@@ -226,7 +235,8 @@ func orNone(s string) string {
 
 // StatusLine is s on one line: the cloud source, the period and its dates,
 // the status, when the declaration in effect was made, the file that has not
-// loaded, the period's table and whether the period is locked.
+// loaded, the file waiting for its period, the period's table and whether the
+// period is locked.
 func StatusLine(s *PeriodStatus) string {
 	text := fmt.Sprintf("cloud-source/%d period %q (%s to %s): %s", s.DataSourceModelID,
 		terminal.Sanitize(s.PeriodKey), dateText(s.PeriodStart), dateText(s.PeriodEnd), s.Status)
@@ -235,6 +245,9 @@ func StatusLine(s *PeriodStatus) string {
 	}
 	if f := s.NotLoadedFile; f != nil {
 		text += fmt.Sprintf(", file %q not loaded", terminal.Sanitize(f.FileName))
+	}
+	if f := s.WaitingFile; f != nil {
+		text += fmt.Sprintf(", file %q waiting for its period", terminal.Sanitize(f.FileName))
 	}
 	if s.DatasetID != nil {
 		text += fmt.Sprintf(", table %d", *s.DatasetID)

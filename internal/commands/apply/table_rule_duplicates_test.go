@@ -338,8 +338,8 @@ func TestApplyTableRuleCreate_ForcedNameOfAnErroredRuleDoesNotClaimAnEnable(t *t
 
 // A nameless create repeating a live rule of the same family on the same
 // columns is refused before the POST. Each case reaches the same final
-// mapping a different way: written out, the identity default, and a concept
-// fill the server makes.
+// mapping a different way: written out, and a name or concept binding the
+// server's preview predicts.
 func TestApplyTableRuleCreate_NamelessRepeatExitsTwo(t *testing.T) {
 	for name, tc := range map[string]struct {
 		manifest string
@@ -351,10 +351,14 @@ func TestApplyTableRuleCreate_NamelessRepeatExitsTwo(t *testing.T) {
 			column:   "email_col",
 			revision: func() api.RuleRevisionFullSchema { return sampleRuleRevisionFull(nil) },
 		},
-		"identity default": {
+		"server binding by name": {
 			manifest: namelessIdentityDoc(),
 			column:   "email",
-			revision: func() api.RuleRevisionFullSchema { return sampleRuleRevisionFull(nil) },
+			revision: func() api.RuleRevisionFullSchema {
+				rev := sampleRuleRevisionFull(nil)
+				rev.FieldColumnCandidates = &[]api.RuleFieldColumnCandidatesSchema{boundCandidate("email", "email", api.RuleFieldBindingSourceOriginalName)}
+				return rev
+			},
 		},
 		"concept fill": {
 			manifest: namelessIdentityDoc(),

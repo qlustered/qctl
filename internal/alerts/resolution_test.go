@@ -194,7 +194,8 @@ func TestEveryResolveFieldIsMappedOrDenied(t *testing.T) {
 }
 
 // TestEveryRequiredFieldIsSuppliable is the other half: a field the backend can
-// REQUIRE but no manifest can set would be an exit 2 with no way out.
+// REQUIRE but no manifest can set would be an exit 2 with no way out. An
+// optional field resolutionFieldDenylist names is exempt.
 func TestEveryRequiredFieldIsSuppliable(t *testing.T) {
 	mapped := map[string]bool{}
 	st := reflect.TypeOf(AlertResolutionSpec{})
@@ -208,7 +209,11 @@ func TestEveryRequiredFieldIsSuppliable(t *testing.T) {
 		for _, group := range fields.OneOf {
 			names = append(names, group...)
 		}
-		names = append(names, fields.Optional...)
+		for _, name := range fields.Optional {
+			if !resolutionFieldDenylist[name] {
+				names = append(names, name)
+			}
+		}
 		for _, name := range names {
 			if !mapped[name] {
 				t.Errorf("action %q reads %q, which AlertResolutionSpec cannot supply", action, name)
@@ -258,6 +263,18 @@ func TestSkeletonCommentsOutOptionalKeys(t *testing.T) {
 	out := Skeleton(&AlertFull{ID: 9}, "map_value", nil)
 	if !strings.Contains(out, "# map_value_once:") {
 		t.Errorf("optional keys should be commented out, got:\n%s", out)
+	}
+}
+
+// A denylisted key is not offered, since ParseResolution refuses it.
+func TestSkeletonOmitsDenylistedOptionalKeys(t *testing.T) {
+	for action, fields := range api.AlertActionFields {
+		out := Skeleton(&AlertFull{ID: 9}, action, nil)
+		for _, name := range fields.Optional {
+			if resolutionFieldDenylist[name] && strings.Contains(out, name+":") {
+				t.Errorf("%s skeleton offers denylisted %s:\n%s", action, name, out)
+			}
+		}
 	}
 }
 

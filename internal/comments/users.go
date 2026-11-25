@@ -26,7 +26,7 @@ func FetchUsers(apiClient *client.Client, orgID openapi_types.UUID) (*Directory,
 	var users []api.UserListItemSchema
 	var total *int
 	page, limit := 1, 200
-	orderBy := api.CreatedAt
+	orderBy := api.UserOrderByCreatedAt
 	for {
 		params := &api.GetUsersListParams{Page: &page, Limit: &limit, OrderBy: &orderBy}
 		resp, err := apiClient.API.GetUsersListWithResponse(context.Background(), orgID, params)

@@ -14,7 +14,7 @@ func TestDiffKindsAnnotation(t *testing.T) {
 		t.Errorf("diff resource annotation = %q, want %q",
 			cmd.Annotations[catalog.AnnotationResource], catalog.Generic)
 	}
-	if got := cmd.Annotations[catalog.AnnotationKinds]; got != "Deliverable,LinkedTable,StandardField,Table,TableKind,TableRule,TableSchema,TableSeries" {
-		t.Errorf("diff kinds annotation = %q, want %q", got, "Deliverable,LinkedTable,StandardField,Table,TableKind,TableRule,TableSchema,TableSeries")
+	if got := cmd.Annotations[catalog.AnnotationKinds]; got != "Deliverable,LinkedTable,StandardField,Table,TableKind,TableRule,TableRuleTemplate,TableSchema,TableSeries" {
+		t.Errorf("diff kinds annotation = %q, want %q", got, "Deliverable,LinkedTable,StandardField,Table,TableKind,TableRule,TableRuleTemplate,TableSchema,TableSeries")
 	}
 }

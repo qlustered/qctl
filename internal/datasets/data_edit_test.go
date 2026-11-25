@@ -47,7 +47,7 @@ func TestSearchAndReplace_DryRunSendsNullFieldName(t *testing.T) {
 	res, err := c.SearchAndReplace("tok", 42, SearchReplaceRequest{
 		SearchTerm:  "N/A",
 		ReplaceTerm: "",
-		MatchMode:   api.SearchMatchModeContainsCaseInsensitive,
+		MatchMode:   api.ContainsCaseInsensitive,
 		DryRun:      true,
 	})
 	if err != nil {
@@ -93,7 +93,7 @@ func TestSearchAndReplace_RealRunSendsScopeAndDryRunFalse(t *testing.T) {
 	res, err := c.SearchAndReplace("tok", 42, SearchReplaceRequest{
 		SearchTerm:        "CA",
 		ReplaceTerm:       "California",
-		MatchMode:         api.SearchMatchModeRegexCaseInsensitive,
+		MatchMode:         api.RegexCaseInsensitive,
 		FieldName:         &field,
 		DataSourceModelID: &source,
 	})
@@ -153,7 +153,7 @@ func TestSearchAndReplace_InvalidRegex422(t *testing.T) {
 		`{"detail":{"msg":"Invalid regex pattern: missing ), unterminated subpattern at position 0"}}`)
 
 	_, err := c.SearchAndReplace("tok", 42, SearchReplaceRequest{
-		SearchTerm: "(", MatchMode: api.SearchMatchModeRegex,
+		SearchTerm: "(", MatchMode: api.Regex,
 	})
 	assertServerMessage(t, err, "Invalid regex pattern", qerrors.ExitBadUsage)
 	assertAPIError(t, err, http.StatusUnprocessableEntity)

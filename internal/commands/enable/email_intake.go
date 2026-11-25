@@ -32,7 +32,9 @@ Nothing is scheduled while the source is not active, and a sender whose address
 is refused is skipped; a later enable tries both again.
 
 --auto-send-issues-report=true|false sets whether each loaded file's issues
-report is sent automatically; without the flag the current setting is kept.
+report is sent automatically. Without the flag the current setting is kept,
+except on the enable that gives the source its first address, which turns it
+on unless the table's change review policy refuses you that setting.
 
 The table's change review policy can refuse the change with a 403 (exit 4);
 there is no proposal to submit instead.
@@ -52,7 +54,7 @@ Examples:
 		},
 	}
 	cmd.Flags().Bool("auto-send-issues-report", false,
-		"Send each loaded file's issues report automatically (omit to keep the current setting)")
+		"Send each loaded file's issues report automatically (omit to keep the current setting, except on the first enable)")
 	return cmd
 }
 

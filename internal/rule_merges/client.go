@@ -1,5 +1,6 @@
 // Package rule_merges is the domain client for rule merges: previewing a merge
-// of one table's rules into another, reading a merge back, and applying it.
+// of one table's rules or of a rule template into a table, reading a merge
+// back, and applying it.
 package rule_merges //nolint:revive // Public package name matches the established resource domain.
 
 import (
@@ -70,6 +71,62 @@ type applyRequest struct {
 	Resolutions []Resolution `json:"resolutions,omitempty"`
 }
 
+// Template is the rule template PreviewTemplate sends: api.RuleTemplateSchema
+// with each entry encoded by TemplateEntry.MarshalJSON.
+type Template struct {
+	Entries []TemplateEntry `json:"entries"`
+	Name    string          `json:"name"`
+}
+
+// TemplateEntry is one entry of a Template. RowFilterSet sends row_filter
+// even when RowFilter is nil, as null.
+type TemplateEntry struct {
+	api.RuleTemplateEntrySchema
+	RowFilterSet bool
+}
+
+// templateEntryJSON is api.RuleTemplateEntrySchema with every optional key
+// omitted when nil; row_filter holds its encoded value.
+type templateEntryJSON struct {
+	ColumnMapping  *map[string]string                     `json:"column_mapping,omitempty"`
+	InstanceName   *string                                `json:"instance_name,omitempty"`
+	Params         *map[string]interface{}                `json:"params,omitempty"`
+	ProducedFields *[]api.RuleTemplateProducedFieldSchema `json:"produced_fields,omitempty"`
+	Release        string                                 `json:"release"`
+	RowFilter      json.RawMessage                        `json:"row_filter,omitempty"`
+	Rule           string                                 `json:"rule"`
+	Severity       *api.RuleSeverity                      `json:"severity,omitempty"`
+}
+
+// MarshalJSON encodes rule, release and each other key whose field is
+// non-nil, plus row_filter as null when RowFilterSet is true and RowFilter is
+// nil.
+func (e TemplateEntry) MarshalJSON() ([]byte, error) {
+	out := templateEntryJSON{
+		ColumnMapping:  e.ColumnMapping,
+		InstanceName:   e.InstanceName,
+		Params:         e.Params,
+		ProducedFields: e.ProducedFields,
+		Release:        e.Release,
+		Rule:           e.Rule,
+		Severity:       e.Severity,
+	}
+	if e.RowFilterSet || e.RowFilter != nil {
+		raw, err := json.Marshal(e.RowFilter)
+		if err != nil {
+			return nil, err
+		}
+		out.RowFilter = raw
+	}
+	return json.Marshal(out)
+}
+
+// templateRequest is the body of a template preview:
+// api.RuleMergeRequestSchema with only its template key.
+type templateRequest struct {
+	Template Template `json:"template"`
+}
+
 // Preview stores and returns a new previewed merge of sourceDatasetID's rules
 // into targetDatasetID, with the response body as received.
 func (c *Client) Preview(accessToken string, targetDatasetID, sourceDatasetID int) (*RuleMerge, []byte, error) {
@@ -81,7 +138,29 @@ func (c *Client) Preview(accessToken string, targetDatasetID, sourceDatasetID in
 	const contextMsg = "failed to preview rule merge"
 	resp, err := apiClient.API.PostRuleMergeWithResponse(
 		context.Background(), c.organizationID, targetDatasetID, &api.PostRuleMergeParams{},
-		api.RuleMergeRequestSchema{SourceDatasetID: sourceDatasetID})
+		api.RuleMergeRequestSchema{SourceDatasetID: &sourceDatasetID})
+	if err != nil {
+		return nil, nil, wrapAPIError(apiClient, err, contextMsg)
+	}
+	return ruleMergeFromResponse(resp.StatusCode(), http.StatusOK, resp.Body, contextMsg)
+}
+
+// PreviewTemplate stores and returns a new previewed merge of template into
+// targetDatasetID, with the response body as received.
+func (c *Client) PreviewTemplate(accessToken string, targetDatasetID int, template Template) (*RuleMerge, []byte, error) {
+	apiClient, err := c.newAPIClient(accessToken)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	const contextMsg = "failed to preview rule template"
+	body, err := json.Marshal(templateRequest{Template: template})
+	if err != nil {
+		return nil, nil, fmt.Errorf("%s: failed to encode request: %w", contextMsg, err)
+	}
+	resp, err := apiClient.API.PostRuleMergeWithBodyWithResponse(
+		context.Background(), c.organizationID, targetDatasetID, &api.PostRuleMergeParams{},
+		"application/json", bytes.NewReader(body))
 	if err != nil {
 		return nil, nil, wrapAPIError(apiClient, err, contextMsg)
 	}

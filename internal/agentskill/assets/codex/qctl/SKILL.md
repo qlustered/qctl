@@ -25,7 +25,7 @@ or whole guides for routine work.
 | What changed | `qctl get history --table-id <id> --since <duration>` |
 | Test a rule | `qctl create dry-run-job -f <spec>`; spec: `qctl guide dry-run-jobs` |
 | Fix a cell | `qctl rows set-cell --help` |
-| Rule files to a table | `qctl submit rules -f <file> --check`, then submit with `--yes`, then attach below |
+| Rule files to a table | `ops` only, else 403: `qctl submit rules -f <file> --check`, `--yes`; attach below |
 | Approve a rule review | Hand off to a human; the `agent` role cannot approve (403) |
 | `propose` in NEXT ACTIONS | Propose; a human approves |
 
@@ -100,32 +100,32 @@ Use `qctl api-resources` for an unknown resource.
 
 ## Initializing submitted rules on a table
 
-1. Resolve the named table in the current organization.
-2. List the relevant submitted rules with `qctl get rules --exclude-builtin`.
-3. Inspect the table's schema and the table rules it already has.
-4. Apply one multi-document `kind: TableRule` manifest. Omit `spec.severity`
-   unless the user or an existing manifest explicitly sets it.
-5. Read back once with
+1. Resolve the table; inspect its schema, table rules and
+   `qctl get rules --exclude-builtin`.
+2. A report's rules live in its `kind: TableRuleTemplate` file (published
+   releases, no table id): `qctl diff -f <file> --table <table>` (exit 0
+   nothing to do, 1 changes, 2 a decision), then
+   `qctl apply -f <file> --table <table> --yes --wait`.
+3. Read back once:
    `qctl get table-rules <table> --columns instance_name,state,severity`.
 
-Omit `spec.instance_name` unless the user gives one; the server names it.
-Names are unique per table. Re-applying a create (no `metadata.id`) creates
-again. Apply checks rules and pending creates for taken names and nameless
-exact repeats (exit 2). Use the instance ID for updates.
+Exit 2 `unmapped`: rerun diff with `--write-mappings` and fill each empty
+value with a column (ask if unsure). Report skipped entries' next steps.
+Guide: `qctl guide instantiate-rule`.
 
-Omitted severity uses the revision's default. Preserve an explicit severity;
-never rewrite severities in bulk. Retired `spec.treat_as_alert`: `true` becomes
-`as_declared`, and `false` becomes `warning` (follow the exit-2 diagnostic).
+A one-off rule is a multi-document `kind: TableRule` manifest
+(`--section "several rules"`). Omit `spec.severity` unless the user or an
+existing manifest explicitly sets it, and `spec.instance_name` unless given.
+Re-applying a create (no `metadata.id`) creates again; taken names and
+nameless exact repeats exit 2. Use the instance ID for updates.
 
-Multi-document syntax:
-`qctl guide instantiate-rule --section "several rules"`.
-Manifest correction does not authorize editing/resubmitting rule source.
+Preserve an explicit severity; never rewrite severities in bulk. Retired
+`spec.treat_as_alert`: `true` becomes `as_declared`, and `false` becomes
+`warning`. Manifest correction does not authorize editing/resubmitting rule source.
 
-Attachment does not revalidate all existing rows. To do that, use
-`qctl rows reprocess-quarantined <table> --all` or
-`qctl rows reprocess-clean <table> --all`, asking first unless the request
-authorized reprocessing. Do not change the schema while the table's
-rule-validation dry runs are running.
+Attachment does not revalidate existing rows (`qctl rows
+reprocess-quarantined|reprocess-clean <table> --all`; ask first unless
+authorized). Do not change the schema while rule-validation dry runs run.
 
 ## Async work
 

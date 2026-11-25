@@ -453,6 +453,10 @@ var declaredOutputFormats = map[string]string{
 	"qctl cache releases gc":   "table,json,yaml",
 	// The user is no kind any command takes, so there is no name view.
 	"qctl auth me": "table,json,yaml",
+	// A diff prints text; a TableRuleTemplate diff alone also prints the rule
+	// merge it stored as a document, which has no name view, and diff refuses
+	// json and yaml for every other kind.
+	"qctl diff": "table,json,yaml",
 	// The local and session commands that print prose, a script, a page or a
 	// diff, so table is the whole vocabulary.
 	"qctl auth login":            "table",
@@ -470,7 +474,6 @@ var declaredOutputFormats = map[string]string{
 	"qctl completion zsh":        "table",
 	"qctl config delete-context": "table",
 	"qctl config use-context":    "table",
-	"qctl diff":                  "table",
 	"qctl docs":                  "table",
 	"qctl guide":                 "table",
 	"qctl help":                  "table",
@@ -643,7 +646,6 @@ func TestLocalCommandsNarrowedToTableRefuseJSON(t *testing.T) {
 		{"auth", "login", "-o", "json"},
 		{"config", "use-context", "dev", "-o", "yaml"},
 		{"skill", "install", "claude-code", "-o", "json"},
-		{"diff", "-f", "manifest.yaml", "-o", "json"},
 	} {
 		t.Run(strings.Join(args, " "), func(t *testing.T) {
 			out, err := runRoot(t, args...)

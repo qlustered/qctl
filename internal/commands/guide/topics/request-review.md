@@ -53,6 +53,10 @@ qctl get rule-review-policy --table orders   # effective policy for one table
 qctl submit rules -f rule.py --yes
 ```
 
+Only Qluster operations staff (the `ops` role) can submit rule code; any other
+role gets a 403. If you are not ops, Qluster submits the file and you continue
+from step 3.
+
 When the policy requires review, the new revision lands in `draft` and the
 output ends with a breadcrumb:
 
@@ -133,7 +137,8 @@ copyable next commands.
 When the review lands in `changes_requested`:
 
 1. Read the thread — comments carry `[c: <uuid>]` tags for replying.
-2. Fix the code **keeping the same release** and resubmit:
+2. Fix the code **keeping the same release** and resubmit (`ops` role only,
+   as in step 2):
 
    ```bash
    qctl submit rules -f rule.py --yes
@@ -186,8 +191,8 @@ On `approved`:
   the policy requires one). `qctl describe rule-review <review-id>` shows
   what is missing.
 
-On `rejected`: fix under a **new** release (bump `release` in
-`RuleMetadata`), submit, and request a fresh review — approvals never carry
+On `rejected`: fix under a **new** release (bump `release` in `RuleMetadata`),
+submit (`ops` role only), and request a fresh review — approvals never carry
 over. The rejected review remains as history; reopen it only if the reject
 itself was a mistake (`qctl review reopen <review-id>`).
 

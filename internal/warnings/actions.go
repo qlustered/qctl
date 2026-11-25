@@ -80,7 +80,7 @@ func FansOutAcrossSources(action string) bool {
 // duplicate group let load.
 func isDuplicateGroupWarning(issueType api.IssueTypeEnum) bool {
 	switch issueType {
-	case api.RepeatedKey, api.IdenticalRows, api.PersonMarkedDuplicate:
+	case api.IssueTypeEnumRepeatedKey, api.IssueTypeEnumIdenticalRows, api.IssueTypeEnumPersonMarkedDuplicate:
 		return true
 	}
 	return false

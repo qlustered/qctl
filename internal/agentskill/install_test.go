@@ -287,8 +287,8 @@ func TestTheClaudeCodeTreeIsOneFileAndCarriesNoAgentPolicy(t *testing.T) {
 // changing the pin here in the same commit.
 func TestEachTargetsBundledVersionIsPinned(t *testing.T) {
 	pins := map[Target]string{
-		TargetCodex:      "8cf9672bc031",
-		TargetClaudeCode: "6cca87c642d1",
+		TargetCodex:      "cbe1ab3796f1",
+		TargetClaudeCode: "44cc5a2b0c1d",
 	}
 	for _, target := range Targets() {
 		t.Run(string(target), func(t *testing.T) {

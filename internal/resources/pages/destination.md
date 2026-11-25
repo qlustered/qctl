@@ -4,7 +4,7 @@ aliases:
 kind: Destination
 schema: openapi:DestinationSchemaFull
 guide:
-signature: fe1be4b
+signature: cb62b46
 ---
 
 ## USAGE

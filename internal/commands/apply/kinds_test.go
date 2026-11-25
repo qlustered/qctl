@@ -14,7 +14,8 @@ import (
 func TestKindsAnnotationMatchesDispatcher(t *testing.T) {
 	want := []string{
 		"BackupSettings", "ChangeReviewPolicy", "CloudSource", "DataReviewPolicy", "Deliverable", "Destination", "LinkedTable", "NotificationPreferences",
-		"Rule", "RuleReviewPolicy", "StandardField", "Table", "TableKind", "TableRule", "TableSchema", "TableSeries",
+		"Rule", "RuleReviewPolicy", "StandardField", "Table", "TableKind", "TableRule", "TableRuleTemplate",
+		"TableSchema", "TableSeries",
 	}
 	got := applyKinds()
 	if strings.Join(got, ",") != strings.Join(want, ",") {

@@ -154,7 +154,7 @@ const gtinPrefixManifest = "apiVersion: qluster.ai/v1\nkind: WarningResolution\n
 // The accepted GTIN prefix reaches the request body as a JSON string.
 func TestResolveFileSendsAcceptGtinPrefixWithYes(t *testing.T) {
 	mock := newWarningTestEnv(t)
-	registerResolvingGetWarning(mock, prefixWarning(api.UpcUnknownGtinPrefix, api.AcceptGtinPrefix))
+	registerResolvingGetWarning(mock, prefixWarning(api.IssueTypeEnumUpcUnknownGtinPrefix, api.AcceptGtinPrefix))
 	var rawBody []byte
 	posts := registerResolvePost(mock, &rawBody)
 	path := writeWarningManifest(t, gtinPrefixManifest)
@@ -228,7 +228,7 @@ func TestActionPathRefusalNamesTheManifest(t *testing.T) {
 func TestResolveFileResolvesAUserSubmittedWarning(t *testing.T) {
 	mock := newWarningTestEnv(t)
 	w := anomalyWarning(api.MapValue)
-	w.IssueType = api.UserSubmitted
+	w.IssueType = api.IssueTypeEnumUserSubmitted
 	registerResolvingGetWarning(mock, w)
 	registerWarningResolvePostID(mock, 55)
 	path := writeWarningManifest(t, "apiVersion: qluster.ai/v1\nkind: WarningResolution\nmetadata:\n  id: 55\nspec:\n  action: map_value\n  new_value: \"1420.00\"\n")
@@ -362,7 +362,7 @@ func TestKeywordMapValueResolvesWithoutPrompt(t *testing.T) {
 // The prefix action runs without a prompt from a manifest.
 func TestAcceptGtinPrefixResolvesWithoutPrompt(t *testing.T) {
 	mock := newWarningTestEnv(t)
-	registerResolvingGetWarning(mock, prefixWarning(api.UpcUnknownGtinPrefix, api.AcceptGtinPrefix))
+	registerResolvingGetWarning(mock, prefixWarning(api.IssueTypeEnumUpcUnknownGtinPrefix, api.AcceptGtinPrefix))
 	posts := registerResolvePost(mock, nil)
 	path := writeWarningManifest(t, gtinPrefixManifest)
 
@@ -497,7 +497,7 @@ func TestResolveFileDeclinedSingleDocumentExitsOne(t *testing.T) {
 // A prefix resolve sends one request without a confirmation prompt.
 func TestResolveFileGtinPrefixDoesNotPrompt(t *testing.T) {
 	mock := newWarningTestEnv(t)
-	registerResolvingGetWarning(mock, prefixWarning(api.UpcUnknownGtinPrefix, api.AcceptGtinPrefix))
+	registerResolvingGetWarning(mock, prefixWarning(api.IssueTypeEnumUpcUnknownGtinPrefix, api.AcceptGtinPrefix))
 	posts := registerResolvePost(mock, nil)
 	path := writeWarningManifest(t, gtinPrefixManifest)
 	_, stderr, err := runWarningCommandSplit(t, "warning", "resolve", "-f", path)

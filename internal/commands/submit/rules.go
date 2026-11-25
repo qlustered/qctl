@@ -56,7 +56,8 @@ func NewRulesCommand() *cobra.Command {
 		Long: `Submit rule definitions from Python files into the org rule library.
 
 The Python files are parsed server-side, and only the extracted rule
-versions are kept.
+versions are kept. Submitting and --check need the ops role (Qluster
+operations staff); any other role gets a 403.
 
 Each -f takes one path: a .py file, or a directory, which contributes the
 regular .py files directly inside it other than __init__.py, in name

@@ -29,9 +29,9 @@ const dataReviewRowColumns = "id,row,status,requester,approvals,held,undecided,b
 const noActiveReview = "-"
 
 var dataReviewRowStates = map[string]api.ReviewStatusFilter{
-	"awaiting_decision": api.AwaitingDecision,
-	"rejected":          api.Rejected,
-	"accepted":          api.Accepted,
+	"awaiting_decision": api.ReviewStatusFilterAwaitingDecision,
+	"rejected":          api.ReviewStatusFilterRejected,
+	"accepted":          api.ReviewStatusFilterAccepted,
 }
 
 type dataReviewRow struct {

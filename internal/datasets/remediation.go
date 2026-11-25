@@ -122,22 +122,24 @@ func keepInQuarantineResult(status int, body []byte, json200 *KeepInQuarantineRe
 
 // DeleteRows deletes live quarantine rows by hex initial_signature_, or by
 // status when signatures is empty and status is not nil, recording comment as
-// the reason.
+// the reason. excludeFromFutureUploads is sent as exclude_from_future_uploads,
+// null when nil.
 //
 // signatures is always sent as a LIST: the backend takes its status branch
 // only under `if not body.signatures and quarantine_status is not None`
 // (delete_rows_in_dataset_core, data_view_core.py).
 //
 // The signature form (delete_data_rows, quarantine.py) adds each deleted
-// row's source-scoped identity entries to the table's excluded_row_signatures,
-// withholding an entry a live clean row with a requested signature also has.
+// row's source-scoped identity entries to the excluded_row_signatures of every
+// file a deleted row is linked to, and with excludeFromFutureUploads true to
+// the table's as well, withholding an entry that would drop a live clean row.
 // UnmatchedSignatures are the requested signatures with no live quarantine
 // row; NotExcludedSignatures are those deleted with an entry withheld.
 //
 // The status form (delete_bad_rows_by_status, quarantine.py) adds no entries
 // and skips every row of a repeated-key group the status splits, listing those
 // groups in SkippedRepeatedKeys; its signature lists come back empty.
-func (c *Client) DeleteRows(accessToken string, datasetID int, signatures []string, isBadData bool, status *api.QuarantineStatus, comment string) (*DeleteResult, error) {
+func (c *Client) DeleteRows(accessToken string, datasetID int, signatures []string, isBadData bool, status *api.QuarantineStatus, excludeFromFutureUploads *bool, comment string) (*DeleteResult, error) {
 	apiClient, err := c.newAPIClient(accessToken)
 	if err != nil {
 		return nil, err
@@ -145,7 +147,7 @@ func (c *Client) DeleteRows(accessToken string, datasetID int, signatures []stri
 	if signatures == nil {
 		signatures = []string{}
 	}
-	body := api.DeleteRowsRequestSchema{Signatures: &signatures, Comment: comment}
+	body := api.DeleteRowsRequestSchema{Signatures: &signatures, ExcludeFromFutureUploads: excludeFromFutureUploads, Comment: comment}
 	params := &api.DeleteRowsInDatasetParams{IsBadData: &isBadData, QuarantineStatus: status}
 	var resp *api.DeleteRowsInDatasetResponse
 	if c.thirdParty {

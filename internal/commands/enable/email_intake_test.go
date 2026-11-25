@@ -77,8 +77,8 @@ func intakeOn(auto bool) api.EmailIntakeSchema {
 	return api.EmailIntakeSchema{EmailIntakeAddress: &addr, EmailIntakeEnabled: true, AutoSendIssuesReport: auto}
 }
 
-// Without --auto-send-issues-report the PUT carries null, which keeps the
-// server's current setting; the prefixed positional reaches the same source.
+// Without --auto-send-issues-report the PUT carries null, leaving the setting
+// to the server; the prefixed positional reaches the same source.
 func TestEnableEmailIntakeLeavesTheReportSettingAloneWithoutTheFlag(t *testing.T) {
 	mock := intakeEnv(t)
 	bodies := servePut(mock, http.StatusOK, intakeOn(false))

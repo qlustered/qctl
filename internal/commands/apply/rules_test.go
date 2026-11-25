@@ -42,7 +42,7 @@ func sampleLiveRule() api.RuleRevisionFullSchema {
 		Slug:             "check_email",
 		Release:          "1.0.0",
 		Description:      &desc,
-		State:            api.Enabled,
+		State:            api.RuleStateEnabled,
 		IsDefault:        true,
 		IsBuiltin:        false,
 		IsCaf:            false,
@@ -314,7 +314,7 @@ func TestApplyRuleAcceptsStaleRenderability(t *testing.T) {
 	if !strings.Contains(out, "patched") {
 		t.Fatalf("expected 'patched' in output, got: %s", out)
 	}
-	if received.State == nil || *received.State != api.Disabled {
+	if received.State == nil || *received.State != api.RuleStateDisabled {
 		t.Fatalf("expected state disabled, got %+v", received.State)
 	}
 }

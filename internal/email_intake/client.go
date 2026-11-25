@@ -32,10 +32,10 @@ type (
 
 // Welcome outcomes of an add.
 const (
-	WelcomeScheduled        = api.Scheduled
-	WelcomeAlreadyScheduled = api.AlreadyScheduled
-	WelcomeSourceInactive   = api.SourceInactive
-	WelcomeRecipientRefused = api.RecipientRefused
+	WelcomeScheduled        = api.EmailIntakeWelcomeOutcomeSchemaStatusScheduled
+	WelcomeAlreadyScheduled = api.EmailIntakeWelcomeOutcomeSchemaStatusAlreadyScheduled
+	WelcomeSourceInactive   = api.EmailIntakeWelcomeOutcomeSchemaStatusSourceInactive
+	WelcomeRecipientRefused = api.EmailIntakeWelcomeOutcomeSchemaStatusRecipientRefused
 )
 
 // SenderRefKind is the reference prefix of a sender: email-sender/<user-id>.

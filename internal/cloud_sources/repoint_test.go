@@ -23,7 +23,7 @@ func TestRepointClassifiesEveryPatchField(t *testing.T) {
 	if !slices.Equal(got, want) {
 		t.Fatalf("repointKeys = %v, want %v. %s", got, want, recheck)
 	}
-	other := strings.Fields("broker_due_days chunk_size_to_read_for_header connection_timeout csv_delimiter csv_escapechar csv_quotechar dataset_id delete_source_file_after_backup excluded_row_signatures_override dropbox_authorization_code encoding_probably end_period_key id identify_header_by_column_names ignore_column_ids internal_id name preload_row_drop_share raw_headers redirect_post_submit_to routing_column routing_mode routing_pattern s3_default_buffer_size schedule settings_model_id source_time_zone start_period_key state delta_applied_cursor table_series_id version_id")
+	other := strings.Fields("broker_due_days chunk_size_to_read_for_header connection_timeout csv_delimiter csv_escapechar csv_quotechar dataset_id delete_source_file_after_backup excluded_row_signatures_override dropbox_authorization_code encoding_probably end_period_key export_request_days id identify_header_by_column_names ignore_column_ids internal_id name preload_row_drop_share raw_headers redirect_post_submit_to routing_column routing_mode routing_pattern s3_default_buffer_size schedule settings_model_id source_time_zone start_period_key state delta_applied_cursor table_series_id version_id")
 	other = append(other, CopyRequestSecretKeys()...)
 	for _, name := range overrideNames {
 		other = append(other, name+overrideSuffix)

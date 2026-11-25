@@ -91,16 +91,19 @@ func keepInQuarantineResult(status int, body []byte, json200 *KeepInQuarantineRe
 
 // DeleteRows deletes this source's live quarantine rows in the selected table
 // by hex initial_signature_, recording comment as the reason.
+// excludeFromFutureUploads is sent as exclude_from_future_uploads, null when
+// nil.
 //
 // delete_rows_in_data_source_core (data_view_core.py) adds each deleted row's
-// source-scoped identity entries to the source's
-// excluded_row_signatures_override, or to the table's excluded_row_signatures
-// for a table-series source, withholding an entry a live clean row with a
-// requested signature also has (delete_data_rows, quarantine.py).
+// source-scoped identity entries to the excluded_row_signatures of every file a
+// deleted row is linked to, and with excludeFromFutureUploads true to the
+// source's excluded_row_signatures_override as well, or to the table's
+// excluded_row_signatures for a table-series source, withholding an entry that
+// would drop a live clean row (delete_data_rows, quarantine.py).
 // UnmatchedSignatures are the requested signatures with no live quarantine
 // row of this source; NotExcludedSignatures are those deleted with an entry
 // withheld.
-func (c *Client) DeleteRows(accessToken string, dataSourceModelID int, signatures []string, isBadData bool, datasetID *int, comment string) (*DeleteResult, error) {
+func (c *Client) DeleteRows(accessToken string, dataSourceModelID int, signatures []string, isBadData bool, datasetID *int, excludeFromFutureUploads *bool, comment string) (*DeleteResult, error) {
 	apiClient, err := c.newAPIClient(accessToken)
 	if err != nil {
 		return nil, err
@@ -110,7 +113,7 @@ func (c *Client) DeleteRows(accessToken string, dataSourceModelID int, signature
 	if signatures == nil {
 		signatures = []string{}
 	}
-	body := api.DeleteRowsRequestSchema{Signatures: &signatures, Comment: comment}
+	body := api.DeleteRowsRequestSchema{Signatures: &signatures, ExcludeFromFutureUploads: excludeFromFutureUploads, Comment: comment}
 	var resp *api.DeleteRowsInDataSourceResponse
 	if c.thirdParty {
 		rawResponse, requestErr := apiClient.API.DeleteThirdPartyRowsInDataSource(

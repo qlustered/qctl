@@ -23,6 +23,11 @@ import (
 type RenderNames struct {
 	SourceTable, TargetTable string                   // table display names ("" → show the id only)
 	SourceRule, TargetRule   func(uuid string) string // instance_name for a rule UUID of that table; "" when unknown
+	Release                  func(uuid string) string // release of a rule revision UUID; "" when unknown
+	// Builtin reports a built-in rule revision UUID; nil reports none.
+	// RenderTemplateMerge leaves the table rules of such revisions out of its
+	// list of table rules not in the template.
+	Builtin func(uuid string) bool
 }
 
 // mergeActionOrder is DatasetCopyItemAction in the backend's declaration order.
@@ -46,10 +51,14 @@ const mergeParamsUnitsLine = "Params shown here are stored values; an edit_sourc
 // RenderMerge writes m as text: a header with the merge's state and a count of
 // its items per action, one table row per item, and a CONFLICTS block per
 // conflict item comparing the source rule's configuration with the target's.
-// Every backend string is sanitized for a terminal and kept to one line.
+// Every backend string is sanitized for a terminal and kept to one line. A
+// rule template merge is rendered by RenderTemplateMerge.
 func RenderMerge(w io.Writer, m *api.RuleMergeSchema, names RenderNames) error {
 	if m == nil {
 		return errors.New("no rule merge to render")
+	}
+	if m.TemplateName != nil {
+		return RenderTemplateMerge(w, m, names)
 	}
 	var b bytes.Buffer
 	writeMergeHeader(&b, m, names)
@@ -67,8 +76,13 @@ func RenderMerge(w io.Writer, m *api.RuleMergeSchema, names RenderNames) error {
 // writeMergeHeader writes the merge's identity and label lines. The count line
 // is "Plan:" while the merge is previewed and "Items:" after that.
 func writeMergeHeader(b *bytes.Buffer, m *api.RuleMergeSchema, names RenderNames) {
+	writeMergeHeaderCounts(b, m, names, mergeActionCounts(m.Items))
+}
+
+// writeMergeHeaderCounts is writeMergeHeader with counts on its count line.
+func writeMergeHeaderCounts(b *bytes.Buffer, m *api.RuleMergeSchema, names RenderNames, counts string) {
 	fmt.Fprintf(b, "Rule merge %d: %s -> %s\n", m.ID,
-		mergeTableLabel(names.SourceTable, m.SourceDatasetID),
+		mergeSourceLabel(m, names.SourceTable),
 		mergeTableLabel(names.TargetTable, m.TargetDatasetID))
 	fmt.Fprintf(b, "%-9s %s\n", "State:", mergeText(string(m.State)))
 	if m.Summary != nil && *m.Summary != "" {
@@ -79,7 +93,20 @@ func writeMergeHeader(b *bytes.Buffer, m *api.RuleMergeSchema, names RenderNames
 	if m.State == api.DatasetCopyStatePreviewed {
 		label = "Plan:"
 	}
-	fmt.Fprintf(b, "%-9s %s\n", label, mergeActionCounts(m.Items))
+	fmt.Fprintf(b, "%-9s %s\n", label, counts)
+}
+
+// mergeSourceLabel names a merge's source: the rule template it merges, else
+// the source table.
+func mergeSourceLabel(m *api.RuleMergeSchema, tableName string) string {
+	if m.SourceDatasetID == nil {
+		name := ""
+		if m.TemplateName != nil {
+			name = *m.TemplateName
+		}
+		return "rule template " + mergeText(name)
+	}
+	return mergeTableLabel(tableName, *m.SourceDatasetID)
 }
 
 // mergeTableLabel is "name (id N)", or "id N" without a name.

@@ -78,10 +78,10 @@ func TestExplainTableRuleFieldPath(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !strings.Contains(out, "column_mapping") || !strings.Contains(out, "same name") {
-		t.Errorf("expected column_mapping field docs mentioning the identity default; got:\n%s", out)
+	if !strings.Contains(out, "column_mapping") || !strings.Contains(out, "the server binds each rule field left out") {
+		t.Errorf("expected column_mapping field docs describing the server's binding; got:\n%s", out)
 	}
-	for _, want := range []string{"placeholder", "optional_columns", "standard field", "explicit mapping wins"} {
+	for _, want := range []string{"placeholder", "optional_columns", "standard field", "always wins", "original header", "normalizer", "spec.upgradedFrom", "describe rule <rule> --table", "candidate columns"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("expected column_mapping field docs to mention %q; got:\n%s", want, out)
 		}

@@ -130,7 +130,7 @@ func TestCatalogHasEveryExpectedResource(t *testing.T) {
 		"file", "history", "ingestion-job", "latest-alert", "linked-table", "notification", "notification-preference", "org",
 		"pii-access-request", "pii-grant", "pii-reveal", "privilege-request", "profiling-job", "rule", "rule-merge", "rule-review", "rule-review-policy", "rule-revision",
 		"release", "rule-run-replay", "rule-suggestion", "rule-upgrade", "session", "slack-config", "soft-deleted-tables", "standard-field", "submission-status", "table", "table-config", "table-copy",
-		"queue-message", "table-kind", "table-member", "table-rule",
+		"queue-message", "table-kind", "table-member", "table-rule", "table-rule-template",
 		"table-schema", "table-series", "tables-overview", "warning",
 	}
 	built, err := catalog.Build(realRoot(t))

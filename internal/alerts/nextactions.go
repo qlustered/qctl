@@ -151,7 +151,7 @@ func duplicateGroupLines(a *AlertFull) string {
 		return "see the duplicate group's decision: " + FindDuplicateGroupCommand(a, holdRowKind(a.IssueType)) + "\n" +
 			"  a reviewer kept another copy, so these rows will not load: resolving this alert\n" +
 			"  does not load them, and a reprocess raises a new alert on them\n" +
-			fmt.Sprintf("  or delete them: qctl rows delete-quarantined --table-id %d --signature <a not-loaded row's signature> --reason <why>\n", a.DatasetID)
+			fmt.Sprintf("  or delete them: qctl rows delete-quarantined --table-id %d --signature <a not-loaded row's signature> --exclude-from-future-uploads=<true|false> --reason <why>\n", a.DatasetID)
 	}
 	lines := "decide the duplicate group: " + FindDuplicateGroupCommand(a, holdRowKind(a.IssueType)) + "\n" +
 		"  resolving this alert does not release its rows: they stay held until the group's\n" +
